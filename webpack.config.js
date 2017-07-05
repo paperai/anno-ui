@@ -3,12 +3,16 @@ const webpack = require('webpack')
 const LiveReloadPlugin = require('webpack-livereload-plugin')
 
 
+const distTarget = path.resolve(__dirname, process.env.DIST_TARGET || 'dist');
+console.log('distTarget:', distTarget)
+
 module.exports = {
   entry: {
     'anno-ui' : './src/anno-ui.js'
   },
   output: {
-    path : path.resolve(__dirname, 'dist'),
+    // path : path.resolve(__dirname, 'dist'),
+    path :  distTarget,
     filename : '[name].bundle.js',
     // library       : 'PDFAnnoCore',
     // libraryTarget : 'umd'
