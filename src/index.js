@@ -12,7 +12,7 @@ import * as annoSpanButton from './components/annoSpanButton';
 
 import * as labelInput from './components/labelInput';
 
-export default {
+export {
 
     browseButton,
     contentDropdown,

@@ -25,8 +25,8 @@ module.exports = {
     path : path.resolve(__dirname, 'dist'),
     // path :  distTarget,
     filename : '[name].js',
-    // library       : 'annoUI',
-    // libraryTarget : 'umd'
+    library       : 'annoUI',
+    libraryTarget : 'umd'
   },
   // module: {
   //   loaders: [

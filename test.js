@@ -1,5 +1,4 @@
-import annoUI from './src/index';
-
+import * as annoUI from './src/index';
 
 function createEchoFunction() {
     let obj = {};
