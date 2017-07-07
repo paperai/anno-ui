@@ -2,8 +2,6 @@
  * UI parts - Browse button.
  */
 
-// import { setupColorPicker } from '../util/display';
-
 /**
  * Setup the color pickers.
  */
@@ -30,15 +28,38 @@ export function setupColorPicker() {
     });
 
     // Setup behavior.
-    $('.js-anno-palette').off('change').on('change', window.annoPage.displayAnnotation.bind(null, false));
+    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations());
 }
 
-
+// TODO この辺は、pdfannoのせいでかなり複雑なので、なんとかしたいなー.
+let _loadFiles;
+let _clearAllAnnotations;
+let _displayCurrentReferenceAnnotations;
+let _displayCurrentPrimaryAnnotations;
+let _getContentFiles;
+let _getAnnoFiles;
+let _closePDFViewer;
 
 /**
  * Setup the behavior of a Browse Button.
  */
-export function setup({ fileLoader }) {
+export function setup({ 
+        loadFiles,
+        clearAllAnnotations,
+        displayCurrentReferenceAnnotations,
+        displayCurrentPrimaryAnnotations,
+        getContentFiles,
+        getAnnoFiles,
+        closePDFViewer,
+    }) {
+
+    _loadFiles = loadFiles;
+    _clearAllAnnotations = clearAllAnnotations;
+    _displayCurrentReferenceAnnotations = displayCurrentReferenceAnnotations;
+    _displayCurrentPrimaryAnnotations = displayCurrentPrimaryAnnotations;
+    _getContentFiles = getContentFiles,
+    _getAnnoFiles = getAnnoFiles;
+    _closePDFViewer = closePDFViewer;
 
     // Enable to select the same directory twice or more.
     $('.js-file :file').on('click', ev => {
@@ -54,14 +75,13 @@ export function setup({ fileLoader }) {
             return alert(error);
         }
 
-        // window.annoPage.loadFiles(files).then(() => {
-        fileLoader(files).then(() => {
+        loadFiles(files).then(() => {
 
             // Get current visuals.
             const current = getCurrentFileNames();
 
             // Initialize PDF Viewer.
-            window.annoPage.clearAllAnnotations();
+            clearAllAnnotations();
 
             // Setup PDF Dropdown.
             setPDFDropdownList();
@@ -107,7 +127,7 @@ function restoreBeforeState(currentDisplay) {
     let isPDFClosed = false;
 
     // Restore the check state of a content.
-    files = window.annoPage.contentFiles.filter(c => c.name === currentDisplay.pdfName);
+    files = _getContentFiles().filter(c => c.name === currentDisplay.pdfName);
     if (files.length > 0) {
         $('#dropdownPdf .js-text').text(files[0].name);
         $('#dropdownPdf a').each((index, element) => {
@@ -121,11 +141,11 @@ function restoreBeforeState(currentDisplay) {
 
         isPDFClosed = true;
 
-        window.annoPage.closePDFViewer();
+        _closePDFViewer();
     }
 
     // Restore the check state of a primaryAnno.
-    files = window.annoPage.annoFiles.filter(c => c.name === currentDisplay.primaryAnnotationName);
+    files = _getAnnoFiles().filter(c => c.name === currentDisplay.primaryAnnotationName);
     if (files.length > 0 && isPDFClosed === false) {
         $('#dropdownAnnoPrimary .js-text').text(currentDisplay.primaryAnnotationName);
         $('#dropdownAnnoPrimary a').each((index, element) => {
@@ -135,7 +155,7 @@ function restoreBeforeState(currentDisplay) {
             }
         });
         setTimeout(() => {
-            window.annoPage.displayAnnotation(true, false);
+            _displayCurrentPrimaryAnnotations();
         }, 100);
     }
 
@@ -144,7 +164,7 @@ function restoreBeforeState(currentDisplay) {
     let colors = currentDisplay.referenceAnnotationColors;
     names = names.filter((name, i) => {
         let found = false;
-        let annos = window.annoPage.annoFiles.filter(c => c.name === name);
+        let annos = _getAnnoFiles().filter(c => c.name === name);
         if (annos.length > 0) {
             $('#dropdownAnnoReference a').each((index, element) => {
                 let $elm = $(element);
@@ -161,7 +181,7 @@ function restoreBeforeState(currentDisplay) {
     if (names.length > 0 && isPDFClosed === false) {
         $('#dropdownAnnoReference .js-text').text(names.join(','));
         setTimeout(() => {
-            window.annoPage.displayAnnotation(false, false);
+            _displayCurrentReferenceAnnotations();
         }, 500);
 
     }
@@ -213,7 +233,7 @@ function setPDFDropdownList() {
     $('#dropdownPdf li').remove();
 
     // Create and setup the dropdown menu.
-    const snipets = window.annoPage.contentFiles.map(content => {
+    const snipets = _getContentFiles().map(content => {
         return `
             <li>
                 <a href="#">
@@ -238,7 +258,7 @@ function setAnnoDropdownList() {
     $('#dropdownAnnoReference .js-text').text('Reference Files');
 
     // Setup anno / reference dropdown.
-    window.annoPage.annoFiles.forEach(file => {
+    _getAnnoFiles().forEach(file => {
 
         let snipet1 = `
             <li>
