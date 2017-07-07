@@ -719,12 +719,13 @@ function setup({
             let blobURL = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             document.body.appendChild(a); // for firefox working correctly.
-            a.download = _getDownloadFileName();
+            a.download = _getDownloadFileName(getCurrentContentName);
             a.href = blobURL;
             a.click();
             a.parentNode.removeChild(a);
         });
 
+        // TODO 復活する.
         // unlistenWindowLeaveEvent();
 
         return false;
@@ -751,7 +752,7 @@ function _getDownloadFileName(getCurrentContentName) {
     }
 
     // The name of Content.
-    getCurrentContentName();
+    let pdfFileName = getCurrentContentName();
     return pdfFileName.split('.')[0] + '.anno';
 }
 

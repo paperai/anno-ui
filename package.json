@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "webpack",
-    "dev" : "webpack --watch",
+    "dev": "webpack --watch",
     "watch": "cross-env NODE_ENV=development webpack-dev-server"
   },
   "repository": {
