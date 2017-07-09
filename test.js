@@ -10,8 +10,6 @@ function createEchoFunction() {
 
 window.addEventListener('DOMContentLoaded', e => {
 
-    // TODO pdfanno.jsに書いてる、window系の処理はどうしたら良いだろうか・・。
-
     // TODO ちょっと複雑だからなんとかしたいなー.
     // Browse button.
     annoUI.browseButton.setup({

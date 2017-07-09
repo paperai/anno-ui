@@ -90,6 +90,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__events__ = __webpack_require__(12);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "primaryAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__; });
@@ -101,6 +102,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoSpanButton", function() { return __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "labelInput", function() { return __WEBPACK_IMPORTED_MODULE_9__components_labelInput__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "uploadButton", function() { return __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_11__events__; });
+
+
 
 
 
@@ -1179,6 +1183,59 @@ function setup({
 
         return false;
     });
+}
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["dispatchWindowEvent"] = dispatchWindowEvent;
+/**
+ * Event listeners.
+ */
+
+/**
+ * Initializer.
+ */
+function setup() {
+    $(document).on('keydown', e => {
+
+        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
+            dispatchWindowEvent('manageCtrlKey', 'on');
+        }
+
+    }).on('keyup', e => {
+
+        // Allow any keyboard events for <input/>.
+        if (e.target.tagName.toLowerCase() === 'input') {
+            return;
+        }
+
+        dispatchWindowEvent('manageCtrlKey', 'off');
+
+        if (e.keyCode === 49) {         // Digit "1"
+            dispatchWindowEvent('digitKeyPressed', 1);
+        } else if (e.keyCode === 50) {  // Digit "2"
+            dispatchWindowEvent('digitKeyPressed', 2);
+        } else if (e.keyCode === 51) {  // Digit "3"
+            dispatchWindowEvent('digitKeyPressed', 3);
+        } else if (e.keyCode === 52) {  // Digit "4"
+            dispatchWindowEvent('digitKeyPressed', 4);
+        }
+    });
+}
+
+/**
+ * Dispatch a custom event to `window` object.
+ */
+function dispatchWindowEvent(eventName, data) {
+    var event = document.createEvent('CustomEvent');
+    event.initCustomEvent(eventName, true, true, data);
+    window.dispatchEvent(event);
 }
 
 

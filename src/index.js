@@ -14,6 +14,8 @@ import * as labelInput from './components/labelInput';
 
 import * as uploadButton from './components/uploadButton';
 
+import * as event from './events';
+
 export {
 
     browseButton,
@@ -28,6 +30,7 @@ export {
     annoSpanButton,
 
     labelInput,
+    uploadButton,
 
-    uploadButton
+    event
 }
