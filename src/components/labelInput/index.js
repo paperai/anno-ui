@@ -123,7 +123,7 @@ function saveText(uuid) {
 
     const text = $inputLabel.val() || '';
 
-    saveAnnotationText(uuid, text);
+    _saveAnnotationText(uuid, text);
 }
 
 /**

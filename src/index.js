@@ -12,6 +12,8 @@ import * as annoSpanButton from './components/annoSpanButton';
 
 import * as labelInput from './components/labelInput';
 
+import * as uploadButton from './components/uploadButton';
+
 export {
 
     browseButton,
@@ -25,7 +27,7 @@ export {
     annoRelButton,
     annoSpanButton,
 
-    labelInput
-}
+    labelInput,
 
-// TODO 残：pdfanno.jsからのお引越し.
+    uploadButton
+}

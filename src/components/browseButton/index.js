@@ -28,7 +28,7 @@ export function setupColorPicker() {
     });
 
     // Setup behavior.
-    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations());
+    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations);
 }
 
 // TODO この辺は、pdfannoのせいでかなり複雑なので、なんとかしたいなー.

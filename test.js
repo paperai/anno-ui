@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', e => {
     // TODO ちょっと複雑だからなんとかしたいなー.
     // Browse button.
     annoUI.browseButton.setup({
-        loadFiles : files => { 
+        loadFiles : files => {
             console.log('loadFiles:', files);
             return Promise.resolve();
         },
@@ -52,8 +52,8 @@ window.addEventListener('DOMContentLoaded', e => {
 
     // Content dropdown.
     annoUI.contentDropdown.setup({
-        initialText : () => 'initial label text',
-        overrideWarningMessage : () => 'warning message when override.',
+        initialText : 'initial label text',
+        overrideWarningMessage : 'warning message when override.',
         contentReloadHandler : fileName => console.log('contentReloadHandler:', fileName)
     });
 
@@ -84,6 +84,11 @@ window.addEventListener('DOMContentLoaded', e => {
     annoUI.labelInput.setup({
         getSelectedAnnotations : () => [],
         saveAnnotationText : (id, text) => console.log('saveAnnotationText:', id, text)
+    });
+
+    // Upload button.
+    annoUI.uploadButton.setup({
+        getCurrentDisplayContentFile : () => null,
     });
 
 });

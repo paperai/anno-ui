@@ -89,6 +89,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(11);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "primaryAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__; });
@@ -99,6 +100,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoRelButton", function() { return __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoSpanButton", function() { return __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "labelInput", function() { return __WEBPACK_IMPORTED_MODULE_9__components_labelInput__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "uploadButton", function() { return __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__; });
 
 
 
@@ -115,7 +117,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-// TODO 残：pdfanno.jsからのお引越し.
+
 
 
 /***/ }),
@@ -156,7 +158,7 @@ function setupColorPicker() {
     });
 
     // Setup behavior.
-    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations());
+    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations);
 }
 
 // TODO この辺は、pdfannoのせいでかなり複雑なので、なんとかしたいなー.
@@ -963,7 +965,7 @@ function saveText(uuid) {
 
     const text = $inputLabel.val() || '';
 
-    saveAnnotationText(uuid, text);
+    _saveAnnotationText(uuid, text);
 }
 
 /**
@@ -1080,6 +1082,102 @@ function listenWindowEvents() {
     // handle annotation deselected.
     window.addEventListener('annotationDeselected' , () => {
         handleAnnotationDeselected();
+    });
+}
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * UI parts - Upload Button.
+ */
+
+function setup({
+        getCurrentDisplayContentFile,
+    }) {
+    $('.js-btn-upload').off('click').on('click', () => {
+
+        const contentFile = getCurrentDisplayContentFile();
+        if (!contentFile) {
+            return alert('Display a content before upload.');
+        }
+
+        function arrayBufferToBase64( buffer ) {
+            var binary = '';
+            var bytes = new Uint8Array( buffer );
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode( bytes[ i ] );
+            }
+            return window.btoa( binary );
+        }
+
+        const contentBase64 = arrayBufferToBase64(contentFile.content);
+
+
+        const $progressBar = $('.js-upload-progress');
+
+        const url = $('#serverURL').val();
+        if (!url) {
+            return alert('Set server URL.');
+        }
+
+        $('#uploadResult').val("Waiting for response...");
+
+        $.ajax({
+            xhr: function(){
+               var xhr = new window.XMLHttpRequest();
+               //Upload progress
+               xhr.upload.addEventListener("progress", function(evt){
+               if (evt.lengthComputable) {
+                 var percentComplete = evt.loaded / evt.total;
+                 //Do something with upload progress
+                 console.log('uploadProgress:', percentComplete);
+
+                 let percent = Math.floor(percentComplete * 100);
+                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%');
+                 if (percent === 100) {
+                    setTimeout(() => {
+                        $progressBar.addClass('hidden');
+                    }, 2000);
+                 }
+                }
+               }, false);
+               //Download progress
+               xhr.addEventListener("progress", function(evt){
+                 if (evt.lengthComputable) {
+                   var percentComplete = evt.loaded / evt.total;
+                   //Do something with download progress
+                   console.log('downloadProgress:', percentComplete);
+                 }
+               }, false);
+               return xhr;
+            },
+            url : url,
+            method : 'POST',
+            dataType : "text",
+            data : contentBase64
+            //dataType : 'json',
+            //data : { name : pdfFileName, content : contentBase64 }
+        }).then(result => {
+            console.log('result:', result);
+            setTimeout(() => {
+                // alert('Upload completed.');
+                var json = JSON.parse(result);
+                $('#uploadResult').val(json.text);
+                window.addAll(json.anno);
+            }, 500); // wait for progress bar animation.
+        });
+
+        // Show.
+        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+
+        return false;
     });
 }
 
