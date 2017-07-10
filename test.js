@@ -6,6 +6,9 @@ import * as annoUI from './src/index';
 
 window.addEventListener('DOMContentLoaded', e => {
 
+    // Make the UI resizable.
+    annoUI.util.setupResizableColumns();
+
     annoUI.browseButton.setup({
         loadFiles : files => {
             console.log('loadFiles:', files);

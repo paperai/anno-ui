@@ -1,3 +1,5 @@
+require("!style-loader!css-loader!./index.css");
+
 import * as browseButton from './components/browseButton';
 import * as contentDropdown from './components/contentDropdown';
 import * as primaryAnnoDropdown from './components/primaryAnnoDropdown';
@@ -10,6 +12,7 @@ import * as annoSpanButton from './components/annoSpanButton';
 import * as labelInput from './components/labelInput';
 import * as uploadButton from './components/uploadButton';
 import * as event from './events';
+import * as util from './utils';
 
 export {
     browseButton,
@@ -23,5 +26,6 @@ export {
     annoSpanButton,
     labelInput,
     uploadButton,
-    event
+    event,
+    util
 }
