@@ -1,4 +1,6 @@
-
+/**
+ * UI parts - Anno Tools for RectAnnotation.
+ */
 
 export function setup({ enableRect, disableRect }) {
 

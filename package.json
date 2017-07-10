@@ -25,8 +25,6 @@
   "homepage": "https://github.com/paperai/anno-ui#readme",
   "devDependencies": {
     "cross-env": "^5.0.1",
-    "file-loader": "^0.11.2",
-    "uglify-es": "github:mishoo/UglifyJS2#harmony",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.5.0",
     "webpack-livereload-plugin": "^0.11.0"

@@ -31,7 +31,6 @@ export function setupColorPicker() {
     $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations);
 }
 
-// TODO この辺は、pdfannoのせいでかなり複雑なので、なんとかしたいなー.
 let _loadFiles;
 let _clearAllAnnotations;
 let _displayCurrentReferenceAnnotations;
@@ -43,7 +42,7 @@ let _closePDFViewer;
 /**
  * Setup the behavior of a Browse Button.
  */
-export function setup({ 
+export function setup({
         loadFiles,
         clearAllAnnotations,
         displayCurrentReferenceAnnotations,

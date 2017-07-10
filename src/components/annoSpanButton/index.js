@@ -1,4 +1,6 @@
-
+/**
+ * UI parts - Anno Tools for SpanAnnotation.
+ */
 
 export function setup({ createSpanAnnotation }) {
 

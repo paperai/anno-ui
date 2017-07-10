@@ -119,11 +119,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
-
-
-
-
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -165,7 +160,6 @@ function setupColorPicker() {
     $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations);
 }
 
-// TODO この辺は、pdfannoのせいでかなり複雑なので、なんとかしたいなー.
 let _loadFiles;
 let _clearAllAnnotations;
 let _displayCurrentReferenceAnnotations;
@@ -177,7 +171,7 @@ let _closePDFViewer;
 /**
  * Setup the behavior of a Browse Button.
  */
-function setup({ 
+function setup({
         loadFiles,
         clearAllAnnotations,
         displayCurrentReferenceAnnotations,
@@ -705,15 +699,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * UI parts - Download Button.
  */
 
-// TODO 機能としては必要だけど、どうしようか.
-// import { unlistenWindowLeaveEvent } from '../util/window';
-
 /**
  * Setup the behavior of a Download Button.
  */
 function setup({
         getAnnotationTOMLString,
-        getCurrentContentName
+        getCurrentContentName,
+        unlistenWindowLeaveEvent
     }) {
 
     $('#downloadButton').off('click').on('click', e => {
@@ -731,8 +723,7 @@ function setup({
             a.parentNode.removeChild(a);
         });
 
-        // TODO 復活する.
-        // unlistenWindowLeaveEvent();
+        unlistenWindowLeaveEvent();
 
         return false;
     });
@@ -770,7 +761,9 @@ function _getDownloadFileName(getCurrentContentName) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-
+/**
+ * UI parts - Anno Tools for RectAnnotation.
+ */
 
 function setup({ enableRect, disableRect }) {
 
@@ -796,6 +789,7 @@ function setup({ enableRect, disableRect }) {
     });
 }
 
+
 /***/ }),
 /* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -803,6 +797,9 @@ function setup({ enableRect, disableRect }) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * UI parts - Anno Tools for RelationAnnotation (one-way / two-way / link).
+ */
 
 
 function setup({ createRelAnnotation }) {
@@ -816,6 +813,7 @@ function setup({ createRelAnnotation }) {
     });
 }
 
+
 /***/ }),
 /* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -823,7 +821,9 @@ function setup({ createRelAnnotation }) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-
+/**
+ * UI parts - Anno Tools for SpanAnnotation.
+ */
 
 function setup({ createSpanAnnotation }) {
 
@@ -834,6 +834,7 @@ function setup({ createSpanAnnotation }) {
         createSpanAnnotation();
     });
 }
+
 
 /***/ }),
 /* 10 */
@@ -1166,12 +1167,9 @@ function setup({
             method : 'POST',
             dataType : "text",
             data : contentBase64
-            //dataType : 'json',
-            //data : { name : pdfFileName, content : contentBase64 }
         }).then(result => {
             console.log('result:', result);
             setTimeout(() => {
-                // alert('Upload completed.');
                 var json = JSON.parse(result);
                 $('#uploadResult').val(json.text);
                 window.addAll(json.anno);
@@ -1193,7 +1191,6 @@ function setup({
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["dispatchWindowEvent"] = dispatchWindowEvent;
 /**
  * Event listeners.
  */

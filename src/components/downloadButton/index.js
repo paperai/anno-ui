@@ -2,15 +2,13 @@
  * UI parts - Download Button.
  */
 
-// TODO 機能としては必要だけど、どうしようか.
-// import { unlistenWindowLeaveEvent } from '../util/window';
-
 /**
  * Setup the behavior of a Download Button.
  */
 export function setup({
         getAnnotationTOMLString,
-        getCurrentContentName
+        getCurrentContentName,
+        unlistenWindowLeaveEvent
     }) {
 
     $('#downloadButton').off('click').on('click', e => {
@@ -28,8 +26,7 @@ export function setup({
             a.parentNode.removeChild(a);
         });
 
-        // TODO 復活する.
-        // unlistenWindowLeaveEvent();
+        unlistenWindowLeaveEvent();
 
         return false;
     });

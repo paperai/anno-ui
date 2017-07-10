@@ -1,17 +1,11 @@
 import * as annoUI from './src/index';
 
-function createEchoFunction() {
-    let obj = {};
-    [...arguments].forEach(key => {
-        obj[key] = (...args) => console.log(key, args);
-    });
-    return obj;
-}
+/**
+ * The sample of using `annoUI` library.
+ */
 
 window.addEventListener('DOMContentLoaded', e => {
 
-    // TODO ちょっと複雑だからなんとかしたいなー.
-    // Browse button.
     annoUI.browseButton.setup({
         loadFiles : files => {
             console.log('loadFiles:', files);
@@ -30,7 +24,6 @@ window.addEventListener('DOMContentLoaded', e => {
         },
         closePDFViewer : () => console.log('closePDFViewer')
     });
-
 
     // AnnoTool: rect.
     annoUI.annoRectButton.setup({
@@ -75,7 +68,8 @@ window.addEventListener('DOMContentLoaded', e => {
     // Download button.
     annoUI.downloadButton.setup({
         getAnnotationTOMLString : () => 'TOML STRING',
-        getCurrentContentName : () => 'CurrentContentName.pdf'
+        getCurrentContentName : () => 'CurrentContentName.pdf',
+        unlistenWindowLeaveEvent : () => console.log('unlistenWindowLeaveEvent')
     });
 
     // Label input.

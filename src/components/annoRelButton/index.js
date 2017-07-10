@@ -1,3 +1,6 @@
+/**
+ * UI parts - Anno Tools for RelationAnnotation (one-way / two-way / link).
+ */
 
 
 export function setup({ createRelAnnotation }) {

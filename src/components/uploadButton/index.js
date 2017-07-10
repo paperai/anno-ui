@@ -67,12 +67,9 @@ export function setup({
             method : 'POST',
             dataType : "text",
             data : contentBase64
-            //dataType : 'json',
-            //data : { name : pdfFileName, content : contentBase64 }
         }).then(result => {
             console.log('result:', result);
             setTimeout(() => {
-                // alert('Upload completed.');
                 var json = JSON.parse(result);
                 $('#uploadResult').val(json.text);
                 window.addAll(json.anno);
