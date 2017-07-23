@@ -14,6 +14,7 @@ input:-webkit-autofill:active {
 .u-ml-15 {margin-left: 15px;}
 .u-disp-iblock {display: inline-block;}
 .no-visible {visibility: hidden;}
+.no-action {pointer-events: none;}
 
 /**
  * Viewer size.

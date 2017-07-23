@@ -164,7 +164,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "@charset 'utf-8';\n\n/* Super Hack to disable autofill style for Chrome. */\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active {\n    transition: background-color 5000s ease-in-out 0s;\n}\n\n.u-mt-10 {margin-top: 10px;}\n.u-mt-20 {margin-top: 20px;}\n.u-mb-10 {margin-bottom: 10px;}\n.u-ml-15 {margin-left: 15px;}\n.u-disp-iblock {display: inline-block;}\n.no-visible {visibility: hidden;}\n\n/**\n * Viewer size.\n * This height will be override to fit the browser height (by pdfanno.js).\n */\n.anno-viewer {\n    width: 100%;\n    height: 500px;\n}\n\n/**\n * Annotation Select UI Layout.\n */\n.anno-select-layout {}\n.anno-select-layout .row:first-child {\n    margin-bottom: 10px;\n}\n.anno-select-layout [type=\"radio\"] {\n    margin-right: 5px;\n}\n.anno-select-layout [type=\"file\"] {\n    display: inline-block;\n    margin-left: 5px;\n    line-height: 1em;\n}\n.anno-select-layout .sp-replacer {\n    padding: 0;\n    border: none;\n}\n.anno-select-layout .sp-dd {\n    display: none;\n}\n\n/**\n * Dropdown.\n */\n.dropdown-menu {\n    overflow: scroll;\n}\n\n/**\n * Color picker.\n */\n.anno-ui .sp-replacer {\n    padding: 0;\n    border: none;\n}\n.anno-ui .sp-dd {\n    display: none;\n}\n.anno-ui .sp-preview {\n    margin-right: 0;\n}\n\n/**\n * Modal dialog for Datalist.\n\n    今後は不要かなー.\n */\n.modal-datalist {}\n.modal-datalist .list-group-item {\n    position: relative;\n    padding-right: 38px;\n}\n.modal-datalist .form-control {}\n.modal-datalist .glyphicon-remove {\n    position: absolute;\n    top: 50%;\n    right: 12px;\n    margin-top: -7px;\n}\n.modal-datalist .list-group-item:last-child .glyphicon-remove {\n    display: none;\n}\n\n\n/** TODO anno-uiへお引越し. */\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 30px;\n    height: 30px;\n    line-height: 30px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 10px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "@charset 'utf-8';\n\n/* Super Hack to disable autofill style for Chrome. */\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active {\n    transition: background-color 5000s ease-in-out 0s;\n}\n\n.u-mt-10 {margin-top: 10px;}\n.u-mt-20 {margin-top: 20px;}\n.u-mb-10 {margin-bottom: 10px;}\n.u-ml-15 {margin-left: 15px;}\n.u-disp-iblock {display: inline-block;}\n.no-visible {visibility: hidden;}\n.no-action {pointer-events: none;}\n\n/**\n * Viewer size.\n * This height will be override to fit the browser height (by pdfanno.js).\n */\n.anno-viewer {\n    width: 100%;\n    height: 500px;\n}\n\n/**\n * Annotation Select UI Layout.\n */\n.anno-select-layout {}\n.anno-select-layout .row:first-child {\n    margin-bottom: 10px;\n}\n.anno-select-layout [type=\"radio\"] {\n    margin-right: 5px;\n}\n.anno-select-layout [type=\"file\"] {\n    display: inline-block;\n    margin-left: 5px;\n    line-height: 1em;\n}\n.anno-select-layout .sp-replacer {\n    padding: 0;\n    border: none;\n}\n.anno-select-layout .sp-dd {\n    display: none;\n}\n\n/**\n * Dropdown.\n */\n.dropdown-menu {\n    overflow: scroll;\n}\n\n/**\n * Color picker.\n */\n.anno-ui .sp-replacer {\n    padding: 0;\n    border: none;\n}\n.anno-ui .sp-dd {\n    display: none;\n}\n.anno-ui .sp-preview {\n    margin-right: 0;\n}\n\n/**\n * Modal dialog for Datalist.\n\n    今後は不要かなー.\n */\n.modal-datalist {}\n.modal-datalist .list-group-item {\n    position: relative;\n    padding-right: 38px;\n}\n.modal-datalist .form-control {}\n.modal-datalist .glyphicon-remove {\n    position: absolute;\n    top: 50%;\n    right: 12px;\n    margin-top: -7px;\n}\n.modal-datalist .list-group-item:last-child .glyphicon-remove {\n    display: none;\n}\n\n\n/** TODO anno-uiへお引越し. */\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 30px;\n    height: 30px;\n    line-height: 30px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 10px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1463,8 +1463,12 @@ function setup({ getSelectedAnnotations, saveAnnotationText }) {
 
     setupLabelAddButton();
 
+    setupLabelTrashButton();
+
     seupTabClick();
 }
+
+let currentTab = 'span';
 
 function seupTabClick() {
 
@@ -1472,16 +1476,27 @@ function seupTabClick() {
 
         const type = $(e.currentTarget).data('type');
         console.log(type);
-        const labels = getLabelListData()[type] || ['&nbsp;'];
+        const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
+
+        currentTab = type;
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`);
-        labels.forEach(label => {
-            $ul.append(`
-                <li>
-                    <div class="label-list__btn"><i class="fa fa-trash-o"></i></div>
-                    <div class="label-list__text">${label}</div>
-                </li>
-            `);
+        labels.forEach((label, index) => {
+            if (index === 0) {
+                $ul.append(`
+                    <li>
+                        <div class="label-list__btn no-action"></div>
+                        <div class="label-list__text">${label}</div>
+                    </li>
+                `);
+            } else {
+                $ul.append(`
+                    <li>
+                        <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
+                        <div class="label-list__text">${label}</div>
+                    </li>
+                `);
+            }
         });
         $ul.append(`
             <li>
@@ -1500,12 +1515,19 @@ const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
 function setupLabelAddButton() {
 
-    $('.js-add-label-button').click(e => {
+    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
 
         const
             $this = $(e.currentTarget),
             text = $this.parent().find('input').val(),
             type = $this.parents('[data-type]').data('type');
+
+        // No action for no input.
+        if (!text) {
+            return;
+        }
+
+        console.log(text, type);
 
         let d = getLabelListData();
         let labels = d[type] || [];
@@ -1513,8 +1535,31 @@ function setupLabelAddButton() {
         d[type] = labels;
         saveLabelListData(d);
 
-        // TODO re-render.
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click();
     });
+}
+
+function setupLabelTrashButton() {
+
+    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
+
+        const
+            $this = $(e.currentTarget),
+            idx   = $this.data('index') - 1,
+            type  = $this.parents('[data-type]').data('type');
+
+        let d = getLabelListData();
+        let labels = d[type];
+        labels = labels.slice(0, idx).concat(labels.slice(idx+1, labels.length));
+        d[type] = labels;
+        saveLabelListData(d);
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click();
+
+    });
+
 }
 
 function getLabelListData() {

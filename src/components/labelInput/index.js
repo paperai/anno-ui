@@ -30,8 +30,12 @@ export function setup({ getSelectedAnnotations, saveAnnotationText }) {
 
     setupLabelAddButton();
 
+    setupLabelTrashButton();
+
     seupTabClick();
 }
+
+let currentTab = 'span';
 
 function seupTabClick() {
 
@@ -39,16 +43,27 @@ function seupTabClick() {
 
         const type = $(e.currentTarget).data('type');
         console.log(type);
-        const labels = getLabelListData()[type] || ['&nbsp;'];
+        const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
+
+        currentTab = type;
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`);
-        labels.forEach(label => {
-            $ul.append(`
-                <li>
-                    <div class="label-list__btn"><i class="fa fa-trash-o"></i></div>
-                    <div class="label-list__text">${label}</div>
-                </li>
-            `);
+        labels.forEach((label, index) => {
+            if (index === 0) {
+                $ul.append(`
+                    <li>
+                        <div class="label-list__btn no-action"></div>
+                        <div class="label-list__text">${label}</div>
+                    </li>
+                `);
+            } else {
+                $ul.append(`
+                    <li>
+                        <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
+                        <div class="label-list__text">${label}</div>
+                    </li>
+                `);
+            }
         });
         $ul.append(`
             <li>
@@ -67,12 +82,19 @@ const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
 function setupLabelAddButton() {
 
-    $('.js-add-label-button').click(e => {
+    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
 
         const
             $this = $(e.currentTarget),
             text = $this.parent().find('input').val(),
             type = $this.parents('[data-type]').data('type');
+
+        // No action for no input.
+        if (!text) {
+            return;
+        }
+
+        console.log(text, type);
 
         let d = getLabelListData();
         let labels = d[type] || [];
@@ -80,8 +102,31 @@ function setupLabelAddButton() {
         d[type] = labels;
         saveLabelListData(d);
 
-        // TODO re-render.
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click();
     });
+}
+
+function setupLabelTrashButton() {
+
+    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
+
+        const
+            $this = $(e.currentTarget),
+            idx   = $this.data('index') - 1,
+            type  = $this.parents('[data-type]').data('type');
+
+        let d = getLabelListData();
+        let labels = d[type];
+        labels = labels.slice(0, idx).concat(labels.slice(idx+1, labels.length));
+        d[type] = labels;
+        saveLabelListData(d);
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click();
+
+    });
+
 }
 
 function getLabelListData() {
