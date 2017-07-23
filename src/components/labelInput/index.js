@@ -27,7 +27,84 @@ export function setup({ getSelectedAnnotations, saveAnnotationText }) {
 
     // Start to listen window events.
     listenWindowEvents();
+
+    setupLabelAddButton();
+
+    seupTabClick();
 }
+
+function seupTabClick() {
+
+    $('.js-label-tab').on('click', e => {
+
+        const type = $(e.currentTarget).data('type');
+        console.log(type);
+        const labels = getLabelListData()[type] || ['&nbsp;'];
+
+        let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`);
+        labels.forEach(label => {
+            $ul.append(`
+                <li>
+                    <div class="label-list__btn"><i class="fa fa-trash-o"></i></div>
+                    <div class="label-list__text">${label}</div>
+                </li>
+            `);
+        });
+        $ul.append(`
+            <li>
+                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus"></i></div>
+                <input type="text" class="label-list__input">
+            </li>
+        `);
+        $('.js-label-tab-content').html($ul);
+    });
+
+    $('.js-label-tab[data-type="span"]').click();
+}
+
+const LSKEY_LABEL_LIST = 'pdfanno-label-list';
+
+
+function setupLabelAddButton() {
+
+    $('.js-add-label-button').click(e => {
+
+        const
+            $this = $(e.currentTarget),
+            text = $this.parent().find('input').val(),
+            type = $this.parents('[data-type]').data('type');
+
+        let d = getLabelListData();
+        let labels = d[type] || [];
+        labels.push(text);
+        d[type] = labels;
+        saveLabelListData(d);
+
+        // TODO re-render.
+    });
+}
+
+function getLabelListData() {
+    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}');
+}
+
+function saveLabelListData(data) {
+    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export function enable({ uuid, text, disable=false, autoFocus=false, blurListener=null }) {
