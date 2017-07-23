@@ -1446,11 +1446,20 @@ let currentUUID;
 
 let _getSelectedAnnotations;
 let _saveAnnotationText;
+let _createSpanAnnotation;
+let _createRelAnnotation;
 
-function setup({ getSelectedAnnotations, saveAnnotationText }) {
+function setup({
+    getSelectedAnnotations,
+    saveAnnotationText,
+    createSpanAnnotation,
+    createRelAnnotation
+}) {
 
     _getSelectedAnnotations = getSelectedAnnotations;
     _saveAnnotationText = saveAnnotationText;
+    _createSpanAnnotation = createSpanAnnotation;
+    _createRelAnnotation = createRelAnnotation;
 
     // set datalist.
     setDatalist();
@@ -1464,6 +1473,8 @@ function setup({ getSelectedAnnotations, saveAnnotationText }) {
     setupLabelAddButton();
 
     setupLabelTrashButton();
+
+    setupLabelText();
 
     seupTabClick();
 }
@@ -1486,14 +1497,14 @@ function seupTabClick() {
                 $ul.append(`
                     <li>
                         <div class="label-list__btn no-action"></div>
-                        <div class="label-list__text">${label}</div>
+                        <div class="label-list__text js-label">${label}</div>
                     </li>
                 `);
             } else {
                 $ul.append(`
                     <li>
                         <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
-                        <div class="label-list__text">${label}</div>
+                        <div class="label-list__text js-label">${label}</div>
                     </li>
                 `);
             }
@@ -1559,7 +1570,25 @@ function setupLabelTrashButton() {
         $(`.js-label-tab[data-type="${currentTab}"]`).click();
 
     });
+}
 
+function setupLabelText() {
+
+    $('.js-label-tab-content').on('click', '.js-label', e => {
+
+        const
+            $this = $(e.currentTarget),
+            text = $this.text(),
+            type  = $this.parents('[data-type]').data('type');
+
+        if (type === 'span') {
+            _createSpanAnnotation({ text });
+
+        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
+            _createRelAnnotation({ type, text });
+        }
+
+    });
 }
 
 function getLabelListData() {
