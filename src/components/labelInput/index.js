@@ -1,6 +1,11 @@
 /**
  * UI parts - Input Label.
  */
+ import toml from 'toml';
+
+import { tomlString } from '../../utils';
+import packageJson from '../../../package.json';
+
 
  let $inputLabel;
  window.addEventListener('DOMContentLoaded', () => {
@@ -44,6 +49,8 @@ export function setup({
     setupLabelText();
 
     seupTabClick();
+
+    setupImportExportLink();
 }
 
 let currentTab = 'span';
@@ -54,7 +61,9 @@ function seupTabClick() {
 
         const type = $(e.currentTarget).data('type');
         console.log(type);
-        const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
+        // const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
+        const labelObject = getLabelListData()[type] || { labels : [] };
+        const labels = ['&nbsp;', ...(labelObject.labels)];
 
         currentTab = type;
 
@@ -108,9 +117,9 @@ function setupLabelAddButton() {
         console.log(text, type);
 
         let d = getLabelListData();
-        let labels = d[type] || [];
-        labels.push(text);
-        d[type] = labels;
+        let labelObject = d[type] || { labels : [] };
+        labelObject.labels.push(text);
+        d[type] = labelObject;
         saveLabelListData(d);
 
         // Re-render.
@@ -128,9 +137,9 @@ function setupLabelTrashButton() {
             type  = $this.parents('[data-type]').data('type');
 
         let d = getLabelListData();
-        let labels = d[type];
-        labels = labels.slice(0, idx).concat(labels.slice(idx+1, labels.length));
-        d[type] = labels;
+        let labelObject = d[type] || { labels : [] };
+        labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx+1, labelObject.labels.length));
+        d[type] = labelObject;
         saveLabelListData(d);
 
         // Re-render.
@@ -166,19 +175,65 @@ function saveLabelListData(data) {
     localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data));
 }
 
+function setupImportExportLink() {
+
+    $('.js-export-label').on('click', () => {
+
+        let data = getLabelListData();
+        data.version = packageJson.version;
+        const toml = tomlString(data);
+        console.log(toml);
+
+        let blob = new Blob([toml]);
+        let blobURL = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        document.body.appendChild(a); // for firefox working correctly.
+        a.download = 'labels.conf';
+        a.href = blobURL;
+        a.click();
+        a.parentNode.removeChild(a);
+
+    });
+
+    $('.js-import-label').on('click', () => {
+        $('.js-import-file').val(null).click();
+    });
+    $('.js-import-file').on('change', ev => {
+
+        console.log('change', ev.target.files);
+
+        if (ev.target.files.length === 0) {
+            return;
+        }
+
+        const file = ev.target.files[0];
+
+        if (!window.confirm('Are you sure to load labels?')) {
+            return;
+        }
+
+        let fileReader = new FileReader();
+        fileReader.onload = event => {
+
+            const tomlString = event.target.result;
+            try {
+                const labelData = toml.parse(tomlString);
+                saveLabelListData(labelData);
+                // Re-render.
+                $(`.js-label-tab[data-type="${currentTab}"]`).click();
+            } catch (e) {
+                console.log('ERROR:', e);
+                console.log('TOML:\n', tomlString);
+                alert('ERROR: cannot load the label file.')
+                return;
+            }
+
+        }
+        fileReader.readAsText(file);
 
 
-
-
-
-
-
-
-
-
-
-
-
+    });
+}
 
 
 export function enable({ uuid, text, disable=false, autoFocus=false, blurListener=null }) {
