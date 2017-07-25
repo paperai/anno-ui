@@ -14,6 +14,7 @@ input:-webkit-autofill:active {
 .u-ml-15 {margin-left: 15px;}
 .u-disp-iblock {display: inline-block;}
 .no-visible {visibility: hidden;}
+.no-action {pointer-events: none;}
 
 /**
  * Viewer size.
@@ -69,20 +70,41 @@ input:-webkit-autofill:active {
 }
 
 /**
- * Modal dialog for Datalist.
+ * Label list.
  */
-.modal-datalist {}
-.modal-datalist .list-group-item {
-    position: relative;
-    padding-right: 38px;
+.label-list {}
+.label-list li {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid #eee;
 }
-.modal-datalist .form-control {}
-.modal-datalist .glyphicon-remove {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    margin-top: -7px;
+.label-list li:last-child {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 0 solid rgba(0,0,0,0);
 }
-.modal-datalist .list-group-item:last-child .glyphicon-remove {
-    display: none;
+.label-list__btn {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 1.5 ease-in-out;
+    border-radius: 3px;
+    background-color: white;
+    margin-right: 10px;
+    flex: 0 0 30px;
+}
+.label-list__btn:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.label-list__text {
+    flex-grow: 1;
+    cursor: pointer;
+}
+.label-list__input {
+    flex-grow: 1;
+    padding: 2px 5px;
 }
