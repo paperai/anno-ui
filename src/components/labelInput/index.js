@@ -1,11 +1,12 @@
 /**
  * UI parts - Input Label.
  */
- import toml from 'toml';
-
+import toml from 'toml';
 import { tomlString } from '../../utils';
 import packageJson from '../../../package.json';
 
+// LocalStorage key to save label data.
+const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
  let $inputLabel;
  window.addEventListener('DOMContentLoaded', () => {
@@ -42,26 +43,31 @@ export function setup({
     // Start to listen window events.
     listenWindowEvents();
 
+    // Set add button behavior.
     setupLabelAddButton();
 
+    // Set trash button behavior.
     setupLabelTrashButton();
 
+    // Set the action when a label is clicked.
     setupLabelText();
 
+    // Set tab behavior.
     seupTabClick();
 
+    // Set import/export link behavior.
     setupImportExportLink();
 }
 
+// The tab name active.
 let currentTab = 'span';
 
+// Setup the action when a tab is clicked.
 function seupTabClick() {
 
     $('.js-label-tab').on('click', e => {
 
         const type = $(e.currentTarget).data('type');
-        console.log(type);
-        // const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
         const labelObject = getLabelListData()[type] || { labels : [] };
         const labels = ['&nbsp;', ...(labelObject.labels)];
 
@@ -94,10 +100,9 @@ function seupTabClick() {
         $('.js-label-tab-content').html($ul);
     });
 
+    // Setup the initial tab content.
     $('.js-label-tab[data-type="span"]').click();
 }
-
-const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
 
 function setupLabelAddButton() {
@@ -106,15 +111,14 @@ function setupLabelAddButton() {
 
         const
             $this = $(e.currentTarget),
-            text = $this.parent().find('input').val(),
+            text = $this.parent().find('input').val().trim(),
             type = $this.parents('[data-type]').data('type');
 
         // No action for no input.
         if (!text) {
+            alert('Please input label first.');
             return;
         }
-
-        console.log(text, type);
 
         let d = getLabelListData();
         let labelObject = d[type] || { labels : [] };
@@ -154,7 +158,7 @@ function setupLabelText() {
 
         const
             $this = $(e.currentTarget),
-            text = $this.text(),
+            text = $this.text().trim(),
             type  = $this.parents('[data-type]').data('type');
 
         if (type === 'span') {
@@ -227,11 +231,8 @@ function setupImportExportLink() {
                 alert('ERROR: cannot load the label file.')
                 return;
             }
-
         }
         fileReader.readAsText(file);
-
-
     });
 }
 

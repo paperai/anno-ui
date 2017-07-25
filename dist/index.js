@@ -232,8 +232,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__events__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__events__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__utils__ = __webpack_require__(0);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
@@ -1574,19 +1574,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["enable"] = enable;
 /* harmony export (immutable) */ __webpack_exports__["disable"] = disable;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__package_json__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__package_json__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__package_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__package_json__);
 /**
  * UI parts - Input Label.
  */
- 
 
 
 
 
+// LocalStorage key to save label data.
+const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
  let $inputLabel;
  window.addEventListener('DOMContentLoaded', () => {
@@ -1623,26 +1624,31 @@ function setup({
     // Start to listen window events.
     listenWindowEvents();
 
+    // Set add button behavior.
     setupLabelAddButton();
 
+    // Set trash button behavior.
     setupLabelTrashButton();
 
+    // Set the action when a label is clicked.
     setupLabelText();
 
+    // Set tab behavior.
     seupTabClick();
 
+    // Set import/export link behavior.
     setupImportExportLink();
 }
 
+// The tab name active.
 let currentTab = 'span';
 
+// Setup the action when a tab is clicked.
 function seupTabClick() {
 
     $('.js-label-tab').on('click', e => {
 
         const type = $(e.currentTarget).data('type');
-        console.log(type);
-        // const labels = ['&nbsp;'].concat(getLabelListData()[type] || []);
         const labelObject = getLabelListData()[type] || { labels : [] };
         const labels = ['&nbsp;', ...(labelObject.labels)];
 
@@ -1675,10 +1681,9 @@ function seupTabClick() {
         $('.js-label-tab-content').html($ul);
     });
 
+    // Setup the initial tab content.
     $('.js-label-tab[data-type="span"]').click();
 }
-
-const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
 
 function setupLabelAddButton() {
@@ -1687,15 +1692,14 @@ function setupLabelAddButton() {
 
         const
             $this = $(e.currentTarget),
-            text = $this.parent().find('input').val(),
+            text = $this.parent().find('input').val().trim(),
             type = $this.parents('[data-type]').data('type');
 
         // No action for no input.
         if (!text) {
+            alert('Please input label first.');
             return;
         }
-
-        console.log(text, type);
 
         let d = getLabelListData();
         let labelObject = d[type] || { labels : [] };
@@ -1735,7 +1739,7 @@ function setupLabelText() {
 
         const
             $this = $(e.currentTarget),
-            text = $this.text(),
+            text = $this.text().trim(),
             type  = $this.parents('[data-type]').data('type');
 
         if (type === 'span') {
@@ -1808,11 +1812,8 @@ function setupImportExportLink() {
                 alert('ERROR: cannot load the label file.')
                 return;
             }
-
         }
         fileReader.readAsText(file);
-
-
     });
 }
 
@@ -2033,196 +2034,10 @@ function listenWindowEvents() {
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports) {
-
-module.exports = {
-	"name": "anno-ui",
-	"version": "0.1.0",
-	"description": "",
-	"main": "dist/index.js",
-	"files": [
-		"dist",
-		"README.md"
-	],
-	"scripts": {
-		"build": "webpack",
-		"watch": "webpack --watch",
-		"dev": "cross-env NODE_ENV=development webpack-dev-server"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/paperai/anno-ui.git"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/paperai/anno-ui/issues"
-	},
-	"homepage": "https://github.com/paperai/anno-ui#readme",
-	"devDependencies": {
-		"cross-env": "^5.0.1",
-		"css-loader": "^0.28.4",
-		"style-loader": "^0.18.2",
-		"webpack": "^3.0.0",
-		"webpack-dev-server": "^2.5.0",
-		"webpack-livereload-plugin": "^0.11.0",
-		"toml": "github:yoheiMune/toml-node"
-	},
-	"dependencies": {}
-};
-
-/***/ }),
-/* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * UI parts - Upload Button.
- */
-
-function setup({
-        getCurrentDisplayContentFile,
-    }) {
-    $('.js-btn-upload').off('click').on('click', () => {
-
-        const contentFile = getCurrentDisplayContentFile();
-        if (!contentFile) {
-            return alert('Display a content before upload.');
-        }
-
-        function arrayBufferToBase64( buffer ) {
-            var binary = '';
-            var bytes = new Uint8Array( buffer );
-            var len = bytes.byteLength;
-            for (var i = 0; i < len; i++) {
-                binary += String.fromCharCode( bytes[ i ] );
-            }
-            return window.btoa( binary );
-        }
-
-        const contentBase64 = arrayBufferToBase64(contentFile.content);
-
-
-        const $progressBar = $('.js-upload-progress');
-
-        const url = $('#serverURL').val();
-        if (!url) {
-            return alert('Set server URL.');
-        }
-
-        $('#uploadResult').val("Waiting for response...");
-
-        $.ajax({
-            xhr: function(){
-               var xhr = new window.XMLHttpRequest();
-               //Upload progress
-               xhr.upload.addEventListener("progress", function(evt){
-               if (evt.lengthComputable) {
-                 var percentComplete = evt.loaded / evt.total;
-                 //Do something with upload progress
-                 console.log('uploadProgress:', percentComplete);
-
-                 let percent = Math.floor(percentComplete * 100);
-                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%');
-                 if (percent === 100) {
-                    setTimeout(() => {
-                        $progressBar.addClass('hidden');
-                    }, 2000);
-                 }
-                }
-               }, false);
-               //Download progress
-               xhr.addEventListener("progress", function(evt){
-                 if (evt.lengthComputable) {
-                   var percentComplete = evt.loaded / evt.total;
-                   //Do something with download progress
-                   console.log('downloadProgress:', percentComplete);
-                 }
-               }, false);
-               return xhr;
-            },
-            url : url,
-            method : 'POST',
-            dataType : "text",
-            data : contentBase64
-        }).then(result => {
-            console.log('result:', result);
-            setTimeout(() => {
-                var json = JSON.parse(result);
-                $('#uploadResult').val(json.text);
-                window.addAll(json.anno);
-            }, 500); // wait for progress bar animation.
-        });
-
-        // Show.
-        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
-
-        return false;
-    });
-}
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * Event listeners.
- */
-
-/**
- * Initializer.
- */
-function setup() {
-    $(document).on('keydown', e => {
-
-        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
-            dispatchWindowEvent('manageCtrlKey', 'on');
-        }
-
-    }).on('keyup', e => {
-
-        // Allow any keyboard events for <input/>.
-        if (e.target.tagName.toLowerCase() === 'input') {
-            return;
-        }
-
-        dispatchWindowEvent('manageCtrlKey', 'off');
-
-        if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1);
-        } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2);
-        } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3);
-        } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4);
-        }
-    });
-}
-
-/**
- * Dispatch a custom event to `window` object.
- */
-function dispatchWindowEvent(eventName, data) {
-    var event = document.createEvent('CustomEvent');
-    event.initCustomEvent(eventName, true, true, data);
-    window.dispatchEvent(event);
-}
-
-
-/***/ }),
-/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(21);
-var compiler = __webpack_require__(22);
+var parser = __webpack_require__(18);
+var compiler = __webpack_require__(19);
 
 module.exports = {
   parse: function(input) {
@@ -2233,7 +2048,7 @@ module.exports = {
 
 
 /***/ }),
-/* 21 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -6080,7 +5895,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 22 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6281,6 +6096,192 @@ function compile(nodes) {
 module.exports = {
   compile: compile
 };
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"name": "anno-ui",
+	"version": "0.1.0",
+	"description": "",
+	"main": "dist/index.js",
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "webpack",
+		"watch": "webpack --watch",
+		"dev": "cross-env NODE_ENV=development webpack-dev-server"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/paperai/anno-ui.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/paperai/anno-ui/issues"
+	},
+	"homepage": "https://github.com/paperai/anno-ui#readme",
+	"devDependencies": {
+		"cross-env": "^5.0.1",
+		"css-loader": "^0.28.4",
+		"style-loader": "^0.18.2",
+		"webpack": "^3.0.0",
+		"webpack-dev-server": "^2.5.0",
+		"webpack-livereload-plugin": "^0.11.0",
+		"toml": "github:yoheiMune/toml-node"
+	},
+	"dependencies": {}
+};
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * UI parts - Upload Button.
+ */
+
+function setup({
+        getCurrentDisplayContentFile,
+    }) {
+    $('.js-btn-upload').off('click').on('click', () => {
+
+        const contentFile = getCurrentDisplayContentFile();
+        if (!contentFile) {
+            return alert('Display a content before upload.');
+        }
+
+        function arrayBufferToBase64( buffer ) {
+            var binary = '';
+            var bytes = new Uint8Array( buffer );
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode( bytes[ i ] );
+            }
+            return window.btoa( binary );
+        }
+
+        const contentBase64 = arrayBufferToBase64(contentFile.content);
+
+
+        const $progressBar = $('.js-upload-progress');
+
+        const url = $('#serverURL').val();
+        if (!url) {
+            return alert('Set server URL.');
+        }
+
+        $('#uploadResult').val("Waiting for response...");
+
+        $.ajax({
+            xhr: function(){
+               var xhr = new window.XMLHttpRequest();
+               //Upload progress
+               xhr.upload.addEventListener("progress", function(evt){
+               if (evt.lengthComputable) {
+                 var percentComplete = evt.loaded / evt.total;
+                 //Do something with upload progress
+                 console.log('uploadProgress:', percentComplete);
+
+                 let percent = Math.floor(percentComplete * 100);
+                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%');
+                 if (percent === 100) {
+                    setTimeout(() => {
+                        $progressBar.addClass('hidden');
+                    }, 2000);
+                 }
+                }
+               }, false);
+               //Download progress
+               xhr.addEventListener("progress", function(evt){
+                 if (evt.lengthComputable) {
+                   var percentComplete = evt.loaded / evt.total;
+                   //Do something with download progress
+                   console.log('downloadProgress:', percentComplete);
+                 }
+               }, false);
+               return xhr;
+            },
+            url : url,
+            method : 'POST',
+            dataType : "text",
+            data : contentBase64
+        }).then(result => {
+            console.log('result:', result);
+            setTimeout(() => {
+                var json = JSON.parse(result);
+                $('#uploadResult').val(json.text);
+                window.addAll(json.anno);
+            }, 500); // wait for progress bar animation.
+        });
+
+        // Show.
+        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+
+        return false;
+    });
+}
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * Event listeners.
+ */
+
+/**
+ * Initializer.
+ */
+function setup() {
+    $(document).on('keydown', e => {
+
+        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
+            dispatchWindowEvent('manageCtrlKey', 'on');
+        }
+
+    }).on('keyup', e => {
+
+        // Allow any keyboard events for <input/>.
+        if (e.target.tagName.toLowerCase() === 'input') {
+            return;
+        }
+
+        dispatchWindowEvent('manageCtrlKey', 'off');
+
+        if (e.keyCode === 49) {         // Digit "1"
+            dispatchWindowEvent('digitKeyPressed', 1);
+        } else if (e.keyCode === 50) {  // Digit "2"
+            dispatchWindowEvent('digitKeyPressed', 2);
+        } else if (e.keyCode === 51) {  // Digit "3"
+            dispatchWindowEvent('digitKeyPressed', 3);
+        } else if (e.keyCode === 52) {  // Digit "4"
+            dispatchWindowEvent('digitKeyPressed', 4);
+        }
+    });
+}
+
+/**
+ * Dispatch a custom event to `window` object.
+ */
+function dispatchWindowEvent(eventName, data) {
+    var event = document.createEvent('CustomEvent');
+    event.initCustomEvent(eventName, true, true, data);
+    window.dispatchEvent(event);
+}
 
 
 /***/ })
