@@ -70,30 +70,6 @@ input:-webkit-autofill:active {
 }
 
 /**
- * Modal dialog for Datalist.
-
-    今後は不要かなー.
- */
-.modal-datalist {}
-.modal-datalist .list-group-item {
-    position: relative;
-    padding-right: 38px;
-}
-.modal-datalist .form-control {}
-.modal-datalist .glyphicon-remove {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    margin-top: -7px;
-}
-.modal-datalist .list-group-item:last-child .glyphicon-remove {
-    display: none;
-}
-
-
-/** TODO anno-uiへお引越し. */
-
-/**
  * Label list.
  */
 .label-list {}
@@ -132,15 +108,3 @@ input:-webkit-autofill:active {
     flex-grow: 1;
     padding: 2px 5px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
