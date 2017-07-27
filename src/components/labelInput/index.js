@@ -68,28 +68,29 @@ function seupTabClick() {
     $('.js-label-tab').on('click', e => {
 
         const type = $(e.currentTarget).data('type');
-        const labelObject = getLabelListData()[type] || { labels : [] };
-        const labels = ['&nbsp;', ...(labelObject.labels)];
+        let d = getLabelListData();
+        const labelObject = d[type] || {};
+        let labels;
+        if (labelObject.labels === undefined) {
+            labels = ['&lt;Empty Label&gt;'];
+        } else {
+            labels = labelObject.labels;
+        }
+
+        labelObject.labels = labels;
+        d[type] = labelObject;
+        saveLabelListData(d);
 
         currentTab = type;
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`);
         labels.forEach((label, index) => {
-            if (index === 0) {
-                $ul.append(`
-                    <li>
-                        <div class="label-list__btn no-action"></div>
-                        <div class="label-list__text js-label">${label}</div>
-                    </li>
-                `);
-            } else {
-                $ul.append(`
-                    <li>
-                        <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
-                        <div class="label-list__text js-label">${label}</div>
-                    </li>
-                `);
-            }
+            $ul.append(`
+                <li>
+                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
+                    <div class="label-list__text js-label">${label}</div>
+                </li>
+            `);
         });
         $ul.append(`
             <li>
@@ -109,7 +110,7 @@ function setupLabelAddButton() {
 
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
 
-        const
+        let
             $this = $(e.currentTarget),
             text = $this.parent().find('input').val().trim(),
             type = $this.parents('[data-type]').data('type');
@@ -137,8 +138,10 @@ function setupLabelTrashButton() {
 
         const
             $this = $(e.currentTarget),
-            idx   = $this.data('index') - 1,
+            idx   = $this.data('index'),
             type  = $this.parents('[data-type]').data('type');
+
+        console.log('trash:', idx, type);
 
         let d = getLabelListData();
         let labelObject = d[type] || { labels : [] };
@@ -156,10 +159,14 @@ function setupLabelText() {
 
     $('.js-label-tab-content').on('click', '.js-label', e => {
 
-        const
+        let
             $this = $(e.currentTarget),
             text = $this.text().trim(),
             type  = $this.parents('[data-type]').data('type');
+
+        if (text === '<Empty Label>') {
+            text = '';
+        }
 
         if (type === 'span') {
             _createSpanAnnotation({ text });
@@ -184,10 +191,24 @@ function setupImportExportLink() {
     $('.js-export-label').on('click', () => {
 
         let data = getLabelListData();
+
+        // Remove : "&lt;Empty Label&gt;"
+        Object.keys(data).forEach(key => {
+            let labelObject = data[key];
+            let labels = (labelObject.labels || []).filter(label => {
+                return label !== '&lt;Empty Label&gt;';
+            });
+            labelObject.labels = labels;
+        });
+
+        // Set version.
         data.version = packageJson.version;
+
+        // Conver to TOML style.
         const toml = tomlString(data);
         console.log(toml);
 
+        // Download.
         let blob = new Blob([toml]);
         let blobURL = window.URL.createObjectURL(blob);
         let a = document.createElement('a');
