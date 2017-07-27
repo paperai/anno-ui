@@ -69,9 +69,9 @@ function seupTabClick() {
 
         const type = $(e.currentTarget).data('type');
         let d = getLabelListData();
-        const labelObject = d[type] || { labels : [] };
+        const labelObject = d[type] || {};
         let labels;
-        if (labelObject.labels.length === 0) {
+        if (labelObject.labels === undefined) {
             labels = ['&lt;Empty Label&gt;'];
         } else {
             labels = labelObject.labels;
@@ -138,8 +138,10 @@ function setupLabelTrashButton() {
 
         const
             $this = $(e.currentTarget),
-            idx   = $this.data('index') - 1,
+            idx   = $this.data('index'),
             type  = $this.parents('[data-type]').data('type');
+
+        console.log('trash:', idx, type);
 
         let d = getLabelListData();
         let labelObject = d[type] || { labels : [] };
@@ -189,10 +191,24 @@ function setupImportExportLink() {
     $('.js-export-label').on('click', () => {
 
         let data = getLabelListData();
+
+        // Remove : "&lt;Empty Label&gt;"
+        Object.keys(data).forEach(key => {
+            let labelObject = data[key];
+            let labels = (labelObject.labels || []).filter(label => {
+                return label !== '&lt;Empty Label&gt;';
+            });
+            labelObject.labels = labels;
+        });
+
+        // Set version.
         data.version = packageJson.version;
+
+        // Conver to TOML style.
         const toml = tomlString(data);
         console.log(toml);
 
+        // Download.
         let blob = new Blob([toml]);
         let blobURL = window.URL.createObjectURL(blob);
         let a = document.createElement('a');
