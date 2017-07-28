@@ -100,12 +100,14 @@ input:-webkit-autofill:active {
     margin-right: 10px;
     flex: 0 0 30px;
 }
-.label-list__btn:hover {
+.label-list__btn:hover,
+.label-list__text:hover {
     box-shadow: 0 1px 3px rgba(0,0,0,.3);
 }
 .label-list__text {
     flex-grow: 1;
     cursor: pointer;
+    padding: 2px;
 }
 .label-list__input {
     flex-grow: 1;
