@@ -87,14 +87,14 @@ function seupTabClick() {
         labels.forEach((label, index) => {
             $ul.append(`
                 <li>
-                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o"></i></div>
+                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
                     <div class="label-list__text js-label">${label}</div>
                 </li>
             `);
         });
         $ul.append(`
             <li>
-                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus"></i></div>
+                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
                 <input type="text" class="label-list__input">
             </li>
         `);

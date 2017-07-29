@@ -88,9 +88,9 @@ input:-webkit-autofill:active {
     border-bottom: 0 solid rgba(0,0,0,0);
 }
 .label-list__btn {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
+    width: 40px;
+    height: 40px;
+    line-height: 50px;
     font-size: 16px;
     text-align: center;
     cursor: pointer;
@@ -108,6 +108,7 @@ input:-webkit-autofill:active {
     flex-grow: 1;
     cursor: pointer;
     padding: 2px;
+    font-size: 20px;
 }
 .label-list__input {
     flex-grow: 1;
