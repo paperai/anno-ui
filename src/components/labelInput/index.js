@@ -243,11 +243,11 @@ function setupImportExportLink() {
                 const labelData = toml.parse(tomlString);
 
                 // whitespace to '&nbsp;'
-                Object.keys(data).forEach(key => {
-                    let labelObject = data[key];
+                Object.keys(labelData).forEach(key => {
+                    let labelObject = labelData[key];
                     let labels = (labelObject.labels || []).map(label => {
-                        if (label === ' ') {
-                            label = 'nbsp;';
+                        if (label === '') {
+                            label = '&nbsp;';
                         }
                         return label;
                     });
