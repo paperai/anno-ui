@@ -72,7 +72,7 @@ function seupTabClick() {
         const labelObject = d[type] || {};
         let labels;
         if (labelObject.labels === undefined) {
-            labels = ['&lt;Empty Label&gt;'];
+            labels = ['&nbsp;'];
         } else {
             labels = labelObject.labels;
         }
@@ -115,10 +115,8 @@ function setupLabelAddButton() {
             text = $this.parent().find('input').val().trim(),
             type = $this.parents('[data-type]').data('type');
 
-        // No action for no input.
         if (!text) {
-            alert('Please input label first.');
-            return;
+            text = '&nbsp;';
         }
 
         let d = getLabelListData();
@@ -161,7 +159,7 @@ function setupLabelText() {
 
         let
             $this = $(e.currentTarget),
-            text = $this.text().trim(),
+            text = $this.text().trim().replace(/&nbsp;/g, ''),
             type  = $this.parents('[data-type]').data('type');
 
         if (text === '<Empty Label>') {
@@ -192,17 +190,17 @@ function setupImportExportLink() {
 
         let data = getLabelListData();
 
-        // Remove : "&lt;Empty Label&gt;"
+        // Transform '&nbsp;' to white space.
         Object.keys(data).forEach(key => {
             let labelObject = data[key];
-            let labels = (labelObject.labels || []).filter(label => {
-                return label !== '&lt;Empty Label&gt;';
+            let labels = (labelObject.labels || []).map(label => {
+                if (label === '&nbsp;') {
+                    label = '';
+                }
+                return label;
             });
             labelObject.labels = labels;
         });
-
-        // Set version.
-        data.version = packageJson.version;
 
         // Conver to TOML style.
         const toml = tomlString(data);
@@ -243,6 +241,19 @@ function setupImportExportLink() {
             const tomlString = event.target.result;
             try {
                 const labelData = toml.parse(tomlString);
+
+                // whitespace to '&nbsp;'
+                Object.keys(data).forEach(key => {
+                    let labelObject = data[key];
+                    let labels = (labelObject.labels || []).map(label => {
+                        if (label === ' ') {
+                            label = 'nbsp;';
+                        }
+                        return label;
+                    });
+                    labelObject.labels = labels;
+                });
+
                 saveLabelListData(labelData);
                 // Re-render.
                 $(`.js-label-tab[data-type="${currentTab}"]`).click();
