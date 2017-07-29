@@ -3,7 +3,7 @@
  */
 import toml from 'toml';
 import { tomlString } from '../../utils';
-import packageJson from '../../../package.json';
+// import packageJson from '../../../package.json';
 
 // LocalStorage key to save label data.
 const LSKEY_LABEL_LIST = 'pdfanno-label-list';
@@ -211,7 +211,7 @@ function setupImportExportLink() {
         let blobURL = window.URL.createObjectURL(blob);
         let a = document.createElement('a');
         document.body.appendChild(a); // for firefox working correctly.
-        a.download = 'labels.conf';
+        a.download = 'pdfanno.conf';
         a.href = blobURL;
         a.click();
         a.parentNode.removeChild(a);
