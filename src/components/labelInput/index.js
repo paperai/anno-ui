@@ -1,6 +1,8 @@
 /**
  * UI parts - Input Label.
  */
+require("!style-loader!css-loader!./index.css");
+
 import toml from 'toml';
 import { tomlString } from '../../utils';
 // import packageJson from '../../../package.json';
