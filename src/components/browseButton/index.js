@@ -1,6 +1,7 @@
 /**
  * UI parts - Browse button.
  */
+import * as alertDialog from '../../uis/alertDialog';
 
 /**
  * Setup the color pickers.
@@ -71,7 +72,8 @@ export function setup({
 
         let error = isValidDirectorySelect(files);
         if (error) {
-            return alert(error);
+            alertDialog.show({ message : error });
+            return;
         }
 
         loadFiles(files).then(() => {
@@ -103,13 +105,13 @@ function isValidDirectorySelect(files) {
 
     // Error, if no contents exits.
     if (!files || files.length === 0) {
-        return 'Not files specified';
+        return 'No files specified.';
     }
 
     // Error, if the user select a file - not a directory.
     let relativePath = files[0].webkitRelativePath;
     if (!relativePath) {
-        return 'Please select a directory, NOT a file';
+        return 'Please select a directory, NOT a file.';
     }
 
     // OK.

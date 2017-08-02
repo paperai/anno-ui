@@ -7,6 +7,8 @@ import toml from 'toml';
 import { tomlString } from '../../utils';
 // import packageJson from '../../../package.json';
 
+import * as alertDialog from '../../uis/alertDialog';
+
 // LocalStorage key to save label data.
 const LSKEY_LABEL_LIST = 'pdfanno-label-list';
 
@@ -262,7 +264,7 @@ function setupImportExportLink() {
             } catch (e) {
                 console.log('ERROR:', e);
                 console.log('TOML:\n', tomlString);
-                alert('ERROR: cannot load the label file.')
+                alertDialog.show({ message : 'ERROR: cannot load the label file.' });
                 return;
             }
         }
