@@ -1,6 +1,7 @@
 /**
  * UI parts - Upload Button.
  */
+import * as alertDialog from '../../uis/alertDialog';
 
 export function setup({
         getCurrentDisplayContentFile,
@@ -9,7 +10,7 @@ export function setup({
 
         const contentFile = getCurrentDisplayContentFile();
         if (!contentFile) {
-            return alert('Display a content before upload.');
+            return alertDialog.show({ message : 'Display a content before upload.' });
         }
 
         function arrayBufferToBase64( buffer ) {
@@ -29,7 +30,7 @@ export function setup({
 
         const url = $('#serverURL').val();
         if (!url) {
-            return alert('Set server URL.');
+            return alertDialog.show({ message : 'Set server URL.' });
         }
 
         $('#uploadResult').val("Waiting for response...");
