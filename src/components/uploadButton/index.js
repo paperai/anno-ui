@@ -27,10 +27,7 @@ export function setup({
 
         const $progressBar = $('.js-upload-progress');
 
-        const url = $('#serverURL').val();
-        if (!url) {
-            return alertDialog.show({ message : 'Set server URL.' });
-        }
+        const url = window.API_ROOT + '/api/pdf_upload';
 
         $('#uploadResult').val("Waiting for response...");
 
@@ -77,12 +74,14 @@ export function setup({
         }).then(result => {
             console.log('result:', result);
 
-            if (result.status === 'NG') {
+            if (result.status === 'failure') {
                 alert('ERROR!!')
+                $('#uploadResult').val(result.err.stderr);
+                return;
             }
 
             setTimeout(() => {
-                $('#uploadResult').val(result.result || result.err.stderr);
+                $('#uploadResult').val(result.text);
             }, 500); // wait for progress bar animation.
         });
 
