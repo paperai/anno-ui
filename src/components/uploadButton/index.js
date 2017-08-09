@@ -13,27 +13,29 @@ export function setup({
             return alertDialog.show({ message : 'Display a content before upload.' });
         }
 
-        function arrayBufferToBase64( buffer ) {
-            var binary = '';
-            var bytes = new Uint8Array( buffer );
+        function arrayBufferToBase64(buffer) {
+            var s = '';
+            var bytes = new Uint8Array(buffer);
             var len = bytes.byteLength;
             for (var i = 0; i < len; i++) {
-                binary += String.fromCharCode( bytes[ i ] );
+                s += String.fromCharCode(bytes[i]);
             }
-            return window.btoa( binary );
+            return window.btoa(s);
         }
 
         const contentBase64 = arrayBufferToBase64(contentFile.content);
 
-
         const $progressBar = $('.js-upload-progress');
 
-        const url = $('#serverURL').val();
-        if (!url) {
-            return alertDialog.show({ message : 'Set server URL.' });
-        }
+        const url = window.API_ROOT + '/api/pdf_upload';
 
         $('#uploadResult').val("Waiting for response...");
+
+
+        let data = {
+            filename : contentFile.name,
+            pdf      : contentBase64
+        };
 
         $.ajax({
             xhr: function(){
@@ -64,16 +66,22 @@ export function setup({
                }, false);
                return xhr;
             },
-            url : url,
-            method : 'POST',
-            dataType : "text",
-            data : contentBase64
+            url      : url,
+            method   : 'POST',
+            dataType : 'json',
+            data
+
         }).then(result => {
             console.log('result:', result);
+
+            if (result.status === 'failure') {
+                alert('ERROR!!')
+                $('#uploadResult').val(result.err.stderr);
+                return;
+            }
+
             setTimeout(() => {
-                var json = JSON.parse(result);
-                $('#uploadResult').val(json.text);
-                window.addAll(json.anno);
+                $('#uploadResult').val(result.text);
             }, 500); // wait for progress bar animation.
         });
 
@@ -83,3 +91,4 @@ export function setup({
         return false;
     });
 }
+
