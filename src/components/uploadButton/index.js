@@ -72,7 +72,6 @@ export function setup({
             data
 
         }).then(result => {
-            console.log('result:', result);
 
             if (result.status === 'failure') {
                 alert('ERROR!!')
