@@ -29,7 +29,7 @@ export function setup({
 
         const url = window.API_ROOT + '/api/pdf_upload';
 
-        $('#uploadResult').val("Waiting for response...");
+        setResult("Waiting for response...");
 
 
         let data = {
@@ -75,12 +75,12 @@ export function setup({
 
             if (result.status === 'failure') {
                 alert('ERROR!!')
-                $('#uploadResult').val(result.err.stderr);
+                setResult(result.err.stderr);
                 return;
             }
 
             setTimeout(() => {
-                $('#uploadResult').val(result.text);
+                setResult(result.text);
             }, 500); // wait for progress bar animation.
         });
 
@@ -91,3 +91,9 @@ export function setup({
     });
 }
 
+/**
+ * Set the analyzing result.
+ */
+export function setResult(text) {
+    $('#uploadResult').val(text);
+}
