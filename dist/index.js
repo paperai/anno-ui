@@ -6284,6 +6284,7 @@ module.exports = {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /**
  * UI parts - Upload Button.
@@ -6316,7 +6317,7 @@ function setup({
 
         const url = window.API_ROOT + '/api/pdf_upload';
 
-        $('#uploadResult').val("Waiting for response...");
+        setResult("Waiting for response...");
 
 
         let data = {
@@ -6362,12 +6363,12 @@ function setup({
 
             if (result.status === 'failure') {
                 alert('ERROR!!')
-                $('#uploadResult').val(result.err.stderr);
+                setResult(result.err.stderr);
                 return;
             }
 
             setTimeout(() => {
-                $('#uploadResult').val(result.text);
+                setResult(result.text);
             }, 500); // wait for progress bar animation.
         });
 
@@ -6378,6 +6379,12 @@ function setup({
     });
 }
 
+/**
+ * Set the analyzing result.
+ */
+function setResult(text) {
+    $('#uploadResult').val(text);
+}
 
 
 /***/ }),
