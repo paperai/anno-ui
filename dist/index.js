@@ -1511,8 +1511,8 @@ function setup({
         $('#dropdownAnnoList .js-count').text(getAnnotations().length);
     }
     $(window)
-        .off('annotationrendered annotationUpdated', watchPrimaryAnno)
-        .on('annotationrendered annotationUpdated', watchPrimaryAnno);
+        .off('annotationrendered annotationUpdated annotationDeleted', watchPrimaryAnno)
+        .on('annotationrendered annotationUpdated annotationDeleted', watchPrimaryAnno);
 }
 
 
