@@ -1,4 +1,4 @@
-import * as alertDialog from './alertDialog';
+import * as alertDialog from './alertDialog'
 
 export {
     alertDialog

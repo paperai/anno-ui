@@ -1,70 +1,67 @@
 /**
  * UI parts - Upload Button.
  */
-import * as alertDialog from '../../uis/alertDialog';
+import * as alertDialog from '../../uis/alertDialog'
 
-export function setup({
-        getCurrentDisplayContentFile,
+export function setup ({
+        getCurrentDisplayContentFile
     }) {
     $('.js-btn-upload').off('click').on('click', () => {
-
-        const contentFile = getCurrentDisplayContentFile();
+        const contentFile = getCurrentDisplayContentFile()
         if (!contentFile) {
-            return alertDialog.show({ message : 'Display a content before upload.' });
+            return alertDialog.show({ message : 'Display a content before upload.' })
         }
 
-        function arrayBufferToBase64(buffer) {
-            var s = '';
-            var bytes = new Uint8Array(buffer);
-            var len = bytes.byteLength;
+        function arrayBufferToBase64 (buffer) {
+            var s = ''
+            var bytes = new Uint8Array(buffer)
+            var len = bytes.byteLength
             for (var i = 0; i < len; i++) {
-                s += String.fromCharCode(bytes[i]);
+                s += String.fromCharCode(bytes[i])
             }
-            return window.btoa(s);
+            return window.btoa(s)
         }
 
-        const contentBase64 = arrayBufferToBase64(contentFile.content);
+        const contentBase64 = arrayBufferToBase64(contentFile.content)
 
-        const $progressBar = $('.js-upload-progress');
+        const $progressBar = $('.js-upload-progress')
 
-        const url = window.API_ROOT + '/api/pdf_upload';
+        const url = window.API_ROOT + '/api/pdf_upload'
 
-        setResult("Waiting for response...");
-
+        setResult('Waiting for response...')
 
         let data = {
             filename : contentFile.name,
             pdf      : contentBase64
-        };
+        }
 
         $.ajax({
-            xhr: function(){
-               var xhr = new window.XMLHttpRequest();
-               //Upload progress
-               xhr.upload.addEventListener("progress", function(evt){
-               if (evt.lengthComputable) {
-                 var percentComplete = evt.loaded / evt.total;
-                 //Do something with upload progress
-                 console.log('uploadProgress:', percentComplete);
-
-                 let percent = Math.floor(percentComplete * 100);
-                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%');
-                 if (percent === 100) {
-                    setTimeout(() => {
-                        $progressBar.addClass('hidden');
-                    }, 2000);
-                 }
-                }
-               }, false);
-               //Download progress
-               xhr.addEventListener("progress", function(evt){
-                 if (evt.lengthComputable) {
-                   var percentComplete = evt.loaded / evt.total;
-                   //Do something with download progress
-                   console.log('downloadProgress:', percentComplete);
-                 }
-               }, false);
-               return xhr;
+            xhr : function () {
+                var xhr = new window.XMLHttpRequest()
+                // Upload progress
+                xhr.upload.addEventListener('progress', function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total
+                        // Do something with upload progress
+                        console.log('uploadProgress:', percentComplete)
+                        let percent = Math.floor(percentComplete * 100)
+                        $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
+                        if (percent === 100) {
+                            setTimeout(() => {
+                                $progressBar.addClass('hidden')
+                            }, 2000)
+                        }
+                    }
+                }, false)
+                // Download progress
+                xhr.addEventListener('progress', function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total
+                        // Do something with download progress
+                        console.log('downloadProgress:', percentComplete)
+                    }
+                }, false)
+                return xhr
             },
             url      : url,
             method   : 'POST',
@@ -72,28 +69,27 @@ export function setup({
             data
 
         }).then(result => {
-
             if (result.status === 'failure') {
                 alert('ERROR!!')
-                setResult(result.err.stderr);
-                return;
+                setResult(result.err.stderr)
+                return
             }
 
             setTimeout(() => {
-                setResult(result.text);
-            }, 500); // wait for progress bar animation.
-        });
+                setResult(result.text)
+            }, 500) // wait for progress bar animation.
+        })
 
         // Show.
-        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
 
-        return false;
-    });
+        return false
+    })
 }
 
 /**
  * Set the analyzing result.
  */
-export function setResult(text) {
-    $('#uploadResult').val(text);
+export function setResult (text) {
+    $('#uploadResult').val(text)
 }
