@@ -5,34 +5,30 @@
 /**
  * Setup a click action of the Reference Annotation Dropdown.
  */
-export function setup({
+export function setup ({
     displayReferenceAnnotations
 }) {
-
     $('#dropdownAnnoReference').on('click', 'a', e => {
+        let $this = $(e.currentTarget)
 
-        let $this = $(e.currentTarget);
+        $this.find('.fa-check').toggleClass('no-visible')
 
-        $this.find('.fa-check').toggleClass('no-visible');
-
-        let annoNames = [];
+        let annoNames = []
         $('#dropdownAnnoReference a').each((index, element) => {
-            let $elm = $(element);
+            let $elm = $(element)
             if ($elm.find('.fa-check').hasClass('no-visible') === false) {
-                annoNames.push($elm.find('.js-annoname').text());
+                annoNames.push($elm.find('.js-annoname').text())
             }
-        });
+        })
         if (annoNames.length > 0) {
-            $('#dropdownAnnoReference .js-text').text(annoNames.join(','));
+            $('#dropdownAnnoReference .js-text').text(annoNames.join(','))
         } else {
-            $('#dropdownAnnoReference .js-text').text('Reference Files');
+            $('#dropdownAnnoReference .js-text').text('Reference Files')
         }
 
         // Display reference annotations.
-        displayReferenceAnnotations(annoNames);
+        displayReferenceAnnotations(annoNames)
 
-        return false;
-
-    });
-
+        return false
+    })
 }

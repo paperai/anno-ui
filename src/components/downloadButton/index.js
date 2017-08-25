@@ -5,56 +5,49 @@
 /**
  * Setup the behavior of a Download Button.
  */
-export function setup({
-        getAnnotationTOMLString,
-        getCurrentContentName,
-        unlistenWindowLeaveEvent
-    }) {
-
+export function setup ({
+    getAnnotationTOMLString,
+    getCurrentContentName,
+    unlistenWindowLeaveEvent
+}) {
     $('#downloadButton').off('click').on('click', e => {
-
-        $(e.currentTarget).blur();
+        $(e.currentTarget).blur()
 
         getAnnotationTOMLString().then(annotations => {
-            let blob = new Blob([annotations]);
-            let blobURL = window.URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            document.body.appendChild(a); // for firefox working correctly.
-            a.download = _getDownloadFileName(getCurrentContentName);
-            a.href = blobURL;
-            a.click();
-            a.parentNode.removeChild(a);
-        });
+            let blob = new Blob([annotations])
+            let blobURL = window.URL.createObjectURL(blob)
+            let a = document.createElement('a')
+            document.body.appendChild(a) // for firefox working correctly.
+            a.download = _getDownloadFileName(getCurrentContentName)
+            a.href = blobURL
+            a.click()
+            a.parentNode.removeChild(a)
+        })
 
-        unlistenWindowLeaveEvent();
+        unlistenWindowLeaveEvent()
 
-        return false;
-    });
-
+        return false
+    })
 }
-
 
 /**
  * Get the file name for download.
  */
-function _getDownloadFileName(getCurrentContentName) {
-
+function _getDownloadFileName (getCurrentContentName) {
     // The name of Primary Annotation.
-    let primaryAnnotationName;
+    let primaryAnnotationName
     $('#dropdownAnnoPrimary a').each((index, element) => {
-        let $elm = $(element);
+        let $elm = $(element)
         if ($elm.find('.fa-check').hasClass('no-visible') === false) {
-            primaryAnnotationName = $elm.find('.js-annoname').text();
+            primaryAnnotationName = $elm.find('.js-annoname').text()
         }
-    });
+    })
     if (primaryAnnotationName) {
-        console.log('AAA:', primaryAnnotationName);
-        return primaryAnnotationName;
+        return primaryAnnotationName
     }
 
     // The name of Content.
-    let pdfFileName = getCurrentContentName();
-    let annoName = pdfFileName.split('.')[0] + '.anno';
-    console.log('BBB:', annoName);
-    return annoName;
+    let pdfFileName = getCurrentContentName()
+    let annoName = pdfFileName.split('.')[0] + '.anno'
+    return annoName
 }
