@@ -1,11 +1,10 @@
 /**
  * UI - Alert dialog.
  */
-require("!style-loader!css-loader!./index.css");
+require('!style-loader!css-loader!./index.css')
 
-export function create({ type='alert', message='' }) {
-
-    const id = 'modal-' + (new Date().getTime());
+export function create ({ type = 'alert', message = '' }) {
+    const id = 'modal-' + (new Date().getTime())
 
     const styleClass = (type === 'alert' ? 'alertdialog-danger' : '')
 
@@ -25,14 +24,14 @@ export function create({ type='alert', message='' }) {
             </div>
           </div>
         </div>
-    `;
-    $(document.body).append(snipet);
+    `
+    $(document.body).append(snipet)
 
     return $('#' + id)
 }
 
-export function show() {
-    const $modal = create(...arguments);
-    $modal.modal('show');
-    return $modal;
+export function show () {
+    const $modal = create(...arguments)
+    $modal.modal('show')
+    return $modal
 }

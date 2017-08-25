@@ -48,10 +48,13 @@ function _getDownloadFileName(getCurrentContentName) {
         }
     });
     if (primaryAnnotationName) {
+        console.log('AAA:', primaryAnnotationName);
         return primaryAnnotationName;
     }
 
     // The name of Content.
     let pdfFileName = getCurrentContentName();
-    return pdfFileName.split('.')[0] + '.anno';
+    let annoName = pdfFileName.split('.')[0] + '.anno';
+    console.log('BBB:', annoName);
+    return annoName;
 }

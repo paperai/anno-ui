@@ -84,11 +84,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * UI - Alert dialog.
  */
-__webpack_require__(9);
+__webpack_require__(9)
 
-function create({ type='alert', message='' }) {
-
-    const id = 'modal-' + (new Date().getTime());
+function create ({ type = 'alert', message = '' }) {
+    const id = 'modal-' + (new Date().getTime())
 
     const styleClass = (type === 'alert' ? 'alertdialog-danger' : '')
 
@@ -108,16 +107,16 @@ function create({ type='alert', message='' }) {
             </div>
           </div>
         </div>
-    `;
-    $(document.body).append(snipet);
+    `
+    $(document.body).append(snipet)
 
     return $('#' + id)
 }
 
-function show() {
-    const $modal = create(...arguments);
-    $modal.modal('show');
-    return $modal;
+function show () {
+    const $modal = create(...arguments)
+    $modal.modal('show')
+    return $modal
 }
 
 
@@ -573,135 +572,128 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * Make the UI resizable.
  */
-function setupResizableColumns() {
-
+function setupResizableColumns () {
     // Make resizable.
     $('#tools').resizable({
-      handles: 'e',
-      alsoResizeReverse: '#viewerWrapper',
-      start : () => {
-        console.log('resize start');
-        $('#viewer iframe').css({
-            'pointer-events' : 'none',
-        });
-
-      },
-      stop : () => {
-        console.log('resize stop');
-        $('#viewer iframe').css({
-            'pointer-events' : 'auto',
-        });
-
-      }
-    });
+        handles           : 'e',
+        alsoResizeReverse : '#viewerWrapper',
+        start             : () => {
+            $('#viewer iframe').css({
+                'pointer-events' : 'none'
+            })
+        },
+        stop : () => {
+            $('#viewer iframe').css({
+                'pointer-events' : 'auto'
+            })
+        }
+    })
 
     // Customize.
-    $.ui.plugin.add("resizable", "alsoResizeReverse", {
+    $.ui.plugin.add('resizable', 'alsoResizeReverse', {
 
-        start: function() {
-            var that = $(this).resizable( "instance" ),
-                o = that.options;
+        start : function () {
+            let that = $(this).resizable('instance')
+            let o = that.options
 
-            $(o.alsoResizeReverse).each(function() {
-                var el = $(this);
-                el.data("ui-resizable-alsoresizeReverse", {
-                    width: parseInt(el.width(), 10), height: parseInt(el.height(), 10),
-                    left: parseInt(el.css("left"), 10), top: parseInt(el.css("top"), 10)
-                });
-            });
+            $(o.alsoResizeReverse).each(function () {
+                var el = $(this)
+                el.data('ui-resizable-alsoresizeReverse', {
+                    width  : parseInt(el.width(), 10),
+                    height : parseInt(el.height(), 10),
+                    left   : parseInt(el.css('left'), 10),
+                    top    : parseInt(el.css('top'), 10)
+                })
+            })
         },
 
-        resize: function(event, ui) {
-            var that = $(this).resizable( "instance" ),
-                o = that.options,
-                os = that.originalSize,
-                op = that.originalPosition,
-                delta = {
-                    height: (that.size.height - os.height) || 0,
-                    width: (that.size.width - os.width) || 0,
-                    top: (that.position.top - op.top) || 0,
-                    left: (that.position.left - op.left) || 0
-                };
+        resize : function (event, ui) {
+            let that = $(this).resizable('instance')
+            let o = that.options
+            let os = that.originalSize
+            let op = that.originalPosition
+            let delta = {
+                height : (that.size.height - os.height) || 0,
+                width  : (that.size.width - os.width) || 0,
+                top    : (that.position.top - op.top) || 0,
+                left   : (that.position.left - op.left) || 0
+            }
 
-            $(o.alsoResizeReverse).each(function() {
-                var el = $(this), start = $(this).data("ui-resizable-alsoresize-reverse"), style = {},
-                    css = el.parents(ui.originalElement[0]).length ?
-                        [ "width", "height" ] :
-                        [ "width", "height", "top", "left" ];
+            $(o.alsoResizeReverse).each(function () {
+                let el = $(this)
+                let start = $(this).data('ui-resizable-alsoresize-reverse')
+                let style = {}
+                let css = el.parents(ui.originalElement[0]).length
+                        ? [ 'width', 'height' ]
+                        : [ 'width', 'height', 'top', 'left' ]
 
-                $.each(css, function(i, prop) {
-                    var sum = (start[prop] || 0) - (delta[prop] || 0);
+                $.each(css, function (i, prop) {
+                    let sum = (start[prop] || 0) - (delta[prop] || 0)
                     if (sum && sum >= 0) {
-                        style[prop] = sum || null;
+                        style[prop] = sum || null
                     }
-                });
+                })
 
-                el.css(style);
-            });
+                el.css(style)
+            })
         },
 
-        stop: function() {
-            $(this).removeData("resizable-alsoresize-reverse");
+        stop : function () {
+            $(this).removeData('resizable-alsoresize-reverse')
         }
-    });
+    })
 }
-
 
 /**
  * Convert object to TOML String.
  */
-function tomlString(obj, root=true) {
-
-    let lines = [];
+function tomlString (obj, root = true) {
+    let lines = []
 
     // `version` is first.
     if ('version' in obj) {
-        lines.push(`version = "${obj['version']}"`);
-        lines.push('');
-        delete obj['version'];
+        lines.push(`version = "${obj['version']}"`)
+        lines.push('')
+        delete obj['version']
     }
 
     // #paperanno-ja/issues/38
     // Make all values in `position` as string.
     if ('position' in obj) {
-        let position = obj.position;
+        let position = obj.position
         position = position.map(p => {
             if (typeof p === 'number') {
-                return String(p);
+                return String(p)
             } else {
-                return p.map(v => String(v));
+                return p.map(v => String(v))
             }
-        });
-        obj.position = position;
+        })
+        obj.position = position
     }
 
     Object.keys(obj).forEach(prop => {
-
-        let val = obj[prop];
+        let val = obj[prop]
         if (typeof val === 'string') {
-            lines.push(`${prop} = "${val}"`);
-            root && lines.push('');
-
+            lines.push(`${prop} = "${val}"`)
+            root && lines.push('')
         } else if (typeof val === 'number') {
-            lines.push(`${prop} = ${val}`);
-            root && lines.push('');
-
+            lines.push(`${prop} = ${val}`)
+            root && lines.push('')
         } else if (isArray(val)) {
-            lines.push(`${prop} = ${JSON.stringify(val)}`);
-            root && lines.push('');
-
+            lines.push(`${prop} = ${JSON.stringify(val)}`)
+            root && lines.push('')
         } else if (typeof val === 'object') {
-            lines.push(`[${prop}]`);
-            lines.push(tomlString(val, false));
-            root && lines.push('');
+            lines.push(`[${prop}]`)
+            lines.push(tomlString(val, false))
+            root && lines.push('')
         }
-    });
+    })
 
-    return lines.join('\n');
+    return lines.join('\n')
 }
 
-function isArray(val) {
-    return val && 'length' in val;
+function isArray (val) {
+    return val && 'length' in val
 }
 
 
@@ -1573,12 +1565,15 @@ function _getDownloadFileName(getCurrentContentName) {
         }
     });
     if (primaryAnnotationName) {
+        console.log('AAA:', primaryAnnotationName);
         return primaryAnnotationName;
     }
 
     // The name of Content.
     let pdfFileName = getCurrentContentName();
-    return pdfFileName.split('.')[0] + '.anno';
+    let annoName = pdfFileName.split('.')[0] + '.anno';
+    console.log('BBB:', annoName);
+    return annoName;
 }
 
 
@@ -6291,68 +6286,65 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  */
 
 
-function setup({
-        getCurrentDisplayContentFile,
+function setup ({
+        getCurrentDisplayContentFile
     }) {
     $('.js-btn-upload').off('click').on('click', () => {
-
-        const contentFile = getCurrentDisplayContentFile();
+        const contentFile = getCurrentDisplayContentFile()
         if (!contentFile) {
-            return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' });
+            return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' })
         }
 
-        function arrayBufferToBase64(buffer) {
-            var s = '';
-            var bytes = new Uint8Array(buffer);
-            var len = bytes.byteLength;
+        function arrayBufferToBase64 (buffer) {
+            var s = ''
+            var bytes = new Uint8Array(buffer)
+            var len = bytes.byteLength
             for (var i = 0; i < len; i++) {
-                s += String.fromCharCode(bytes[i]);
+                s += String.fromCharCode(bytes[i])
             }
-            return window.btoa(s);
+            return window.btoa(s)
         }
 
-        const contentBase64 = arrayBufferToBase64(contentFile.content);
+        const contentBase64 = arrayBufferToBase64(contentFile.content)
 
-        const $progressBar = $('.js-upload-progress');
+        const $progressBar = $('.js-upload-progress')
 
-        const url = window.API_ROOT + '/api/pdf_upload';
+        const url = window.API_ROOT + '/api/pdf_upload'
 
-        setResult("Waiting for response...");
-
+        setResult('Waiting for response...')
 
         let data = {
             filename : contentFile.name,
             pdf      : contentBase64
-        };
+        }
 
         $.ajax({
-            xhr: function(){
-               var xhr = new window.XMLHttpRequest();
-               //Upload progress
-               xhr.upload.addEventListener("progress", function(evt){
-               if (evt.lengthComputable) {
-                 var percentComplete = evt.loaded / evt.total;
-                 //Do something with upload progress
-                 console.log('uploadProgress:', percentComplete);
-
-                 let percent = Math.floor(percentComplete * 100);
-                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%');
-                 if (percent === 100) {
-                    setTimeout(() => {
-                        $progressBar.addClass('hidden');
-                    }, 2000);
-                 }
-                }
-               }, false);
-               //Download progress
-               xhr.addEventListener("progress", function(evt){
-                 if (evt.lengthComputable) {
-                   var percentComplete = evt.loaded / evt.total;
-                   //Do something with download progress
-                   console.log('downloadProgress:', percentComplete);
-                 }
-               }, false);
-               return xhr;
+            xhr : function () {
+                var xhr = new window.XMLHttpRequest()
+                // Upload progress
+                xhr.upload.addEventListener('progress', function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total
+                        // Do something with upload progress
+                        console.log('uploadProgress:', percentComplete)
+                        let percent = Math.floor(percentComplete * 100)
+                        $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
+                        if (percent === 100) {
+                            setTimeout(() => {
+                                $progressBar.addClass('hidden')
+                            }, 2000)
+                        }
+                    }
+                }, false)
+                // Download progress
+                xhr.addEventListener('progress', function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total
+                        // Do something with download progress
+                        console.log('downloadProgress:', percentComplete)
+                    }
+                }, false)
+                return xhr
             },
             url      : url,
             method   : 'POST',
@@ -6360,30 +6352,29 @@ function setup({
             data
 
         }).then(result => {
-
             if (result.status === 'failure') {
                 alert('ERROR!!')
-                setResult(result.err.stderr);
-                return;
+                setResult(result.err.stderr)
+                return
             }
 
             setTimeout(() => {
-                setResult(result.text);
-            }, 500); // wait for progress bar animation.
-        });
+                setResult(result.text)
+            }, 500) // wait for progress bar animation.
+        })
 
         // Show.
-        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
 
-        return false;
-    });
+        return false
+    })
 }
 
 /**
  * Set the analyzing result.
  */
-function setResult(text) {
-    $('#uploadResult').val(text);
+function setResult (text) {
+    $('#uploadResult').val(text)
 }
 
 
@@ -6414,41 +6405,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * Initializer.
  */
-function setup() {
+function setup () {
     $(document).on('keydown', e => {
-
         if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
-            dispatchWindowEvent('manageCtrlKey', 'on');
+            dispatchWindowEvent('manageCtrlKey', 'on')
         }
-
     }).on('keyup', e => {
-
         // Allow any keyboard events for <input/>.
         if (e.target.tagName.toLowerCase() === 'input') {
-            return;
+            return
         }
 
-        dispatchWindowEvent('manageCtrlKey', 'off');
+        dispatchWindowEvent('manageCtrlKey', 'off')
 
         if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1);
+            dispatchWindowEvent('digitKeyPressed', 1)
         } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2);
+            dispatchWindowEvent('digitKeyPressed', 2)
         } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3);
+            dispatchWindowEvent('digitKeyPressed', 3)
         } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4);
+            dispatchWindowEvent('digitKeyPressed', 4)
         }
-    });
+    })
 }
 
 /**
  * Dispatch a custom event to `window` object.
  */
-function dispatchWindowEvent(eventName, data) {
-    var event = document.createEvent('CustomEvent');
-    event.initCustomEvent(eventName, true, true, data);
-    window.dispatchEvent(event);
+function dispatchWindowEvent (eventName, data) {
+    var event = document.createEvent('CustomEvent')
+    event.initCustomEvent(eventName, true, true, data)
+    window.dispatchEvent(event)
 }
 
 
