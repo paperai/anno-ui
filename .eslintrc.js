@@ -26,8 +26,8 @@ module.exports = {
       "afterColon": true
     }],
     "semi" : 1,
-    "space-before-function-paren" : 0,
-    "padded-blocks" : 1,
+    "space-before-function-paren" : 1,
+    "padded-blocks" : 0,
     "keyword-spacing" : 1,
     "no-multi-spaces" : 1,
     "space-infix-ops" : 1,
