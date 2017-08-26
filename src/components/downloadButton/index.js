@@ -34,6 +34,7 @@ export function setup ({
  * Get the file name for download.
  */
 function _getDownloadFileName (getCurrentContentName) {
+
     // The name of Primary Annotation.
     let primaryAnnotationName
     $('#dropdownAnnoPrimary a').each((index, element) => {
