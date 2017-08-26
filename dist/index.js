@@ -1554,7 +1554,7 @@ function _getDownloadFileName (getCurrentContentName) {
 
     // The name of Content.
     let pdfFileName = getCurrentContentName()
-    let annoName = pdfFileName.split('.')[0] + '.anno'
+    let annoName = pdfFileName.replace(/\.pdf$/i, '.anno')
     return annoName
 }
 
