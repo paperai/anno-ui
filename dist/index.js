@@ -1677,12 +1677,6 @@ function setup ({
     _createSpanAnnotation = createSpanAnnotation
     _createRelAnnotation = createRelAnnotation
 
-    // set datalist.
-    setDatalist()
-
-    // set actions.
-    setupActions()
-
     // Start to listen window events.
     listenWindowEvents()
 
@@ -1713,7 +1707,7 @@ function seupTabClick () {
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
-            labels = ['&nbsp;']
+            labels = [(type === 'span' ? 'span1' : 'relation1')]
         } else {
             labels = labelObject.labels
         }
@@ -1973,86 +1967,16 @@ function saveText (uuid) {
 }
 
 /**
- * Local storage key for datalist.
+ * Set window event listeners.
  */
-const LSKEY_DATALIST = '_pdfanno_datalist'
-
-function setDatalist () {
-    // set datalist.
-    let datalist = JSON.parse(localStorage.getItem(LSKEY_DATALIST) || '[]')
-    const options = datalist.map(d => {
-        return `<option value="${d}"></option>`
-    })
-    $('#labels').html(options)
-}
-
-function setupActions () {
-    // Setup datalist modal.
-    $('#datalistModal').off().on('show.bs.modal', e => {
-        // datalist.
-        let datalist = JSON.parse(localStorage.getItem(LSKEY_DATALIST) || '[]')
-
-        // input for new.
-        datalist.push('')
-
-        const snipets = datalist.map(d => {
-            return `
-            <li class="list-group-item">
-                <input class="form-control js-input" value="${d}">
-                <span class="glyphicon glyphicon-remove js-delete"></span>
-            </li>
-            `
-        })
-
-        $('#datalistModal .js-datalist').html(snipets.join(''))
-    })
-
-    $('#datalistModal').on('keyup', '.js-input', e => {
-        const $this = $(e.currentTarget)
-        const val = $this.val()
-        const isEnd = $this.parent().is(':last-child')
-
-        if (isEnd && val && val.length > 0) {
-            $('#datalistModal .js-datalist').append(`
-                <li class="list-group-item">
-                    <input class="form-control js-input" value="">
-                    <span class="glyphicon glyphicon-remove js-delete"></span>
-                </li>
-            `)
-        }
-    })
-
-    $('#datalistModal').on('click', '.js-delete', e => {
-        $(e.currentTarget).parent().remove()
-    })
-
-    $('#datalistModal .js-done').on('click', e => {
-        let datalist = []
-        $('#datalistModal .js-datalist .js-input').each(function () {
-            const val = $(this).val()
-            if (val && val.length > 0) {
-                datalist.push(val)
-            }
-        })
-
-        localStorage.setItem(LSKEY_DATALIST, JSON.stringify(datalist))
-
-        setDatalist()
-
-        $('#datalistModal').modal('hide')
-    })
-}
-
 function listenWindowEvents () {
     // enable text input.
     window.addEventListener('enableTextInput', e => {
-        console.log('enableTextInput:', e.detail)
         enable(e.detail)
     })
 
     // disable text input.
     window.addEventListener('disappearTextInput', e => {
-        console.log('disappearTextInput:', e.detail)
         disable(e.detail)
     })
 
