@@ -52,7 +52,8 @@ export function uploadPDF ({
             successCallback(resultText)
         },
         failedCallback : err => {
-            alert('ERROR!!')
+            const message = 'Failed to upload and analyze your PDF.<br>Reason: ' + err
+            alertDialog.show({ message })
             setResult(err)
         }
     })

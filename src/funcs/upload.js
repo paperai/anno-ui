@@ -36,22 +36,9 @@ export function upload ({
                     console.log('uploadProgress:', percentComplete)
                     let percent = Math.floor(percentComplete * 100)
                     progressCallback(percent)
-                    // $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
-                    // if (percent === 100) {
-                    //     setTimeout(() => {
-                    //         $progressBar.addClass('hidden')
-                    //     }, 2000)
-                    // }
                 }
             }, false)
-            // Download progress
-            // xhr.addEventListener('progress', function (evt) {
-            //     if (evt.lengthComputable) {
-            //         var percentComplete = evt.loaded / evt.total
-            //         // Do something with download progress
-            //         console.log('downloadProgress:', percentComplete)
-            //     }
-            // }, false)
+
             return xhr
         },
         url      : url,
@@ -61,24 +48,14 @@ export function upload ({
 
     }).then(result => {
         if (result.status === 'failure') {
-            failedCallback(result.err.stderr)
-            // alert('ERROR!!')
-            // setResult(result.err.stderr)
+            failedCallback(result.err.stderr || result.err || result)
             return
         }
 
         setTimeout(() => {
             successCallback(result.text)
-            // setResult(result.text)
-            // uploadFinishCallback && uploadFinishCallback(result.text)
         }, 500) // wait for progress bar animation.
     })
-
-    // Show.
-    // $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
-
-    // return false
-
 }
 
 function arrayBufferToBase64 (buffer) {
