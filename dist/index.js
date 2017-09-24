@@ -1235,9 +1235,11 @@ exports.push([module.i, "/**\n * UI - Alert Dialog.\n */\n\n.alertdialog-danger 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__funcs_upload__ = __webpack_require__(28);
 /**
  * UI parts - Content dropdown.
  */
+
 
 /**
  * Setup the dropdown of PDFs.
@@ -1245,7 +1247,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 function setup ({
     initialText,
     overrideWarningMessage,
-    contentReloadHandler
+    contentReloadHandler,
+    contentWillChangeCallback = function () {},
+    contentDidChangeCallback = function () {}
 }) {
 
     $('#dropdownPdf .js-text').text(initialText)
@@ -6125,6 +6129,7 @@ module.exports = {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
 /* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(28);
@@ -6136,117 +6141,55 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function setup ({
     getCurrentDisplayContentFile,
-    uploadFinishCallback
+    uploadFinishCallback = function () {}
 }) {
     $('.js-btn-upload').off('click').on('click', () => {
         const contentFile = getCurrentDisplayContentFile()
-        if (!contentFile) {
-            return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' })
-        }
-
-        // Progress bar.
-        const $progressBar = $('.js-upload-progress')
-
-        // Upload and analyze the PDF.
-        __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
+        uploadPDF({
             contentFile,
-            willStartCallback : () => {
-                // Reset the result text.
-                setResult('Waiting for response...')
-                // Show the progress bar.
-                $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
-            },
-            progressCallback : percent => {
-                $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
-                if (percent === 100) {
-                    setTimeout(() => {
-                        $progressBar.addClass('hidden')
-                    }, 2000)
-                }
-            },
-            successCallback : resultText => {
-                setResult(resultText)
-                uploadFinishCallback && uploadFinishCallback(resultText)
-            },
-            failedCallback : err => {
-                alert('ERROR!!')
-                setResult(err)
-            }
+            successCallback : uploadFinishCallback
         })
-
-        // function arrayBufferToBase64 (buffer) {
-        //     var s = ''
-        //     var bytes = new Uint8Array(buffer)
-        //     var len = bytes.byteLength
-        //     for (var i = 0; i < len; i++) {
-        //         s += String.fromCharCode(bytes[i])
-        //     }
-        //     return window.btoa(s)
-        // }
-
-        // const contentBase64 = arrayBufferToBase64(contentFile.content)
-
-        // const $progressBar = $('.js-upload-progress')
-
-        // const url = window.API_ROOT + '/api/pdf_upload'
-
-        // setResult('Waiting for response...')
-
-        // let data = {
-        //     filename : contentFile.name,
-        //     pdf      : contentBase64
-        // }
-
-        // $.ajax({
-        //     xhr : function () {
-        //         var xhr = new window.XMLHttpRequest()
-        //         // Upload progress
-        //         xhr.upload.addEventListener('progress', function (evt) {
-        //             if (evt.lengthComputable) {
-        //                 var percentComplete = evt.loaded / evt.total
-        //                 // Do something with upload progress
-        //                 console.log('uploadProgress:', percentComplete)
-        //                 let percent = Math.floor(percentComplete * 100)
-        //                 $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
-        //                 if (percent === 100) {
-        //                     setTimeout(() => {
-        //                         $progressBar.addClass('hidden')
-        //                     }, 2000)
-        //                 }
-        //             }
-        //         }, false)
-        //         // Download progress
-        //         xhr.addEventListener('progress', function (evt) {
-        //             if (evt.lengthComputable) {
-        //                 var percentComplete = evt.loaded / evt.total
-        //                 // Do something with download progress
-        //                 console.log('downloadProgress:', percentComplete)
-        //             }
-        //         }, false)
-        //         return xhr
-        //     },
-        //     url      : url,
-        //     method   : 'POST',
-        //     dataType : 'json',
-        //     data
-
-        // }).then(result => {
-        //     if (result.status === 'failure') {
-        //         alert('ERROR!!')
-        //         setResult(result.err.stderr)
-        //         return
-        //     }
-
-        //     setTimeout(() => {
-        //         setResult(result.text)
-        //         uploadFinishCallback && uploadFinishCallback(result.text)
-        //     }, 500) // wait for progress bar animation.
-        // })
-
-        // // Show.
-        // $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
-
         return false
+    })
+}
+
+function uploadPDF ({
+    contentFile,
+    successCallback = function () {}
+}) {
+
+    if (!contentFile) {
+        return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' })
+    }
+
+    // Progress bar.
+    const $progressBar = $('.js-upload-progress')
+
+    // Upload and analyze the PDF.
+    __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
+        contentFile,
+        willStartCallback : () => {
+            // Reset the result text.
+            setResult('Waiting for response...')
+            // Show the progress bar.
+            $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
+        },
+        progressCallback : percent => {
+            $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
+            if (percent === 100) {
+                setTimeout(() => {
+                    $progressBar.addClass('hidden')
+                }, 2000)
+            }
+        },
+        successCallback : resultText => {
+            setResult(resultText)
+            successCallback(resultText)
+        },
+        failedCallback : err => {
+            alert('ERROR!!')
+            setResult(err)
+        }
     })
 }
 
