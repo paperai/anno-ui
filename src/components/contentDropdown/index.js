@@ -1,7 +1,6 @@
 /**
  * UI parts - Content dropdown.
  */
-import { upload } from '../../funcs/upload'
 
 /**
  * Setup the dropdown of PDFs.
@@ -9,9 +8,7 @@ import { upload } from '../../funcs/upload'
 export function setup ({
     initialText,
     overrideWarningMessage,
-    contentReloadHandler,
-    contentWillChangeCallback = function () {},
-    contentDidChangeCallback = function () {}
+    contentReloadHandler
 }) {
 
     $('#dropdownPdf .js-text').text(initialText)

@@ -1235,11 +1235,9 @@ exports.push([module.i, "/**\n * UI - Alert Dialog.\n */\n\n.alertdialog-danger 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__funcs_upload__ = __webpack_require__(28);
 /**
  * UI parts - Content dropdown.
  */
-
 
 /**
  * Setup the dropdown of PDFs.
@@ -1247,9 +1245,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 function setup ({
     initialText,
     overrideWarningMessage,
-    contentReloadHandler,
-    contentWillChangeCallback = function () {},
-    contentDidChangeCallback = function () {}
+    contentReloadHandler
 }) {
 
     $('#dropdownPdf .js-text').text(initialText)
