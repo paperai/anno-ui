@@ -2,88 +2,60 @@
  * UI parts - Upload Button.
  */
 import * as alertDialog from '../../uis/alertDialog'
+import { upload } from '../../funcs/upload'
 
 export function setup ({
-        getCurrentDisplayContentFile
-    }) {
+    getCurrentDisplayContentFile,
+    uploadFinishCallback = function () {}
+}) {
     $('.js-btn-upload').off('click').on('click', () => {
         const contentFile = getCurrentDisplayContentFile()
-        if (!contentFile) {
-            return alertDialog.show({ message : 'Display a content before upload.' })
-        }
-
-        function arrayBufferToBase64 (buffer) {
-            var s = ''
-            var bytes = new Uint8Array(buffer)
-            var len = bytes.byteLength
-            for (var i = 0; i < len; i++) {
-                s += String.fromCharCode(bytes[i])
-            }
-            return window.btoa(s)
-        }
-
-        const contentBase64 = arrayBufferToBase64(contentFile.content)
-
-        const $progressBar = $('.js-upload-progress')
-
-        const url = window.API_ROOT + '/api/pdf_upload'
-
-        setResult('Waiting for response...')
-
-        let data = {
-            filename : contentFile.name,
-            pdf      : contentBase64
-        }
-
-        $.ajax({
-            xhr : function () {
-                var xhr = new window.XMLHttpRequest()
-                // Upload progress
-                xhr.upload.addEventListener('progress', function (evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = evt.loaded / evt.total
-                        // Do something with upload progress
-                        console.log('uploadProgress:', percentComplete)
-                        let percent = Math.floor(percentComplete * 100)
-                        $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
-                        if (percent === 100) {
-                            setTimeout(() => {
-                                $progressBar.addClass('hidden')
-                            }, 2000)
-                        }
-                    }
-                }, false)
-                // Download progress
-                xhr.addEventListener('progress', function (evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = evt.loaded / evt.total
-                        // Do something with download progress
-                        console.log('downloadProgress:', percentComplete)
-                    }
-                }, false)
-                return xhr
-            },
-            url      : url,
-            method   : 'POST',
-            dataType : 'json',
-            data
-
-        }).then(result => {
-            if (result.status === 'failure') {
-                alert('ERROR!!')
-                setResult(result.err.stderr)
-                return
-            }
-
-            setTimeout(() => {
-                setResult(result.text)
-            }, 500) // wait for progress bar animation.
+        uploadPDF({
+            contentFile,
+            successCallback : uploadFinishCallback
         })
-
-        // Show.
-        $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
-
         return false
+    })
+}
+
+export function uploadPDF ({
+    contentFile,
+    successCallback = function () {}
+}) {
+
+    if (!contentFile) {
+        return alertDialog.show({ message : 'Display a content before upload.' })
+    }
+
+    // Progress bar.
+    const $progressBar = $('.js-upload-progress')
+
+    // Upload and analyze the PDF.
+    upload({
+        contentFile,
+        willStartCallback : () => {
+            // Reset the result text.
+            setResult('Waiting for response...')
+            // Show the progress bar.
+            $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
+        },
+        progressCallback : percent => {
+            $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
+            if (percent === 100) {
+                setTimeout(() => {
+                    $progressBar.addClass('hidden')
+                }, 2000)
+            }
+        },
+        successCallback : resultText => {
+            setResult(resultText)
+            successCallback(resultText)
+        },
+        failedCallback : err => {
+            const message = 'Failed to upload and analyze your PDF.<br>Reason: ' + err
+            alertDialog.show({ message })
+            setResult(err)
+        }
     })
 }
 
