@@ -4,8 +4,9 @@
 import * as alertDialog from '../../uis/alertDialog'
 
 export function setup ({
-        getCurrentDisplayContentFile
-    }) {
+    getCurrentDisplayContentFile,
+    uploadFinishCallback
+}) {
     $('.js-btn-upload').off('click').on('click', () => {
         const contentFile = getCurrentDisplayContentFile()
         if (!contentFile) {
@@ -77,6 +78,7 @@ export function setup ({
 
             setTimeout(() => {
                 setResult(result.text)
+                uploadFinishCallback && uploadFinishCallback(result.text)
             }, 500) // wait for progress bar animation.
         })
 

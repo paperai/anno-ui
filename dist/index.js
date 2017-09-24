@@ -6133,8 +6133,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 function setup ({
-        getCurrentDisplayContentFile
-    }) {
+    getCurrentDisplayContentFile,
+    uploadFinishCallback
+}) {
     $('.js-btn-upload').off('click').on('click', () => {
         const contentFile = getCurrentDisplayContentFile()
         if (!contentFile) {
@@ -6206,6 +6207,7 @@ function setup ({
 
             setTimeout(() => {
                 setResult(result.text)
+                uploadFinishCallback && uploadFinishCallback(result.text)
             }, 500) // wait for progress bar animation.
         })
 
