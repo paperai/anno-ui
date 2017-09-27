@@ -191,7 +191,7 @@ function getCurrentFileNames () {
 
     // a PDF name.
     text = $('#dropdownPdf .js-text').text()
-    let pdfName = (text !== 'PDF File' ? text : null)
+    let pdfName = (text !== getContentDropdownInitialText() ? text : null)
 
     // a Primary anno.
     text = $('#dropdownAnnoPrimary .js-text').text()
@@ -223,7 +223,7 @@ function getCurrentFileNames () {
 function setPDFDropdownList () {
 
     // Reset the state of the PDF dropdown.
-    $('#dropdownPdf .js-text').text('PDF File')
+    $('#dropdownPdf .js-text').text(getContentDropdownInitialText())
     $('#dropdownPdf li').remove()
 
     // Create and setup the dropdown menu.
@@ -278,4 +278,9 @@ function setAnnoDropdownList () {
 
     // Setup color pallets.
     setupColorPicker()
+}
+
+function getContentDropdownInitialText() {
+    let value = $('#dropdownPdf .js-text').data('initial-text')
+    return (value === undefined || value === '') ? 'PDF File' : value
 }

@@ -12,6 +12,7 @@ export function setup ({
 }) {
 
     $('#dropdownPdf .js-text').text(initialText)
+    $('#dropdownPdf .js-text').data('initial-text', initialText)
 
     // TODO pdfという単語を削除したい..
 
