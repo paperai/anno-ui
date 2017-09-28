@@ -280,7 +280,7 @@ function setAnnoDropdownList () {
     setupColorPicker()
 }
 
-function getContentDropdownInitialText() {
+function getContentDropdownInitialText () {
     let value = $('#dropdownPdf .js-text').data('initial-text')
     return (value === undefined || value === '') ? 'PDF File' : value
 }

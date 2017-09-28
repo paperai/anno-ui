@@ -8,7 +8,7 @@
 export function setup ({
     getAnnotationTOMLString,
     getCurrentContentName,
-    unlistenWindowLeaveEvent
+    didDownloadCallback = function () {}
 }) {
     $('#downloadButton').off('click').on('click', e => {
         $(e.currentTarget).blur()
@@ -24,7 +24,7 @@ export function setup ({
             a.parentNode.removeChild(a)
         })
 
-        unlistenWindowLeaveEvent()
+        didDownloadCallback()
 
         return false
     })

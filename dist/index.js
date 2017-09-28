@@ -714,8 +714,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__utils__ = __webpack_require__(3);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
@@ -1093,7 +1093,7 @@ function getCurrentFileNames () {
 
     // a PDF name.
     text = $('#dropdownPdf .js-text').text()
-    let pdfName = (text !== 'PDF File' ? text : null)
+    let pdfName = (text !== getContentDropdownInitialText() ? text : null)
 
     // a Primary anno.
     text = $('#dropdownAnnoPrimary .js-text').text()
@@ -1125,7 +1125,7 @@ function getCurrentFileNames () {
 function setPDFDropdownList () {
 
     // Reset the state of the PDF dropdown.
-    $('#dropdownPdf .js-text').text('PDF File')
+    $('#dropdownPdf .js-text').text(getContentDropdownInitialText())
     $('#dropdownPdf li').remove()
 
     // Create and setup the dropdown menu.
@@ -1180,6 +1180,11 @@ function setAnnoDropdownList () {
 
     // Setup color pallets.
     setupColorPicker()
+}
+
+function getContentDropdownInitialText () {
+    let value = $('#dropdownPdf .js-text').data('initial-text')
+    return (value === undefined || value === '') ? 'PDF File' : value
 }
 
 
@@ -1249,6 +1254,7 @@ function setup ({
 }) {
 
     $('#dropdownPdf .js-text').text(initialText)
+    $('#dropdownPdf .js-text').data('initial-text', initialText)
 
     // TODO pdfという単語を削除したい..
 
@@ -1507,7 +1513,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 function setup ({
     getAnnotationTOMLString,
     getCurrentContentName,
-    unlistenWindowLeaveEvent
+    didDownloadCallback = function () {}
 }) {
     $('#downloadButton').off('click').on('click', e => {
         $(e.currentTarget).blur()
@@ -1523,7 +1529,7 @@ function setup ({
             a.parentNode.removeChild(a)
         })
 
-        unlistenWindowLeaveEvent()
+        didDownloadCallback()
 
         return false
     })
@@ -6128,7 +6134,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
 /* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(26);
 /**
  * UI parts - Upload Button.
  */
@@ -6203,68 +6209,6 @@ function setResult (text) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__alertDialog__ = __webpack_require__(0);
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "alertDialog", function() { return __WEBPACK_IMPORTED_MODULE_0__alertDialog__; });
-
-
-
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * Event listeners.
- */
-
-/**
- * Initializer.
- */
-function setup () {
-    $(document).on('keydown', e => {
-        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
-            dispatchWindowEvent('manageCtrlKey', 'on')
-        }
-    }).on('keyup', e => {
-        // Allow any keyboard events for <input/>.
-        if (e.target.tagName.toLowerCase() === 'input') {
-            return
-        }
-
-        dispatchWindowEvent('manageCtrlKey', 'off')
-
-        if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1)
-        } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2)
-        } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3)
-        } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4)
-        }
-    })
-}
-
-/**
- * Dispatch a custom event to `window` object.
- */
-function dispatchWindowEvent (eventName, data) {
-    var event = document.createEvent('CustomEvent')
-    event.initCustomEvent(eventName, true, true, data)
-    window.dispatchEvent(event)
-}
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = upload;
 /**
  * Functions - upload and analyze a PDF.
@@ -6334,6 +6278,68 @@ function arrayBufferToBase64 (buffer) {
         s += String.fromCharCode(bytes[i])
     }
     return window.btoa(s)
+}
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__alertDialog__ = __webpack_require__(0);
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "alertDialog", function() { return __WEBPACK_IMPORTED_MODULE_0__alertDialog__; });
+
+
+
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * Event listeners.
+ */
+
+/**
+ * Initializer.
+ */
+function setup () {
+    $(document).on('keydown', e => {
+        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
+            dispatchWindowEvent('manageCtrlKey', 'on')
+        }
+    }).on('keyup', e => {
+        // Allow any keyboard events for <input/>.
+        if (e.target.tagName.toLowerCase() === 'input') {
+            return
+        }
+
+        dispatchWindowEvent('manageCtrlKey', 'off')
+
+        if (e.keyCode === 49) {         // Digit "1"
+            dispatchWindowEvent('digitKeyPressed', 1)
+        } else if (e.keyCode === 50) {  // Digit "2"
+            dispatchWindowEvent('digitKeyPressed', 2)
+        } else if (e.keyCode === 51) {  // Digit "3"
+            dispatchWindowEvent('digitKeyPressed', 3)
+        } else if (e.keyCode === 52) {  // Digit "4"
+            dispatchWindowEvent('digitKeyPressed', 4)
+        }
+    })
+}
+
+/**
+ * Dispatch a custom event to `window` object.
+ */
+function dispatchWindowEvent (eventName, data) {
+    var event = document.createEvent('CustomEvent')
+    event.initCustomEvent(eventName, true, true, data)
+    window.dispatchEvent(event)
 }
 
 
