@@ -37,6 +37,7 @@ let _displayCurrentPrimaryAnnotations
 let _getContentFiles
 let _getAnnoFiles
 let _closePDFViewer
+let _restoreBeforeStatus
 
 /**
  * Setup the behavior of a Browse Button.
@@ -48,13 +49,15 @@ export function setup ({
     displayCurrentPrimaryAnnotations,
     getContentFiles,
     getAnnoFiles,
-    closePDFViewer
+    closePDFViewer,
+    restoreBeforeStatus
 }) {
     _displayCurrentReferenceAnnotations = displayCurrentReferenceAnnotations
     _displayCurrentPrimaryAnnotations = displayCurrentPrimaryAnnotations
     _getContentFiles = getContentFiles
     _getAnnoFiles = getAnnoFiles
     _closePDFViewer = closePDFViewer
+    _restoreBeforeStatus = restoreBeforeStatus
 
     // Enable to select the same directory twice or more.
     $('.js-file :file').on('click', ev => {
@@ -87,6 +90,7 @@ export function setup ({
 
             // Display a PDF and annotations.
             restoreBeforeState(current)
+            _restoreBeforeStatus(current)
         })
     })
 }
