@@ -48,7 +48,8 @@ export function setup ({
     displayCurrentPrimaryAnnotations,
     getContentFiles,
     getAnnoFiles,
-    closePDFViewer
+    closePDFViewer,
+    callbackLoadedFiles
 }) {
     _displayCurrentReferenceAnnotations = displayCurrentReferenceAnnotations
     _displayCurrentPrimaryAnnotations = displayCurrentPrimaryAnnotations
@@ -87,6 +88,8 @@ export function setup ({
 
             // Display a PDF and annotations.
             restoreBeforeState(current)
+
+            callbackLoadedFiles && callbackLoadedFiles(current)
         })
     })
 }
