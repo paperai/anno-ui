@@ -699,7 +699,7 @@ function isArray (val) {
 
 
 /**
- * Generate a univierally unique identifier
+ * Generate a universally unique identifier
  *
  * @return {String}
  */
