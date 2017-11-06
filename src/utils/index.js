@@ -124,3 +124,18 @@ export function tomlString (obj, root = true) {
 function isArray (val) {
     return val && 'length' in val
 }
+
+
+/**
+ * Generate a universally unique identifier
+ *
+ * @return {String}
+ */
+export function uuid () {
+
+    let uid = 0
+    window.annotationContainer.getAllAnnotations().forEach(a => {
+        uid = Math.max(uid, parseInt(a.uuid))
+    })
+    return String(uid + 1)
+}

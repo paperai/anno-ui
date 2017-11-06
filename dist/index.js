@@ -569,6 +569,7 @@ function updateLink (link, options, obj) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setupResizableColumns"] = setupResizableColumns;
 /* harmony export (immutable) */ __webpack_exports__["tomlString"] = tomlString;
+/* harmony export (immutable) */ __webpack_exports__["uuid"] = uuid;
 /**
  * Make the UI resizable.
  */
@@ -694,6 +695,21 @@ function tomlString (obj, root = true) {
 
 function isArray (val) {
     return val && 'length' in val
+}
+
+
+/**
+ * Generate a universally unique identifier
+ *
+ * @return {String}
+ */
+function uuid () {
+
+    let uid = 0
+    window.annotationContainer.getAllAnnotations().forEach(a => {
+        uid = Math.max(uid, parseInt(a.uuid))
+    })
+    return String(uid + 1)
 }
 
 
@@ -950,7 +966,8 @@ function setup ({
     displayCurrentPrimaryAnnotations,
     getContentFiles,
     getAnnoFiles,
-    closePDFViewer
+    closePDFViewer,
+    callbackLoadedFiles
 }) {
     _displayCurrentReferenceAnnotations = displayCurrentReferenceAnnotations
     _displayCurrentPrimaryAnnotations = displayCurrentPrimaryAnnotations
@@ -989,6 +1006,8 @@ function setup ({
 
             // Display a PDF and annotations.
             restoreBeforeState(current)
+
+            callbackLoadedFiles && callbackLoadedFiles(current)
         })
     })
 }
@@ -1827,7 +1846,7 @@ function setupImportExportLink () {
         })
 
         // Conver to TOML style.
-        const toml = __WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"](data)
+        const toml = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"])(data)
         console.log(toml)
 
         // Download.
@@ -6168,7 +6187,7 @@ function uploadPDF ({
     const $progressBar = $('.js-upload-progress')
 
     // Upload and analyze the PDF.
-    __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
+    Object(__WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */])({
         contentFile,
         willStartCallback : () => {
             // Reset the result text.
