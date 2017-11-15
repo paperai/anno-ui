@@ -21,6 +21,6 @@ module.exports = {
                 exclude: /node_modules/
             }
         ]
-    }
-  devtool: 'source-map'
+    },
+    devtool: 'source-map'
 }
