@@ -125,7 +125,6 @@ function isArray (val) {
     return val && 'length' in val
 }
 
-
 /**
  * Generate a universally unique identifier
  *
