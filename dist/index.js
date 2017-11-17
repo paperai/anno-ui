@@ -704,11 +704,20 @@ function isArray (val) {
  */
 function uuid () {
 
-    let uid = 0
-    window.annotationContainer.getAllAnnotations().forEach(a => {
-        uid = Math.max(uid, parseInt(a.uuid))
-    })
-    return String(uid + 1)
+    // Length of ID characters.
+    const ID_LENGTH = 8
+
+    // Candidates.
+    const BASE = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+    // The number of candidates.
+    const BASE_LEN = BASE.length
+
+    let id = ''
+    for (let i = 0; i < ID_LENGTH; i++) {
+        id += BASE[ Math.floor(Math.random() * BASE_LEN) ]
+    }
+    return id
 }
 
 
