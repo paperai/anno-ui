@@ -697,7 +697,6 @@ function isArray (val) {
     return val && 'length' in val
 }
 
-
 /**
  * Generate a universally unique identifier
  *
@@ -1846,7 +1845,7 @@ function setupImportExportLink () {
         })
 
         // Conver to TOML style.
-        const toml = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"])(data)
+        const toml = __WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"](data)
         console.log(toml)
 
         // Download.
@@ -6187,7 +6186,7 @@ function uploadPDF ({
     const $progressBar = $('.js-upload-progress')
 
     // Upload and analyze the PDF.
-    Object(__WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */])({
+    __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
         contentFile,
         willStartCallback : () => {
             // Reset the result text.

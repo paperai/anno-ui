@@ -5,12 +5,12 @@
   "main": "dist/index.js",
   "files": [
     "dist",
+    "src",
     "README.md"
   ],
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server"
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/paperai/anno-ui#readme",
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^6.2.1",
@@ -36,9 +35,7 @@
     "eslint-plugin-standard": "^2.3.1",
     "style-loader": "^0.18.2",
     "toml": "github:yoheiMune/toml-node",
-    "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0",
-    "webpack-livereload-plugin": "^0.11.0"
+    "webpack": "^3.0.0"
   },
   "dependencies": {}
 }
