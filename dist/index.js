@@ -570,6 +570,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setupResizableColumns"] = setupResizableColumns;
 /* harmony export (immutable) */ __webpack_exports__["tomlString"] = tomlString;
 /* harmony export (immutable) */ __webpack_exports__["uuid"] = uuid;
+/* harmony export (immutable) */ __webpack_exports__["download"] = download;
 /**
  * Make the UI resizable.
  */
@@ -693,6 +694,9 @@ function tomlString (obj, root = true) {
     return lines.join('\n')
 }
 
+/**
+ * Check the value is array.
+ */
 function isArray (val) {
     return val && 'length' in val
 }
@@ -718,6 +722,20 @@ function uuid () {
         id += BASE[ Math.floor(Math.random() * BASE_LEN) ]
     }
     return id
+}
+
+/**
+ * Download a content with the fileName.
+ */
+function download (fileName, content) {
+    let blob = new Blob([content])
+    let blobURL = window.URL.createObjectURL(blob)
+    let a = document.createElement('a')
+    document.body.appendChild(a) // for Firefox working correctly.
+    a.download = fileName
+    a.href = blobURL
+    a.click()
+    a.parentNode.removeChild(a)
 }
 
 
@@ -1667,23 +1685,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["enable"] = enable;
 /* harmony export (immutable) */ __webpack_exports__["disable"] = disable;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__behavior__ = __webpack_require__(30);
 /**
  * UI parts - Input Label.
  */
 __webpack_require__(20)
 
 
-
-// import packageJson from '../../../package.json'
-
-
-
-// LocalStorage key to save label data.
-const LSKEY_LABEL_LIST = 'pdfanno-label-list'
 
 let $inputLabel
 window.addEventListener('DOMContentLoaded', () => {
@@ -1696,8 +1704,6 @@ let currentUUID
 
 let _getSelectedAnnotations
 let _saveAnnotationText
-let _createSpanAnnotation
-let _createRelAnnotation
 
 function setup ({
     getSelectedAnnotations,
@@ -1707,215 +1713,30 @@ function setup ({
 }) {
     _getSelectedAnnotations = getSelectedAnnotations
     _saveAnnotationText = saveAnnotationText
-    _createSpanAnnotation = createSpanAnnotation
-    _createRelAnnotation = createRelAnnotation
 
     // Start to listen window events.
     listenWindowEvents()
 
     // Set add button behavior.
-    setupLabelAddButton()
+    __WEBPACK_IMPORTED_MODULE_0__behavior__["b" /* setupLabelAddButton */]()
 
     // Set trash button behavior.
-    setupLabelTrashButton()
+    __WEBPACK_IMPORTED_MODULE_0__behavior__["d" /* setupLabelTrashButton */]()
 
     // Set the action when a label is clicked.
-    setupLabelText()
+    __WEBPACK_IMPORTED_MODULE_0__behavior__["c" /* setupLabelText */](createSpanAnnotation, createRelAnnotation)
 
     // Set tab behavior.
-    seupTabClick()
+    __WEBPACK_IMPORTED_MODULE_0__behavior__["e" /* seupTabClick */]()
 
     // Set import/export link behavior.
-    setupImportExportLink()
+    __WEBPACK_IMPORTED_MODULE_0__behavior__["a" /* setupImportExportLink */]()
 }
 
-// The tab name active.
-let currentTab = 'span'
-
-// Setup the action when a tab is clicked.
-function seupTabClick () {
-    $('.js-label-tab').on('click', e => {
-        const type = $(e.currentTarget).data('type')
-        let d = getLabelListData()
-        const labelObject = d[type] || {}
-        let labels
-        if (labelObject.labels === undefined) {
-            labels = [(type === 'span' ? 'span1' : 'relation1')]
-        } else {
-            labels = labelObject.labels
-        }
-
-        labelObject.labels = labels
-        d[type] = labelObject
-        saveLabelListData(d)
-
-        currentTab = type
-
-        let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
-        labels.forEach((label, index) => {
-            $ul.append(`
-                <li>
-                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
-                    <div class="label-list__text js-label">${label}</div>
-                </li>
-            `)
-        })
-        $ul.append(`
-            <li>
-                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
-                <input type="text" class="label-list__input">
-            </li>
-        `)
-        $('.js-label-tab-content').html($ul)
-    })
-
-    // Setup the initial tab content.
-    $('.js-label-tab[data-type="span"]').click()
-}
-
-function setupLabelAddButton () {
-    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
-        let $this = $(e.currentTarget)
-        let text = $this.parent().find('input').val().trim()
-        let type = $this.parents('[data-type]').data('type')
-
-        if (!text) {
-            text = '&nbsp;'
-        }
-
-        let d = getLabelListData()
-        let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push(text)
-        d[type] = labelObject
-        saveLabelListData(d)
-
-        // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
-    })
-}
-
-function setupLabelTrashButton () {
-    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
-        const $this = $(e.currentTarget)
-        const idx = $this.data('index')
-        const type = $this.parents('[data-type]').data('type')
-
-        let d = getLabelListData()
-        let labelObject = d[type] || { labels : [] }
-        labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
-        d[type] = labelObject
-        saveLabelListData(d)
-
-        // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
-    })
-}
-
-function setupLabelText () {
-    $('.js-label-tab-content').on('click', '.js-label', e => {
-        let $this = $(e.currentTarget)
-        let text = $this.text().trim().replace(/&nbsp;/g, '')
-        let type = $this.parents('[data-type]').data('type')
-
-        if (text === '<Empty Label>') {
-            text = ''
-        }
-
-        if (type === 'span') {
-            _createSpanAnnotation({ text })
-        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
-            _createRelAnnotation({ type, text })
-        }
-    })
-}
-
-function getLabelListData () {
-    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}')
-}
-
-function saveLabelListData (data) {
-    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data))
-}
-
-function setupImportExportLink () {
-    $('.js-export-label').on('click', () => {
-        let data = getLabelListData()
-
-        // Transform '&nbsp;' to white space.
-        Object.keys(data).forEach(key => {
-            let labelObject = data[key]
-            let labels = (labelObject.labels || []).map(label => {
-                if (label === '&nbsp;') {
-                    label = ''
-                }
-                return label
-            })
-            labelObject.labels = labels
-        })
-
-        // Conver to TOML style.
-        const toml = __WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"](data)
-        console.log(toml)
-
-        // Download.
-        let blob = new Blob([toml])
-        let blobURL = window.URL.createObjectURL(blob)
-        let a = document.createElement('a')
-        document.body.appendChild(a) // for firefox working correctly.
-        a.download = 'pdfanno.conf'
-        a.href = blobURL
-        a.click()
-        a.parentNode.removeChild(a)
-    })
-
-    $('.js-import-label').on('click', () => {
-        $('.js-import-file').val(null).click()
-    })
-    $('.js-import-file').on('change', ev => {
-        if (ev.target.files.length === 0) {
-            return
-        }
-
-        const file = ev.target.files[0]
-
-        if (!window.confirm('Are you sure to load labels?')) {
-            return
-        }
-
-        let fileReader = new FileReader()
-        fileReader.onload = event => {
-            const tomlString = event.target.result
-            try {
-                const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
-
-                // whitespace to '&nbsp'
-                Object.keys(labelData).forEach(key => {
-                    let labelObject = labelData[key]
-                    let labels = (labelObject.labels || []).map(label => {
-                        if (label === '') {
-                            label = '&nbsp;'
-                        }
-                        return label
-                    })
-                    labelObject.labels = labels
-                })
-
-                saveLabelListData(labelData)
-                // Re-render.
-                $(`.js-label-tab[data-type="${currentTab}"]`).click()
-            } catch (e) {
-                console.log('ERROR:', e)
-                console.log('TOML:\n', tomlString)
-                __WEBPACK_IMPORTED_MODULE_2__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
-                return
-            }
-        }
-        fileReader.readAsText(file)
-    })
-}
-
+/**
+ * Enable the Label Input UI.
+ */
 function enable ({ uuid, text, disable = false, autoFocus = false, blurListener = null }) {
-    console.log('enableInputLabel:', uuid, text)
 
     currentUUID = uuid
 
@@ -1952,6 +1773,9 @@ function enable ({ uuid, text, disable = false, autoFocus = false, blurListener 
     })
 }
 
+/**
+ * Disable the Label Input UI.
+ */
 function disable () {
     currentUUID = null
     $inputLabel
@@ -1994,6 +1818,9 @@ function handleAnnotationDeselected () {
     }
 }
 
+/**
+ * Save the text an user wrote, to the annotation ( specified by uuid ).
+ */
 function saveText (uuid) {
     const text = $inputLabel.val() || ''
     _saveAnnotationText(uuid, text)
@@ -2003,37 +1830,38 @@ function saveText (uuid) {
  * Set window event listeners.
  */
 function listenWindowEvents () {
-    // enable text input.
+
+    // Enable the text input.
     window.addEventListener('enableTextInput', e => {
         enable(e.detail)
     })
 
-    // disable text input.
+    // Disable the text input.
     window.addEventListener('disappearTextInput', e => {
         disable(e.detail)
     })
 
-    // handle annotation deleted.
+    // The event an annotation was deleted.
     window.addEventListener('annotationDeleted', e => {
         treatAnnotationDeleted(e.detail)
     })
 
-    // handle annotation hoverIn.
+    // The event an annotation was hovered in.
     window.addEventListener('annotationHoverIn', e => {
         handleAnnotationHoverIn(e.detail)
     })
 
-    // handle annotation hoverOut.
+    // The event an annotation was hovered out.
     window.addEventListener('annotationHoverOut', e => {
         handleAnnotationHoverOut(e.detail)
     })
 
-    // handle annotation selected.
+    // The event an annotation was selected.
     window.addEventListener('annotationSelected', e => {
         handleAnnotationSelected(e.detail)
     })
 
-    // handle annotation deselected.
+    // The event an annotation was deselected.
     window.addEventListener('annotationDeselected', () => {
         handleAnnotationDeselected()
     })
@@ -6367,6 +6195,233 @@ function dispatchWindowEvent (eventName, data) {
     var event = document.createEvent('CustomEvent')
     event.initCustomEvent(eventName, true, true, data)
     window.dispatchEvent(event)
+}
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
+/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
+/**
+ * Storage for label settings.
+ */
+
+// LocalStorage key to save label data.
+const LSKEY_LABEL_LIST = 'pdfanno-label-list'
+
+/**
+ * Get the labels from the storage.
+ */
+function getLabelList () {
+    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}')
+}
+
+/**
+ * Save the labels to the storage.
+ */
+function saveLabelList (data) {
+    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data))
+}
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["e"] = seupTabClick;
+/* harmony export (immutable) */ __webpack_exports__["b"] = setupLabelAddButton;
+/* harmony export (immutable) */ __webpack_exports__["d"] = setupLabelTrashButton;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setupLabelText;
+/* harmony export (immutable) */ __webpack_exports__["a"] = setupImportExportLink;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(29);
+/**
+ * Define the behaviors of label input component.
+ */
+
+
+
+
+
+// The tab selected.
+let currentTab = 'span'
+
+/**
+ * Setup the tab behavior.
+ */
+function seupTabClick () {
+    $('.js-label-tab').on('click', e => {
+        const type = $(e.currentTarget).data('type')
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        const labelObject = d[type] || {}
+        let labels
+        if (labelObject.labels === undefined) {
+            labels = [(type === 'span' ? 'span1' : 'relation1')]
+        } else {
+            labels = labelObject.labels
+        }
+
+        labelObject.labels = labels
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        currentTab = type
+
+        let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
+        labels.forEach((label, index) => {
+            $ul.append(`
+                <li>
+                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
+                    <div class="label-list__text js-label">${label}</div>
+                </li>
+            `)
+        })
+        $ul.append(`
+            <li>
+                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
+                <input type="text" class="label-list__input">
+            </li>
+        `)
+        $('.js-label-tab-content').html($ul)
+    })
+
+    // Setup the initial tab content.
+    $('.js-label-tab[data-type="span"]').click()
+}
+
+/**
+ * Set the add button behavior.
+ */
+function setupLabelAddButton () {
+    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
+        let $this = $(e.currentTarget)
+        let text = $this.parent().find('input').val().trim() || '&nbsp;'
+        let type = $this.parents('[data-type]').data('type')
+
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let labelObject = d[type] || { labels : [] }
+        labelObject.labels.push(text)
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+    })
+}
+
+/**
+ * Set the trash button behavior.
+ */
+function setupLabelTrashButton () {
+    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
+        const $this = $(e.currentTarget)
+        const idx = $this.data('index')
+        const type = $this.parents('[data-type]').data('type')
+
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let labelObject = d[type] || { labels : [] }
+        labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+    })
+}
+
+/**
+ * Set the behavior which a label text is clicked.
+ */
+function setupLabelText (createSpanAnnotation, createRelAnnotation) {
+    $('.js-label-tab-content').on('click', '.js-label', e => {
+        let $this = $(e.currentTarget)
+        let text = $this.text().trim().replace(/&nbsp;/g, '')
+        let type = $this.parents('[data-type]').data('type')
+        if (type === 'span') {
+            createSpanAnnotation({ text })
+        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
+            createRelAnnotation({ type, text })
+        }
+    })
+}
+
+/**
+ * Set the behavior of importing/exporting label settings.
+ */
+function setupImportExportLink () {
+    $('.js-export-label').on('click', () => {
+        let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+
+        // Transform '&nbsp;' to white space.
+        Object.keys(data).forEach(key => {
+            let labelObject = data[key]
+            let labels = (labelObject.labels || []).map(label => {
+                if (label === '&nbsp;') {
+                    label = ''
+                }
+                return label
+            })
+            labelObject.labels = labels
+        })
+
+        // Conver to TOML style.
+        const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
+
+        // Download.
+        __WEBPACK_IMPORTED_MODULE_2__utils__["download"]('pdfanno.conf', toml)
+    })
+
+    $('.js-import-label').on('click', () => {
+        $('.js-import-file').val(null).click()
+    })
+    $('.js-import-file').on('change', ev => {
+        if (ev.target.files.length === 0) {
+            return
+        }
+
+        const file = ev.target.files[0]
+
+        if (!window.confirm('Are you sure to load labels?')) {
+            return
+        }
+
+        let fileReader = new FileReader()
+        fileReader.onload = event => {
+            const tomlString = event.target.result
+            try {
+                const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
+
+                // whitespace to '&nbsp'
+                Object.keys(labelData).forEach(key => {
+                    let labelObject = labelData[key]
+                    let labels = (labelObject.labels || []).map(label => {
+                        if (label === '') {
+                            label = '&nbsp;'
+                        }
+                        return label
+                    })
+                    labelObject.labels = labels
+                })
+
+                __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
+                // Re-render.
+                $(`.js-label-tab[data-type="${currentTab}"]`).click()
+            } catch (e) {
+                console.log('ERROR:', e)
+                console.log('TOML:\n', tomlString)
+                __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
+                return
+            }
+        }
+        fileReader.readAsText(file)
+    })
 }
 
 
