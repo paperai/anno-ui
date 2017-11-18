@@ -40,6 +40,7 @@
     cursor: pointer;
     padding: 2px;
     font-size: 20px;
+    min-height: 1em;
 }
 .label-list__input {
     flex-grow: 1;

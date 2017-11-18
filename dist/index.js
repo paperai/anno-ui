@@ -1706,7 +1706,7 @@ function setup ({
 }) {
 
     // Define core functions.
-    __WEBPACK_IMPORTED_MODULE_0__core__["d" /* setup */](saveAnnotationText)
+    __WEBPACK_IMPORTED_MODULE_0__core__["e" /* setup */](saveAnnotationText)
 
     // Define user actions.
     __WEBPACK_IMPORTED_MODULE_1__behavior__["a" /* setup */](createSpanAnnotation, createRelAnnotation)
@@ -1756,7 +1756,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 20px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n", ""]);
+exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 20px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n    min-height: 1em;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n", ""]);
 
 // exports
 
@@ -6086,9 +6086,11 @@ function saveLabelList (data) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__core__ = __webpack_require__(31);
 /**
  * Define the behaviors of label input component.
  */
+
 
 
 
@@ -6167,8 +6169,14 @@ function setupTabClick () {
 function setupLabelAddButton () {
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
         let $this = $(e.currentTarget)
-        let text = $this.parent().find('input').val().trim() || '&nbsp;'
+        let text = $this.parent().find('input').val()
         let type = $this.parents('[data-type]').data('type')
+
+        // Check the text valid.
+        if (!__WEBPACK_IMPORTED_MODULE_4__core__["d" /* isValidInput */](text)) {
+            __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
+            return
+        }
 
         let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
@@ -6295,13 +6303,16 @@ function setupImportExportLink () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["d"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["e"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["b"] = enable;
 /* harmony export (immutable) */ __webpack_exports__["a"] = disable;
 /* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
+/* harmony export (immutable) */ __webpack_exports__["d"] = isValidInput;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /**
  * Core facilities for Label Input.
  */
+
 
 /**
  * A blur event listener.
@@ -6343,7 +6354,6 @@ function enable ({ uuid, text, disable = false, autoFocus = false, blurListener 
     if (_blurListener) {
         _blurListener()
         _blurListener = null
-        console.log('old _blurListener is called.')
     }
 
     $inputLabel
@@ -6355,9 +6365,9 @@ function enable ({ uuid, text, disable = false, autoFocus = false, blurListener 
     if (disable === false) {
         $inputLabel
             .removeAttr('disabled')
-            .on('keyup', () => {
-                saveText(uuid)
-            })
+            // .on('keyup', () => {
+            //     // saveText(uuid, true)
+            // })
     }
 
     if (autoFocus) {
@@ -6394,8 +6404,24 @@ function isCurrent (uuid) {
  * Save the text an user wrote, to the annotation ( specified by uuid ).
  */
 function saveText (uuid) {
-    const text = $inputLabel.val() || ''
+    const text = $inputLabel.val()
+
+    // Check the text valid.
+    if (!isValidInput(text)) {
+        __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
+        return
+    }
+
     _saveAnnotationText(uuid, text)
+}
+
+/**
+ * Check the text is permitted to save.
+ *
+ * Nor White space, tab or line break are not permitted.
+ */
+function isValidInput (text) {
+    return !/\s/.test(text)
 }
 
 
