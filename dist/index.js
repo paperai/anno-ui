@@ -1683,9 +1683,9 @@ function setup ({ createSpanAnnotation }) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["enable"] = enable;
-/* harmony export (immutable) */ __webpack_exports__["disable"] = disable;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__behavior__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(32);
 /**
  * UI parts - Input Label.
  */
@@ -1693,178 +1693,26 @@ __webpack_require__(20)
 
 
 
-let $inputLabel
-window.addEventListener('DOMContentLoaded', () => {
-    $inputLabel = $('#inputLabel')
-})
 
-let _blurListener
 
-let currentUUID
-
-let _getSelectedAnnotations
-let _saveAnnotationText
-
+/**
+ * Setup the Label Input.
+ */
 function setup ({
     getSelectedAnnotations,
     saveAnnotationText,
     createSpanAnnotation,
     createRelAnnotation
 }) {
-    _getSelectedAnnotations = getSelectedAnnotations
-    _saveAnnotationText = saveAnnotationText
 
-    // Start to listen window events.
-    listenWindowEvents()
+    // Define core functions.
+    __WEBPACK_IMPORTED_MODULE_0__core__["d" /* setup */](saveAnnotationText)
 
-    // Set add button behavior.
-    __WEBPACK_IMPORTED_MODULE_0__behavior__["b" /* setupLabelAddButton */]()
+    // Define user actions.
+    __WEBPACK_IMPORTED_MODULE_1__behavior__["a" /* setup */](createSpanAnnotation, createRelAnnotation)
 
-    // Set trash button behavior.
-    __WEBPACK_IMPORTED_MODULE_0__behavior__["d" /* setupLabelTrashButton */]()
-
-    // Set the action when a label is clicked.
-    __WEBPACK_IMPORTED_MODULE_0__behavior__["c" /* setupLabelText */](createSpanAnnotation, createRelAnnotation)
-
-    // Set tab behavior.
-    __WEBPACK_IMPORTED_MODULE_0__behavior__["e" /* seupTabClick */]()
-
-    // Set import/export link behavior.
-    __WEBPACK_IMPORTED_MODULE_0__behavior__["a" /* setupImportExportLink */]()
-}
-
-/**
- * Enable the Label Input UI.
- */
-function enable ({ uuid, text, disable = false, autoFocus = false, blurListener = null }) {
-
-    currentUUID = uuid
-
-    if (_blurListener) {
-        _blurListener()
-        _blurListener = null
-        console.log('old _blurListener is called.')
-    }
-
-    $inputLabel
-        .attr('disabled', 'disabled')
-        .val(text || '')
-        .off('blur')
-        .off('keyup')
-
-    if (disable === false) {
-        $inputLabel
-            .removeAttr('disabled')
-            .on('keyup', () => {
-                saveText(uuid)
-            })
-    }
-
-    if (autoFocus) {
-        $inputLabel.focus()
-    }
-
-    $inputLabel.on('blur', () => {
-        if (blurListener) {
-            blurListener()
-            _blurListener = blurListener
-        }
-        saveText(uuid)
-    })
-}
-
-/**
- * Disable the Label Input UI.
- */
-function disable () {
-    currentUUID = null
-    $inputLabel
-        .attr('disabled', 'disabled')
-        .val('')
-}
-
-function treatAnnotationDeleted ({ uuid }) {
-    if (currentUUID === uuid) {
-        disable(...arguments)
-    }
-}
-
-function handleAnnotationHoverIn (annotation) {
-    if (_getSelectedAnnotations().length === 0) {
-        enable({ uuid : annotation.uuid, text : annotation.text, disable : true })
-    }
-}
-
-function handleAnnotationHoverOut (annotation) {
-    if (_getSelectedAnnotations().length === 0) {
-        disable()
-    }
-}
-
-function handleAnnotationSelected (annotation) {
-    if (_getSelectedAnnotations().length === 1) {
-        enable({ uuid : annotation.uuid, text : annotation.text })
-    } else {
-        disable()
-    }
-}
-
-function handleAnnotationDeselected () {
-    const annos = _getSelectedAnnotations()
-    if (annos.length === 1) {
-        enable({ uuid : annos[0].uuid, text : annos[0].text })
-    } else {
-        disable()
-    }
-}
-
-/**
- * Save the text an user wrote, to the annotation ( specified by uuid ).
- */
-function saveText (uuid) {
-    const text = $inputLabel.val() || ''
-    _saveAnnotationText(uuid, text)
-}
-
-/**
- * Set window event listeners.
- */
-function listenWindowEvents () {
-
-    // Enable the text input.
-    window.addEventListener('enableTextInput', e => {
-        enable(e.detail)
-    })
-
-    // Disable the text input.
-    window.addEventListener('disappearTextInput', e => {
-        disable(e.detail)
-    })
-
-    // The event an annotation was deleted.
-    window.addEventListener('annotationDeleted', e => {
-        treatAnnotationDeleted(e.detail)
-    })
-
-    // The event an annotation was hovered in.
-    window.addEventListener('annotationHoverIn', e => {
-        handleAnnotationHoverIn(e.detail)
-    })
-
-    // The event an annotation was hovered out.
-    window.addEventListener('annotationHoverOut', e => {
-        handleAnnotationHoverOut(e.detail)
-    })
-
-    // The event an annotation was selected.
-    window.addEventListener('annotationSelected', e => {
-        handleAnnotationSelected(e.detail)
-    })
-
-    // The event an annotation was deselected.
-    window.addEventListener('annotationDeselected', () => {
-        handleAnnotationDeselected()
-    })
+    // Define window event listeners.
+    __WEBPACK_IMPORTED_MODULE_2__listener__["a" /* setup */](getSelectedAnnotations)
 }
 
 
@@ -6232,11 +6080,7 @@ function saveLabelList (data) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["e"] = seupTabClick;
-/* harmony export (immutable) */ __webpack_exports__["b"] = setupLabelAddButton;
-/* harmony export (immutable) */ __webpack_exports__["d"] = setupLabelTrashButton;
-/* harmony export (immutable) */ __webpack_exports__["c"] = setupLabelText;
-/* harmony export (immutable) */ __webpack_exports__["a"] = setupImportExportLink;
+/* harmony export (immutable) */ __webpack_exports__["a"] = setup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
@@ -6254,9 +6098,30 @@ function saveLabelList (data) {
 let currentTab = 'span'
 
 /**
+ * Setup the behaviors for Input Label.
+ */
+function setup (createSpanAnnotation, createRelAnnotation) {
+
+    // Set add button behavior.
+    setupLabelAddButton()
+
+    // Set trash button behavior.
+    setupLabelTrashButton()
+
+    // Set the action when a label is clicked.
+    setupLabelText(createSpanAnnotation, createRelAnnotation)
+
+    // Set tab behavior.
+    setupTabClick()
+
+    // Set import/export link behavior.
+    setupImportExportLink()
+}
+
+/**
  * Setup the tab behavior.
  */
-function seupTabClick () {
+function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
         let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
@@ -6422,6 +6287,226 @@ function setupImportExportLink () {
         }
         fileReader.readAsText(file)
     })
+}
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["d"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["b"] = enable;
+/* harmony export (immutable) */ __webpack_exports__["a"] = disable;
+/* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
+/**
+ * Core facilities for Label Input.
+ */
+
+/**
+ * A blur event listener.
+ */
+let _blurListener
+
+/**
+ * The uuid for the current annotation.
+ */
+let currentUUID
+
+/**
+ * The cache for the DOM of inputLabel.
+ */
+let $inputLabel
+window.addEventListener('DOMContentLoaded', () => {
+    $inputLabel = $('#inputLabel')
+})
+
+/**
+ * The function which saves a text.
+ */
+let _saveAnnotationText
+
+/**
+ * Setup the core module.
+ */
+function setup (saveAnnotationText) {
+    _saveAnnotationText = saveAnnotationText
+}
+
+/**
+ * Enable the Label Input UI.
+ */
+function enable ({ uuid, text, disable = false, autoFocus = false, blurListener = null }) {
+
+    currentUUID = uuid
+
+    if (_blurListener) {
+        _blurListener()
+        _blurListener = null
+        console.log('old _blurListener is called.')
+    }
+
+    $inputLabel
+        .attr('disabled', 'disabled')
+        .val(text || '')
+        .off('blur')
+        .off('keyup')
+
+    if (disable === false) {
+        $inputLabel
+            .removeAttr('disabled')
+            .on('keyup', () => {
+                saveText(uuid)
+            })
+    }
+
+    if (autoFocus) {
+        $inputLabel.focus()
+    }
+
+    $inputLabel.on('blur', () => {
+        if (blurListener) {
+            blurListener()
+            _blurListener = blurListener
+        }
+        saveText(uuid)
+    })
+}
+
+/**
+ * Disable the Label Input UI.
+ */
+function disable () {
+    currentUUID = null
+    $inputLabel
+        .attr('disabled', 'disabled')
+        .val('')
+}
+
+/**
+ * Check the uuid is the current one in Label Input.
+ */
+function isCurrent (uuid) {
+    return currentUUID === uuid
+}
+
+/**
+ * Save the text an user wrote, to the annotation ( specified by uuid ).
+ */
+function saveText (uuid) {
+    const text = $inputLabel.val() || ''
+    _saveAnnotationText(uuid, text)
+}
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = setup;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(31);
+/**
+ * Listeners for Input Label.
+ */
+
+
+/**
+ * The function which gets selected annotations.
+ */
+let _getSelectedAnnotations
+
+/**
+ * Set window event listeners.
+ */
+function setup (getSelectedAnnotations) {
+
+    _getSelectedAnnotations = getSelectedAnnotations
+
+    // Enable the text input.
+    window.addEventListener('enableTextInput', e => {
+        __WEBPACK_IMPORTED_MODULE_0__core__["b" /* enable */](e.detail)
+    })
+
+    // Disable the text input.
+    window.addEventListener('disappearTextInput', e => {
+        __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */](e.detail)
+    })
+
+    // The event an annotation was deleted.
+    window.addEventListener('annotationDeleted', e => {
+        treatAnnotationDeleted(e.detail)
+    })
+
+    // The event an annotation was hovered in.
+    window.addEventListener('annotationHoverIn', e => {
+        handleAnnotationHoverIn(e.detail)
+    })
+
+    // The event an annotation was hovered out.
+    window.addEventListener('annotationHoverOut', e => {
+        handleAnnotationHoverOut(e.detail)
+    })
+
+    // The event an annotation was selected.
+    window.addEventListener('annotationSelected', e => {
+        handleAnnotationSelected(e.detail)
+    })
+
+    // The event an annotation was deselected.
+    window.addEventListener('annotationDeselected', () => {
+        handleAnnotationDeselected()
+    })
+}
+
+/**
+ * When an annotation is deleted.
+ */
+function treatAnnotationDeleted ({ uuid }) {
+    if (__WEBPACK_IMPORTED_MODULE_0__core__["c" /* isCurrent */](uuid)) {
+        __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */](...arguments)
+    }
+}
+
+/**
+ * When an annotation started to be hovered.
+ */
+function handleAnnotationHoverIn (annotation) {
+    if (_getSelectedAnnotations().length === 0) {
+        __WEBPACK_IMPORTED_MODULE_0__core__["b" /* enable */]({ uuid : annotation.uuid, text : annotation.text, disable : true })
+    }
+}
+
+/**
+ * When an annotation ended to be hovered.
+ */
+function handleAnnotationHoverOut (annotation) {
+    if (_getSelectedAnnotations().length === 0) {
+        __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */]()
+    }
+}
+
+/**
+ * When an annotation is selected.
+ */
+function handleAnnotationSelected (annotation) {
+    if (_getSelectedAnnotations().length === 1) {
+        __WEBPACK_IMPORTED_MODULE_0__core__["b" /* enable */]({ uuid : annotation.uuid, text : annotation.text })
+    } else {
+        __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */]()
+    }
+}
+
+/**
+ * When an annotation is deselected.
+ */
+function handleAnnotationDeselected () {
+    const annos = _getSelectedAnnotations()
+    if (annos.length === 1) {
+        __WEBPACK_IMPORTED_MODULE_0__core__["b" /* enable */]({ uuid : annos[0].uuid, text : annos[0].text })
+    } else {
+        __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */]()
+    }
 }
 
 

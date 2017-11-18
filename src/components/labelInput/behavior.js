@@ -10,9 +10,30 @@ import * as db from './db'
 let currentTab = 'span'
 
 /**
+ * Setup the behaviors for Input Label.
+ */
+export function setup (createSpanAnnotation, createRelAnnotation) {
+
+    // Set add button behavior.
+    setupLabelAddButton()
+
+    // Set trash button behavior.
+    setupLabelTrashButton()
+
+    // Set the action when a label is clicked.
+    setupLabelText(createSpanAnnotation, createRelAnnotation)
+
+    // Set tab behavior.
+    setupTabClick()
+
+    // Set import/export link behavior.
+    setupImportExportLink()
+}
+
+/**
  * Setup the tab behavior.
  */
-export function seupTabClick () {
+function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
         let d = db.getLabelList()
@@ -55,7 +76,7 @@ export function seupTabClick () {
 /**
  * Set the add button behavior.
  */
-export function setupLabelAddButton () {
+function setupLabelAddButton () {
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
         let $this = $(e.currentTarget)
         let text = $this.parent().find('input').val().trim() || '&nbsp;'
@@ -75,7 +96,7 @@ export function setupLabelAddButton () {
 /**
  * Set the trash button behavior.
  */
-export function setupLabelTrashButton () {
+function setupLabelTrashButton () {
     $('.js-label-tab-content').on('click', '.js-label-trash', e => {
         const $this = $(e.currentTarget)
         const idx = $this.data('index')
@@ -95,7 +116,7 @@ export function setupLabelTrashButton () {
 /**
  * Set the behavior which a label text is clicked.
  */
-export function setupLabelText (createSpanAnnotation, createRelAnnotation) {
+function setupLabelText (createSpanAnnotation, createRelAnnotation) {
     $('.js-label-tab-content').on('click', '.js-label', e => {
         let $this = $(e.currentTarget)
         let text = $this.text().trim().replace(/&nbsp;/g, '')
@@ -111,7 +132,7 @@ export function setupLabelText (createSpanAnnotation, createRelAnnotation) {
 /**
  * Set the behavior of importing/exporting label settings.
  */
-export function setupImportExportLink () {
+function setupImportExportLink () {
     $('.js-export-label').on('click', () => {
         let data = db.getLabelList()
 
