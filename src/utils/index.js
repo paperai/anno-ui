@@ -121,6 +121,9 @@ export function tomlString (obj, root = true) {
     return lines.join('\n')
 }
 
+/**
+ * Check the value is array.
+ */
 function isArray (val) {
     return val && 'length' in val
 }
@@ -146,4 +149,18 @@ export function uuid () {
         id += BASE[ Math.floor(Math.random() * BASE_LEN) ]
     }
     return id
+}
+
+/**
+ * Download a content with the fileName.
+ */
+export function download (fileName, content) {
+    let blob = new Blob([content])
+    let blobURL = window.URL.createObjectURL(blob)
+    let a = document.createElement('a')
+    document.body.appendChild(a) // for Firefox working correctly.
+    a.download = fileName
+    a.href = blobURL
+    a.click()
+    a.parentNode.removeChild(a)
 }
