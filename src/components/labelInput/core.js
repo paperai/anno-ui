@@ -43,6 +43,7 @@ export function enable ({ uuid, text, disable = false, autoFocus = false, blurLi
     if (_blurListener) {
         _blurListener()
         _blurListener = null
+
     }
 
     $inputLabel

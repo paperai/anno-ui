@@ -80,6 +80,7 @@ function setupTabClick () {
 function setupLabelAddButton () {
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
         let $this = $(e.currentTarget)
+
         let text = $this.parent().find('input').val()
         let type = $this.parents('[data-type]').data('type')
 
