@@ -1,6 +1,7 @@
 /**
  * Core facilities for Label Input.
  */
+import * as alertDialog from '../../uis/alertDialog'
 
 /**
  * A blur event listener.
@@ -42,7 +43,7 @@ export function enable ({ uuid, text, disable = false, autoFocus = false, blurLi
     if (_blurListener) {
         _blurListener()
         _blurListener = null
-        console.log('old _blurListener is called.')
+
     }
 
     $inputLabel
@@ -54,9 +55,9 @@ export function enable ({ uuid, text, disable = false, autoFocus = false, blurLi
     if (disable === false) {
         $inputLabel
             .removeAttr('disabled')
-            .on('keyup', () => {
-                saveText(uuid)
-            })
+            // .on('keyup', () => {
+            //     // saveText(uuid, true)
+            // })
     }
 
     if (autoFocus) {
@@ -93,6 +94,22 @@ export function isCurrent (uuid) {
  * Save the text an user wrote, to the annotation ( specified by uuid ).
  */
 function saveText (uuid) {
-    const text = $inputLabel.val() || ''
+    const text = $inputLabel.val()
+
+    // Check the text valid.
+    if (!isValidInput(text)) {
+        alertDialog.show({ message : 'Nor white space, tab, or line break are not permitted.' })
+        return
+    }
+
     _saveAnnotationText(uuid, text)
+}
+
+/**
+ * Check the text is permitted to save.
+ *
+ * Nor White space, tab or line break are not permitted.
+ */
+export function isValidInput (text) {
+    return !/\s/.test(text)
 }

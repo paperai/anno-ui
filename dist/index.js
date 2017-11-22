@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -84,7 +84,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * UI - Alert dialog.
  */
-__webpack_require__(9)
+__webpack_require__(10)
 
 function create ({ type = 'alert', message = '' }) {
     const id = 'modal-' + (new Date().getTime())
@@ -249,7 +249,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(7);
+var	fixUrls = __webpack_require__(8);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -566,6 +566,134 @@ function updateLink (link, options, obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["e"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["b"] = enable;
+/* harmony export (immutable) */ __webpack_exports__["a"] = disable;
+/* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
+/* harmony export (immutable) */ __webpack_exports__["d"] = isValidInput;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
+/**
+ * Core facilities for Label Input.
+ */
+
+
+/**
+ * A blur event listener.
+ */
+let _blurListener
+
+/**
+ * The uuid for the current annotation.
+ */
+let currentUUID
+
+/**
+ * The cache for the DOM of inputLabel.
+ */
+let $inputLabel
+window.addEventListener('DOMContentLoaded', () => {
+    $inputLabel = $('#inputLabel')
+})
+
+/**
+ * The function which saves a text.
+ */
+let _saveAnnotationText
+
+/**
+ * Setup the core module.
+ */
+function setup (saveAnnotationText) {
+    _saveAnnotationText = saveAnnotationText
+}
+
+/**
+ * Enable the Label Input UI.
+ */
+function enable ({ uuid, text, disable = false, autoFocus = false, blurListener = null }) {
+
+    currentUUID = uuid
+
+    if (_blurListener) {
+        _blurListener()
+        _blurListener = null
+
+    }
+
+    $inputLabel
+        .attr('disabled', 'disabled')
+        .val(text || '')
+        .off('blur')
+        .off('keyup')
+
+    if (disable === false) {
+        $inputLabel
+            .removeAttr('disabled')
+            // .on('keyup', () => {
+            //     // saveText(uuid, true)
+            // })
+    }
+
+    if (autoFocus) {
+        $inputLabel.focus()
+    }
+
+    $inputLabel.on('blur', () => {
+        if (blurListener) {
+            blurListener()
+            _blurListener = blurListener
+        }
+        saveText(uuid)
+    })
+}
+
+/**
+ * Disable the Label Input UI.
+ */
+function disable () {
+    currentUUID = null
+    $inputLabel
+        .attr('disabled', 'disabled')
+        .val('')
+}
+
+/**
+ * Check the uuid is the current one in Label Input.
+ */
+function isCurrent (uuid) {
+    return currentUUID === uuid
+}
+
+/**
+ * Save the text an user wrote, to the annotation ( specified by uuid ).
+ */
+function saveText (uuid) {
+    const text = $inputLabel.val()
+
+    // Check the text valid.
+    if (!isValidInput(text)) {
+        __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
+        return
+    }
+
+    _saveAnnotationText(uuid, text)
+}
+
+/**
+ * Check the text is permitted to save.
+ *
+ * Nor White space, tab or line break are not permitted.
+ */
+function isValidInput (text) {
+    return !/\s/.test(text)
+}
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setupResizableColumns"] = setupResizableColumns;
 /* harmony export (immutable) */ __webpack_exports__["tomlString"] = tomlString;
@@ -740,25 +868,25 @@ function download (fileName, content) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__utils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__utils__ = __webpack_require__(4);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "primaryAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__; });
@@ -773,7 +901,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return __WEBPACK_IMPORTED_MODULE_11__uis__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_12__events__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "util", function() { return __WEBPACK_IMPORTED_MODULE_13__utils__; });
-__webpack_require__(5)
+__webpack_require__(6)
 
 
 
@@ -794,13 +922,13 @@ __webpack_require__(5)
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -825,7 +953,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -839,7 +967,7 @@ exports.push([module.i, "@charset 'utf-8';\n\n/* Reset CSS */\nhtml{color:#000;b
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 
@@ -934,7 +1062,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1234,13 +1362,13 @@ function getContentDropdownInitialText () {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(11);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1265,7 +1393,7 @@ if(false) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1279,7 +1407,7 @@ exports.push([module.i, "/**\n * UI - Alert Dialog.\n */\n\n.alertdialog-danger 
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1365,7 +1493,7 @@ function resetCheckReferenceAnnoDropdown () {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1432,7 +1560,7 @@ function setup ({
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1475,7 +1603,7 @@ function setup ({
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1542,7 +1670,7 @@ function setup ({
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1605,7 +1733,7 @@ function _getDownloadFileName (getCurrentContentName) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1638,7 +1766,7 @@ function setup ({ enableRect, disableRect }) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1659,7 +1787,7 @@ function setup ({ createRelAnnotation }) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1677,19 +1805,19 @@ function setup ({ createSpanAnnotation }) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(28);
 /**
  * UI parts - Input Label.
  */
-__webpack_require__(20)
+__webpack_require__(21)
 
 
 
@@ -1706,7 +1834,7 @@ function setup ({
 }) {
 
     // Define core functions.
-    __WEBPACK_IMPORTED_MODULE_0__core__["d" /* setup */](saveAnnotationText)
+    __WEBPACK_IMPORTED_MODULE_0__core__["e" /* setup */](saveAnnotationText)
 
     // Define user actions.
     __WEBPACK_IMPORTED_MODULE_1__behavior__["a" /* setup */](createSpanAnnotation, createRelAnnotation)
@@ -1717,13 +1845,13 @@ function setup ({
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(21);
+var content = __webpack_require__(22);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1748,7 +1876,7 @@ if(false) {
 }
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1756,17 +1884,241 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 20px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n", ""]);
+exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 20px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n    min-height: 1em;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 22 */
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = setup;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__core__ = __webpack_require__(3);
+/**
+ * Define the behaviors of label input component.
+ */
+
+
+
+
+
+
+// The tab selected.
+let currentTab = 'span'
+
+/**
+ * Setup the behaviors for Input Label.
+ */
+function setup (createSpanAnnotation, createRelAnnotation) {
+
+    // Set add button behavior.
+    setupLabelAddButton()
+
+    // Set trash button behavior.
+    setupLabelTrashButton()
+
+    // Set the action when a label is clicked.
+    setupLabelText(createSpanAnnotation, createRelAnnotation)
+
+    // Set tab behavior.
+    setupTabClick()
+
+    // Set import/export link behavior.
+    setupImportExportLink()
+}
+
+/**
+ * Setup the tab behavior.
+ */
+function setupTabClick () {
+    $('.js-label-tab').on('click', e => {
+        const type = $(e.currentTarget).data('type')
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        const labelObject = d[type] || {}
+        let labels
+        if (labelObject.labels === undefined) {
+            labels = [(type === 'span' ? 'span1' : 'relation1')]
+        } else {
+            labels = labelObject.labels
+        }
+
+        labelObject.labels = labels
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        currentTab = type
+
+        let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
+        labels.forEach((label, index) => {
+            $ul.append(`
+                <li>
+                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
+                    <div class="label-list__text js-label">${label}</div>
+                </li>
+            `)
+        })
+        $ul.append(`
+            <li>
+                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
+                <input type="text" class="label-list__input">
+            </li>
+        `)
+        $('.js-label-tab-content').html($ul)
+    })
+
+    // Setup the initial tab content.
+    $('.js-label-tab[data-type="span"]').click()
+}
+
+/**
+ * Set the add button behavior.
+ */
+function setupLabelAddButton () {
+    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
+        let $this = $(e.currentTarget)
+
+        let text = $this.parent().find('input').val()
+        let type = $this.parents('[data-type]').data('type')
+
+        // Check the text valid.
+        if (!__WEBPACK_IMPORTED_MODULE_4__core__["d" /* isValidInput */](text)) {
+            __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
+            return
+        }
+
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let labelObject = d[type] || { labels : [] }
+        labelObject.labels.push(text)
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+    })
+}
+
+/**
+ * Set the trash button behavior.
+ */
+function setupLabelTrashButton () {
+    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
+        const $this = $(e.currentTarget)
+        const idx = $this.data('index')
+        const type = $this.parents('[data-type]').data('type')
+
+        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let labelObject = d[type] || { labels : [] }
+        labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
+        d[type] = labelObject
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+
+        // Re-render.
+        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+    })
+}
+
+/**
+ * Set the behavior which a label text is clicked.
+ */
+function setupLabelText (createSpanAnnotation, createRelAnnotation) {
+    $('.js-label-tab-content').on('click', '.js-label', e => {
+        let $this = $(e.currentTarget)
+        let text = $this.text().trim().replace(/&nbsp;/g, '')
+        let type = $this.parents('[data-type]').data('type')
+        if (type === 'span') {
+            createSpanAnnotation({ text })
+        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
+            createRelAnnotation({ type, text })
+        }
+    })
+}
+
+/**
+ * Set the behavior of importing/exporting label settings.
+ */
+function setupImportExportLink () {
+    $('.js-export-label').on('click', () => {
+        let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+
+        // Transform '&nbsp;' to white space.
+        Object.keys(data).forEach(key => {
+            let labelObject = data[key]
+            let labels = (labelObject.labels || []).map(label => {
+                if (label === '&nbsp;') {
+                    label = ''
+                }
+                return label
+            })
+            labelObject.labels = labels
+        })
+
+        // Conver to TOML style.
+        const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
+
+        // Download.
+        __WEBPACK_IMPORTED_MODULE_2__utils__["download"]('pdfanno.conf', toml)
+    })
+
+    $('.js-import-label').on('click', () => {
+        $('.js-import-file').val(null).click()
+    })
+    $('.js-import-file').on('change', ev => {
+        if (ev.target.files.length === 0) {
+            return
+        }
+
+        const file = ev.target.files[0]
+
+        if (!window.confirm('Are you sure to load labels?')) {
+            return
+        }
+
+        let fileReader = new FileReader()
+        fileReader.onload = event => {
+            const tomlString = event.target.result
+            try {
+                const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
+
+                // whitespace to '&nbsp'
+                Object.keys(labelData).forEach(key => {
+                    let labelObject = labelData[key]
+                    let labels = (labelObject.labels || []).map(label => {
+                        if (label === '') {
+                            label = '&nbsp;'
+                        }
+                        return label
+                    })
+                    labelObject.labels = labels
+                })
+
+                __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
+                // Re-render.
+                $(`.js-label-tab[data-type="${currentTab}"]`).click()
+            } catch (e) {
+                console.log('ERROR:', e)
+                console.log('TOML:\n', tomlString)
+                __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
+                return
+            }
+        }
+        fileReader.readAsText(file)
+    })
+}
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(23);
-var compiler = __webpack_require__(24);
+var parser = __webpack_require__(25);
+var compiler = __webpack_require__(26);
 
 module.exports = {
   parse: function(input) {
@@ -1777,7 +2129,7 @@ module.exports = {
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -5624,7 +5976,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5828,226 +6180,7 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
-/* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(26);
-/**
- * UI parts - Upload Button.
- */
-
-
-
-function setup ({
-    getCurrentDisplayContentFile,
-    uploadFinishCallback = function () {}
-}) {
-    $('.js-btn-upload').off('click').on('click', () => {
-        const contentFile = getCurrentDisplayContentFile()
-        uploadPDF({
-            contentFile,
-            successCallback : uploadFinishCallback
-        })
-        return false
-    })
-}
-
-function uploadPDF ({
-    contentFile,
-    successCallback = function () {}
-}) {
-
-    if (!contentFile) {
-        return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' })
-    }
-
-    // Progress bar.
-    const $progressBar = $('.js-upload-progress')
-
-    // Upload and analyze the PDF.
-    __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
-        contentFile,
-        willStartCallback : () => {
-            // Reset the result text.
-            setResult('Waiting for response...')
-            // Show the progress bar.
-            $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
-        },
-        progressCallback : percent => {
-            $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
-            if (percent === 100) {
-                setTimeout(() => {
-                    $progressBar.addClass('hidden')
-                }, 2000)
-            }
-        },
-        successCallback : resultText => {
-            setResult(resultText)
-            successCallback(resultText)
-        },
-        failedCallback : err => {
-            const message = 'Failed to upload and analyze your PDF.<br>Reason: ' + err
-            __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message })
-            setResult(err)
-        }
-    })
-}
-
-/**
- * Set the analyzing result.
- */
-function setResult (text) {
-    $('#uploadResult').val(text)
-}
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = upload;
-/**
- * Functions - upload and analyze a PDF.
- */
-function upload ({
-    contentFile,
-    willStartCallback = function () {},
-    progressCallback = function () {},
-    successCallback = function () {},
-    failedCallback = function () {}
-} = {}) {
-
-    // Convert PDF to base64 string.
-    const contentBase64 = arrayBufferToBase64(contentFile.content)
-
-    // API endpoint.
-    const url = window.API_ROOT + '/api/pdf_upload'
-
-    // API params.
-    let data = {
-        filename : contentFile.name,
-        pdf      : contentBase64
-    }
-
-    // Callback before ajax call.
-    willStartCallback()
-
-    // Call the API.
-    $.ajax({
-        xhr : function () {
-            var xhr = new window.XMLHttpRequest()
-            // Upload progress
-            xhr.upload.addEventListener('progress', function (evt) {
-                if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total
-                    // Do something with upload progress
-                    console.log('uploadProgress:', percentComplete)
-                    let percent = Math.floor(percentComplete * 100)
-                    progressCallback(percent)
-                }
-            }, false)
-
-            return xhr
-        },
-        url      : url,
-        method   : 'POST',
-        dataType : 'json',
-        data
-
-    }).then(result => {
-        if (result.status === 'failure') {
-            failedCallback(result.err.stderr || result.err || result)
-            return
-        }
-
-        setTimeout(() => {
-            successCallback(result.text)
-        }, 500) // wait for progress bar animation.
-    })
-}
-
-function arrayBufferToBase64 (buffer) {
-    var s = ''
-    var bytes = new Uint8Array(buffer)
-    var len = bytes.byteLength
-    for (var i = 0; i < len; i++) {
-        s += String.fromCharCode(bytes[i])
-    }
-    return window.btoa(s)
-}
-
-
-/***/ }),
 /* 27 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__alertDialog__ = __webpack_require__(0);
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "alertDialog", function() { return __WEBPACK_IMPORTED_MODULE_0__alertDialog__; });
-
-
-
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * Event listeners.
- */
-
-/**
- * Initializer.
- */
-function setup () {
-    $(document).on('keydown', e => {
-        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
-            dispatchWindowEvent('manageCtrlKey', 'on')
-        }
-    }).on('keyup', e => {
-        // Allow any keyboard events for <input/>.
-        if (e.target.tagName.toLowerCase() === 'input') {
-            return
-        }
-
-        dispatchWindowEvent('manageCtrlKey', 'off')
-
-        if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1)
-        } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2)
-        } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3)
-        } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4)
-        }
-    })
-}
-
-/**
- * Dispatch a custom event to `window` object.
- */
-function dispatchWindowEvent (eventName, data) {
-    var event = document.createEvent('CustomEvent')
-    event.initCustomEvent(eventName, true, true, data)
-    window.dispatchEvent(event)
-}
-
-
-/***/ }),
-/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6076,336 +6209,12 @@ function saveLabelList (data) {
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(29);
-/**
- * Define the behaviors of label input component.
- */
-
-
-
-
-
-// The tab selected.
-let currentTab = 'span'
-
-/**
- * Setup the behaviors for Input Label.
- */
-function setup (createSpanAnnotation, createRelAnnotation) {
-
-    // Set add button behavior.
-    setupLabelAddButton()
-
-    // Set trash button behavior.
-    setupLabelTrashButton()
-
-    // Set the action when a label is clicked.
-    setupLabelText(createSpanAnnotation, createRelAnnotation)
-
-    // Set tab behavior.
-    setupTabClick()
-
-    // Set import/export link behavior.
-    setupImportExportLink()
-}
-
-/**
- * Setup the tab behavior.
- */
-function setupTabClick () {
-    $('.js-label-tab').on('click', e => {
-        const type = $(e.currentTarget).data('type')
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-        const labelObject = d[type] || {}
-        let labels
-        if (labelObject.labels === undefined) {
-            labels = [(type === 'span' ? 'span1' : 'relation1')]
-        } else {
-            labels = labelObject.labels
-        }
-
-        labelObject.labels = labels
-        d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
-
-        currentTab = type
-
-        let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
-        labels.forEach((label, index) => {
-            $ul.append(`
-                <li>
-                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
-                    <div class="label-list__text js-label">${label}</div>
-                </li>
-            `)
-        })
-        $ul.append(`
-            <li>
-                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
-                <input type="text" class="label-list__input">
-            </li>
-        `)
-        $('.js-label-tab-content').html($ul)
-    })
-
-    // Setup the initial tab content.
-    $('.js-label-tab[data-type="span"]').click()
-}
-
-/**
- * Set the add button behavior.
- */
-function setupLabelAddButton () {
-    $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
-        let $this = $(e.currentTarget)
-        let text = $this.parent().find('input').val().trim() || '&nbsp;'
-        let type = $this.parents('[data-type]').data('type')
-
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-        let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push(text)
-        d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
-
-        // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
-    })
-}
-
-/**
- * Set the trash button behavior.
- */
-function setupLabelTrashButton () {
-    $('.js-label-tab-content').on('click', '.js-label-trash', e => {
-        const $this = $(e.currentTarget)
-        const idx = $this.data('index')
-        const type = $this.parents('[data-type]').data('type')
-
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-        let labelObject = d[type] || { labels : [] }
-        labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
-        d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
-
-        // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
-    })
-}
-
-/**
- * Set the behavior which a label text is clicked.
- */
-function setupLabelText (createSpanAnnotation, createRelAnnotation) {
-    $('.js-label-tab-content').on('click', '.js-label', e => {
-        let $this = $(e.currentTarget)
-        let text = $this.text().trim().replace(/&nbsp;/g, '')
-        let type = $this.parents('[data-type]').data('type')
-        if (type === 'span') {
-            createSpanAnnotation({ text })
-        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
-            createRelAnnotation({ type, text })
-        }
-    })
-}
-
-/**
- * Set the behavior of importing/exporting label settings.
- */
-function setupImportExportLink () {
-    $('.js-export-label').on('click', () => {
-        let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-
-        // Transform '&nbsp;' to white space.
-        Object.keys(data).forEach(key => {
-            let labelObject = data[key]
-            let labels = (labelObject.labels || []).map(label => {
-                if (label === '&nbsp;') {
-                    label = ''
-                }
-                return label
-            })
-            labelObject.labels = labels
-        })
-
-        // Conver to TOML style.
-        const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
-
-        // Download.
-        __WEBPACK_IMPORTED_MODULE_2__utils__["download"]('pdfanno.conf', toml)
-    })
-
-    $('.js-import-label').on('click', () => {
-        $('.js-import-file').val(null).click()
-    })
-    $('.js-import-file').on('change', ev => {
-        if (ev.target.files.length === 0) {
-            return
-        }
-
-        const file = ev.target.files[0]
-
-        if (!window.confirm('Are you sure to load labels?')) {
-            return
-        }
-
-        let fileReader = new FileReader()
-        fileReader.onload = event => {
-            const tomlString = event.target.result
-            try {
-                const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
-
-                // whitespace to '&nbsp'
-                Object.keys(labelData).forEach(key => {
-                    let labelObject = labelData[key]
-                    let labels = (labelObject.labels || []).map(label => {
-                        if (label === '') {
-                            label = '&nbsp;'
-                        }
-                        return label
-                    })
-                    labelObject.labels = labels
-                })
-
-                __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
-                // Re-render.
-                $(`.js-label-tab[data-type="${currentTab}"]`).click()
-            } catch (e) {
-                console.log('ERROR:', e)
-                console.log('TOML:\n', tomlString)
-                __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
-                return
-            }
-        }
-        fileReader.readAsText(file)
-    })
-}
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["d"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["b"] = enable;
-/* harmony export (immutable) */ __webpack_exports__["a"] = disable;
-/* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
-/**
- * Core facilities for Label Input.
- */
-
-/**
- * A blur event listener.
- */
-let _blurListener
-
-/**
- * The uuid for the current annotation.
- */
-let currentUUID
-
-/**
- * The cache for the DOM of inputLabel.
- */
-let $inputLabel
-window.addEventListener('DOMContentLoaded', () => {
-    $inputLabel = $('#inputLabel')
-})
-
-/**
- * The function which saves a text.
- */
-let _saveAnnotationText
-
-/**
- * Setup the core module.
- */
-function setup (saveAnnotationText) {
-    _saveAnnotationText = saveAnnotationText
-}
-
-/**
- * Enable the Label Input UI.
- */
-function enable ({ uuid, text, disable = false, autoFocus = false, blurListener = null }) {
-
-    currentUUID = uuid
-
-    if (_blurListener) {
-        _blurListener()
-        _blurListener = null
-        console.log('old _blurListener is called.')
-    }
-
-    $inputLabel
-        .attr('disabled', 'disabled')
-        .val(text || '')
-        .off('blur')
-        .off('keyup')
-
-    if (disable === false) {
-        $inputLabel
-            .removeAttr('disabled')
-            .on('keyup', () => {
-                saveText(uuid)
-            })
-    }
-
-    if (autoFocus) {
-        $inputLabel.focus()
-    }
-
-    $inputLabel.on('blur', () => {
-        if (blurListener) {
-            blurListener()
-            _blurListener = blurListener
-        }
-        saveText(uuid)
-    })
-}
-
-/**
- * Disable the Label Input UI.
- */
-function disable () {
-    currentUUID = null
-    $inputLabel
-        .attr('disabled', 'disabled')
-        .val('')
-}
-
-/**
- * Check the uuid is the current one in Label Input.
- */
-function isCurrent (uuid) {
-    return currentUUID === uuid
-}
-
-/**
- * Save the text an user wrote, to the annotation ( specified by uuid ).
- */
-function saveText (uuid) {
-    const text = $inputLabel.val() || ''
-    _saveAnnotationText(uuid, text)
-}
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(3);
 /**
  * Listeners for Input Label.
  */
@@ -6507,6 +6316,225 @@ function handleAnnotationDeselected () {
     } else {
         __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */]()
     }
+}
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
+/* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(30);
+/**
+ * UI parts - Upload Button.
+ */
+
+
+
+function setup ({
+    getCurrentDisplayContentFile,
+    uploadFinishCallback = function () {}
+}) {
+    $('.js-btn-upload').off('click').on('click', () => {
+        const contentFile = getCurrentDisplayContentFile()
+        uploadPDF({
+            contentFile,
+            successCallback : uploadFinishCallback
+        })
+        return false
+    })
+}
+
+function uploadPDF ({
+    contentFile,
+    successCallback = function () {}
+}) {
+
+    if (!contentFile) {
+        return __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Display a content before upload.' })
+    }
+
+    // Progress bar.
+    const $progressBar = $('.js-upload-progress')
+
+    // Upload and analyze the PDF.
+    __WEBPACK_IMPORTED_MODULE_1__funcs_upload__["a" /* upload */]({
+        contentFile,
+        willStartCallback : () => {
+            // Reset the result text.
+            setResult('Waiting for response...')
+            // Show the progress bar.
+            $progressBar.removeClass('hidden').find('.progress-bar').css('width', '0%').attr('aria-valuenow', 0).text('0%')
+        },
+        progressCallback : percent => {
+            $progressBar.find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).text(percent + '%')
+            if (percent === 100) {
+                setTimeout(() => {
+                    $progressBar.addClass('hidden')
+                }, 2000)
+            }
+        },
+        successCallback : resultText => {
+            setResult(resultText)
+            successCallback(resultText)
+        },
+        failedCallback : err => {
+            const message = 'Failed to upload and analyze your PDF.<br>Reason: ' + err
+            __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message })
+            setResult(err)
+        }
+    })
+}
+
+/**
+ * Set the analyzing result.
+ */
+function setResult (text) {
+    $('#uploadResult').val(text)
+}
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = upload;
+/**
+ * Functions - upload and analyze a PDF.
+ */
+function upload ({
+    contentFile,
+    willStartCallback = function () {},
+    progressCallback = function () {},
+    successCallback = function () {},
+    failedCallback = function () {}
+} = {}) {
+
+    // Convert PDF to base64 string.
+    const contentBase64 = arrayBufferToBase64(contentFile.content)
+
+    // API endpoint.
+    const url = window.API_ROOT + '/api/pdf_upload'
+
+    // API params.
+    let data = {
+        filename : contentFile.name,
+        pdf      : contentBase64
+    }
+
+    // Callback before ajax call.
+    willStartCallback()
+
+    // Call the API.
+    $.ajax({
+        xhr : function () {
+            var xhr = new window.XMLHttpRequest()
+            // Upload progress
+            xhr.upload.addEventListener('progress', function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total
+                    // Do something with upload progress
+                    console.log('uploadProgress:', percentComplete)
+                    let percent = Math.floor(percentComplete * 100)
+                    progressCallback(percent)
+                }
+            }, false)
+
+            return xhr
+        },
+        url      : url,
+        method   : 'POST',
+        dataType : 'json',
+        data
+
+    }).then(result => {
+        if (result.status === 'failure') {
+            failedCallback(result.err.stderr || result.err || result)
+            return
+        }
+
+        setTimeout(() => {
+            successCallback(result.text)
+        }, 500) // wait for progress bar animation.
+    })
+}
+
+function arrayBufferToBase64 (buffer) {
+    var s = ''
+    var bytes = new Uint8Array(buffer)
+    var len = bytes.byteLength
+    for (var i = 0; i < len; i++) {
+        s += String.fromCharCode(bytes[i])
+    }
+    return window.btoa(s)
+}
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__alertDialog__ = __webpack_require__(0);
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "alertDialog", function() { return __WEBPACK_IMPORTED_MODULE_0__alertDialog__; });
+
+
+
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/**
+ * Event listeners.
+ */
+
+/**
+ * Initializer.
+ */
+function setup () {
+    $(document).on('keydown', e => {
+        if (e.keyCode === 17 || e.keyCode === 91) { // 17:ctrlKey, 91:cmdKey
+            dispatchWindowEvent('manageCtrlKey', 'on')
+        }
+    }).on('keyup', e => {
+        // Allow any keyboard events for <input/>.
+        if (e.target.tagName.toLowerCase() === 'input') {
+            return
+        }
+
+        dispatchWindowEvent('manageCtrlKey', 'off')
+
+        if (e.keyCode === 49) {         // Digit "1"
+            dispatchWindowEvent('digitKeyPressed', 1)
+        } else if (e.keyCode === 50) {  // Digit "2"
+            dispatchWindowEvent('digitKeyPressed', 2)
+        } else if (e.keyCode === 51) {  // Digit "3"
+            dispatchWindowEvent('digitKeyPressed', 3)
+        } else if (e.keyCode === 52) {  // Digit "4"
+            dispatchWindowEvent('digitKeyPressed', 4)
+        }
+    })
+}
+
+/**
+ * Dispatch a custom event to `window` object.
+ */
+function dispatchWindowEvent (eventName, data) {
+    var event = document.createEvent('CustomEvent')
+    event.initCustomEvent(eventName, true, true, data)
+    window.dispatchEvent(event)
 }
 
 

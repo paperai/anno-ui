@@ -5,6 +5,7 @@ import toml from 'toml'
 import * as alertDialog from '../../uis/alertDialog'
 import * as annoUtils from '../../utils'
 import * as db from './db'
+import * as core from './core'
 
 // The tab selected.
 let currentTab = 'span'
@@ -79,8 +80,15 @@ function setupTabClick () {
 function setupLabelAddButton () {
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
         let $this = $(e.currentTarget)
-        let text = $this.parent().find('input').val().trim() || '&nbsp;'
+
+        let text = $this.parent().find('input').val()
         let type = $this.parents('[data-type]').data('type')
+
+        // Check the text valid.
+        if (!core.isValidInput(text)) {
+            alertDialog.show({ message : 'Nor white space, tab, or line break are not permitted.' })
+            return
+        }
 
         let d = db.getLabelList()
         let labelObject = d[type] || { labels : [] }
