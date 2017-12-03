@@ -834,10 +834,10 @@ function isArray (val) {
  *
  * @return {String}
  */
-function uuid () {
+function uuid (len = 8) {
 
     // Length of ID characters.
-    const ID_LENGTH = 8
+    const ID_LENGTH = len
 
     // Candidates.
     const BASE = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
