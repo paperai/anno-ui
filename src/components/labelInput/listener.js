@@ -27,7 +27,7 @@ export function setup (getSelectedAnnotations) {
 
     // The event an annotation was deleted.
     window.addEventListener('annotationDeleted', e => {
-        treatAnnotationDeleted(e.detail)
+        handleAnnotationDeleted(e.detail)
     })
 
     // The event an annotation was hovered in.
@@ -54,7 +54,7 @@ export function setup (getSelectedAnnotations) {
 /**
  * When an annotation is deleted.
  */
-function treatAnnotationDeleted ({ uuid }) {
+function handleAnnotationDeleted ({ uuid }) {
     if (core.isCurrent(uuid)) {
         core.disable(...arguments)
     }
