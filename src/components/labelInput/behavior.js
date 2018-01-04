@@ -7,8 +7,26 @@ import * as annoUtils from '../../utils'
 import * as db from './db'
 import * as core from './core'
 
-// The tab selected.
+/**
+ * The selected tab.
+ */
 let currentTab = 'span'
+
+/**
+ * Colors for a picker.
+ */
+const colors = [
+    // pick from https://www.materialui.co/colors.
+    'FFEB3B', // yellow
+    'FF5722', // orange
+    '795548', // brown
+    'f44336', // red
+    'E91E63', // pink
+    '9C27B0', // purple
+    '3F51B5', // blue
+    '4CAF50'  // green
+]
+
 
 /**
  * Setup the behaviors for Input Label.
@@ -41,7 +59,10 @@ function setupTabClick () {
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
-            labels = [(type === 'span' ? 'span1' : 'relation1')]
+            const text = type === 'span' ? 'span1' : 'relation1'
+            // const color = colors[0]
+            // labels = [{ text, color }]
+            labels = [ text ]
         } else {
             labels = labelObject.labels
         }
@@ -54,25 +75,76 @@ function setupTabClick () {
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
+
+            let text, color
+            if (typeof label === 'string') { // old style.
+                text = label
+                color = colors[0]
+            } else {
+                text = label[0]
+                color = label[1]
+            }
+
             $ul.append(`
-                <li>
-                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
-                    <div class="label-list__text js-label">${label}</div>
+                <li class="label-list__item">
+                    <div class="label-list__btn js-label-trash" data-index="${index}">
+                        <i class="fa fa-trash-o fa-2x"></i>
+                    </div>
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${color}">
+                    <div class="label-list__text js-label">
+                        ${text}
+                    </div>
                 </li>
             `)
         })
         $ul.append(`
-            <li>
-                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
+            <li class="label-list__item">
+                <div class="label-list__btn js-add-label-button">
+                    <i class="fa fa-plus fa-2x"></i>
+                </div>
                 <input type="text" class="label-list__input">
             </li>
         `)
         $('.js-label-tab-content').html($ul)
+
+        // Setup color pickers.
+        setupColorPicker()
+
     })
 
     // Setup the initial tab content.
     $('.js-label-tab[data-type="span"]').click()
 }
+
+/**
+ * Setup the color pickers.
+ */
+function setupColorPicker () {
+
+
+    // Setup colorPickers.
+    $('.js-label-palette').spectrum({
+        showPaletteOnly        : true,
+        showPalette            : true,
+        hideAfterPaletteSelect : true,
+        palette                : [
+            colors.slice(0, Math.floor(colors.length / 2)),
+            colors.slice(Math.floor(colors.length / 2), colors.length)
+        ]
+    })
+    // Set initial color.
+    $('.js-label-palette').each((i, elm) => {
+        const $elm = $(elm)
+        $elm.spectrum('set', $elm.data('color'))
+    })
+
+    // Setup behavior.
+    $('.js-label-palette').off('change').on('change', (e) => {
+        console.log('click color picker:', e)
+        // TODO 色変更時の処理を実装する.
+    })
+}
+
 
 /**
  * Set the add button behavior.
@@ -90,9 +162,12 @@ function setupLabelAddButton () {
             return
         }
 
+        // Chose one at random.
+        let color = colors[Math.floor(Math.random() * colors.length) % colors.length]
+
         let d = db.getLabelList()
         let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push(text)
+        labelObject.labels.push([ text, color ])
         d[type] = labelObject
         db.saveLabelList(d)
 
@@ -127,7 +202,7 @@ function setupLabelTrashButton () {
 function setupLabelText (createSpanAnnotation, createRelAnnotation) {
     $('.js-label-tab-content').on('click', '.js-label', e => {
         let $this = $(e.currentTarget)
-        let text = $this.text().trim().replace(/&nbsp;/g, '')
+        let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
         if (type === 'span') {
             createSpanAnnotation({ text })
@@ -141,20 +216,10 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
  * Set the behavior of importing/exporting label settings.
  */
 function setupImportExportLink () {
+
+    // Export behavior.
     $('.js-export-label').on('click', () => {
         let data = db.getLabelList()
-
-        // Transform '&nbsp;' to white space.
-        Object.keys(data).forEach(key => {
-            let labelObject = data[key]
-            let labels = (labelObject.labels || []).map(label => {
-                if (label === '&nbsp;') {
-                    label = ''
-                }
-                return label
-            })
-            labelObject.labels = labels
-        })
 
         // Conver to TOML style.
         const toml = annoUtils.tomlString(data)
@@ -163,48 +228,34 @@ function setupImportExportLink () {
         annoUtils.download('pdfanno.conf', toml)
     })
 
+    // Import behavior.
     $('.js-import-label').on('click', () => {
         $('.js-import-file').val(null).click()
     })
-    $('.js-import-file').on('change', ev => {
+    $('.js-import-file').on('change', async ev => {
+
         if (ev.target.files.length === 0) {
             return
         }
-
-        const file = ev.target.files[0]
 
         if (!window.confirm('Are you sure to load labels?')) {
             return
         }
 
-        let fileReader = new FileReader()
-        fileReader.onload = event => {
-            const tomlString = event.target.result
-            try {
-                const labelData = toml.parse(tomlString)
+        try {
+            const file = ev.target.files[0]
+            const tomlString = await annoUtils.loadFileAsText(file)
+            const labelData = toml.parse(tomlString)
+            db.saveLabelList(labelData)
+            // Re-render.
+            $(`.js-label-tab[data-type="${currentTab}"]`).click()
 
-                // whitespace to '&nbsp'
-                Object.keys(labelData).forEach(key => {
-                    let labelObject = labelData[key]
-                    let labels = (labelObject.labels || []).map(label => {
-                        if (label === '') {
-                            label = '&nbsp;'
-                        }
-                        return label
-                    })
-                    labelObject.labels = labels
-                })
-
-                db.saveLabelList(labelData)
-                // Re-render.
-                $(`.js-label-tab[data-type="${currentTab}"]`).click()
-            } catch (e) {
-                console.log('ERROR:', e)
-                console.log('TOML:\n', tomlString)
-                alertDialog.show({ message : 'ERROR: cannot load the label file.' })
-                return
-            }
+        } catch (e) {
+            console.log('ERROR:', e)
+            console.log('TOML:\n', tomlString)
+            alertDialog.show({ message : 'ERROR: cannot load the label file.' })
+            return
         }
-        fileReader.readAsText(file)
+
     })
 }

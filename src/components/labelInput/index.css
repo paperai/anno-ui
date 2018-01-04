@@ -7,13 +7,13 @@
  * Label list.
  */
 .label-list {}
-.label-list li {
+.label-list .label-list__item {
     display: flex;
     align-items: center;
     padding: 0 10px;
     border-bottom: 1px solid #eee;
 }
-.label-list li:last-child {
+.label-list .label-list__item:last-child {
     padding-top: 5px;
     padding-bottom: 5px;
     border-bottom: 0 solid rgba(0,0,0,0);
@@ -25,10 +25,9 @@
     font-size: 16px;
     text-align: center;
     cursor: pointer;
-    transition: all 1.5 ease-in-out;
     border-radius: 3px;
     background-color: white;
-    margin-right: 20px;
+    margin-right: 5px;
     flex: 0 0 30px;
 }
 .label-list__btn:hover,
@@ -45,4 +44,14 @@
 .label-list__input {
     flex-grow: 1;
     padding: 2px 5px;
+}
+
+/** Override color picker style. */
+.label-list .sp-replacer {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0;
+}
+.label-list .sp-dd {
+    display: none;
 }

@@ -699,6 +699,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["tomlString"] = tomlString;
 /* harmony export (immutable) */ __webpack_exports__["uuid"] = uuid;
 /* harmony export (immutable) */ __webpack_exports__["download"] = download;
+/* harmony export (immutable) */ __webpack_exports__["loadFileAsText"] = loadFileAsText;
 /**
  * Make the UI resizable.
  */
@@ -864,6 +865,23 @@ function download (fileName, content) {
     a.href = blobURL
     a.click()
     a.parentNode.removeChild(a)
+}
+
+/**
+ * Load a file as a text.
+ */
+function loadFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        let fileReader = new FileReader()
+        fileReader.onload = event => {
+            const text = event.target.result
+            resolve(text)
+        }
+        fileReader.onerror = err => {
+            reject(err)
+        }
+        fileReader.readAsText(file)
+    })
 }
 
 
@@ -1884,7 +1902,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list li {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list li:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    transition: all 1.5 ease-in-out;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 20px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n    min-height: 1em;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n", ""]);
+exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Label list.\n */\n.label-list {}\n.label-list .label-list__item {\n    display: flex;\n    align-items: center;\n    padding: 0 10px;\n    border-bottom: 1px solid #eee;\n}\n.label-list .label-list__item:last-child {\n    padding-top: 5px;\n    padding-bottom: 5px;\n    border-bottom: 0 solid rgba(0,0,0,0);\n}\n.label-list__btn {\n    width: 40px;\n    height: 40px;\n    line-height: 50px;\n    font-size: 16px;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 3px;\n    background-color: white;\n    margin-right: 5px;\n    flex: 0 0 30px;\n}\n.label-list__btn:hover,\n.label-list__text:hover {\n    box-shadow: 0 1px 3px rgba(0,0,0,.3);\n}\n.label-list__text {\n    flex-grow: 1;\n    cursor: pointer;\n    padding: 2px;\n    font-size: 20px;\n    min-height: 1em;\n}\n.label-list__input {\n    flex-grow: 1;\n    padding: 2px 5px;\n}\n\n/** Override color picker style. */\n.label-list .sp-replacer {\n    border: none;\n    background-color: rgba(0, 0, 0, 0);\n    padding: 0;\n}\n.label-list .sp-dd {\n    display: none;\n}\n", ""]);
 
 // exports
 
@@ -1910,8 +1928,26 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 
 
 
-// The tab selected.
+/**
+ * The selected tab.
+ */
 let currentTab = 'span'
+
+/**
+ * Colors for a picker.
+ */
+const colors = [
+    // pick from https://www.materialui.co/colors.
+    'FFEB3B', // yellow
+    'FF5722', // orange
+    '795548', // brown
+    'f44336', // red
+    'E91E63', // pink
+    '9C27B0', // purple
+    '3F51B5', // blue
+    '4CAF50'  // green
+]
+
 
 /**
  * Setup the behaviors for Input Label.
@@ -1944,7 +1980,10 @@ function setupTabClick () {
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
-            labels = [(type === 'span' ? 'span1' : 'relation1')]
+            const text = type === 'span' ? 'span1' : 'relation1'
+            // const color = colors[0]
+            // labels = [{ text, color }]
+            labels = [ text ]
         } else {
             labels = labelObject.labels
         }
@@ -1957,25 +1996,76 @@ function setupTabClick () {
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
+
+            let text, color
+            if (typeof label === 'string') { // old style.
+                text = label
+                color = colors[0]
+            } else {
+                text = label[0]
+                color = label[1]
+            }
+
             $ul.append(`
-                <li>
-                    <div class="label-list__btn js-label-trash" data-index="${index}"><i class="fa fa-trash-o fa-2x"></i></div>
-                    <div class="label-list__text js-label">${label}</div>
+                <li class="label-list__item">
+                    <div class="label-list__btn js-label-trash" data-index="${index}">
+                        <i class="fa fa-trash-o fa-2x"></i>
+                    </div>
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${color}">
+                    <div class="label-list__text js-label">
+                        ${text}
+                    </div>
                 </li>
             `)
         })
         $ul.append(`
-            <li>
-                <div class="label-list__btn js-add-label-button"><i class="fa fa-plus fa-2x"></i></div>
+            <li class="label-list__item">
+                <div class="label-list__btn js-add-label-button">
+                    <i class="fa fa-plus fa-2x"></i>
+                </div>
                 <input type="text" class="label-list__input">
             </li>
         `)
         $('.js-label-tab-content').html($ul)
+
+        // Setup color pickers.
+        setupColorPicker()
+
     })
 
     // Setup the initial tab content.
     $('.js-label-tab[data-type="span"]').click()
 }
+
+/**
+ * Setup the color pickers.
+ */
+function setupColorPicker () {
+
+
+    // Setup colorPickers.
+    $('.js-label-palette').spectrum({
+        showPaletteOnly        : true,
+        showPalette            : true,
+        hideAfterPaletteSelect : true,
+        palette                : [
+            colors.slice(0, Math.floor(colors.length / 2)),
+            colors.slice(Math.floor(colors.length / 2), colors.length)
+        ]
+    })
+    // Set initial color.
+    $('.js-label-palette').each((i, elm) => {
+        const $elm = $(elm)
+        $elm.spectrum('set', $elm.data('color'))
+    })
+
+    // Setup behavior.
+    $('.js-label-palette').off('change').on('change', (e) => {
+        console.log('click color picker:', e)
+        // TODO 色変更時の処理を実装する.
+    })
+}
+
 
 /**
  * Set the add button behavior.
@@ -1993,9 +2083,12 @@ function setupLabelAddButton () {
             return
         }
 
+        // Chose one at random.
+        let color = colors[Math.floor(Math.random() * colors.length) % colors.length]
+
         let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push(text)
+        labelObject.labels.push([ text, color ])
         d[type] = labelObject
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
@@ -2030,7 +2123,7 @@ function setupLabelTrashButton () {
 function setupLabelText (createSpanAnnotation, createRelAnnotation) {
     $('.js-label-tab-content').on('click', '.js-label', e => {
         let $this = $(e.currentTarget)
-        let text = $this.text().trim().replace(/&nbsp;/g, '')
+        let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
         if (type === 'span') {
             createSpanAnnotation({ text })
@@ -2044,20 +2137,10 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
  * Set the behavior of importing/exporting label settings.
  */
 function setupImportExportLink () {
+
+    // Export behavior.
     $('.js-export-label').on('click', () => {
         let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-
-        // Transform '&nbsp;' to white space.
-        Object.keys(data).forEach(key => {
-            let labelObject = data[key]
-            let labels = (labelObject.labels || []).map(label => {
-                if (label === '&nbsp;') {
-                    label = ''
-                }
-                return label
-            })
-            labelObject.labels = labels
-        })
 
         // Conver to TOML style.
         const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
@@ -2066,49 +2149,35 @@ function setupImportExportLink () {
         __WEBPACK_IMPORTED_MODULE_2__utils__["download"]('pdfanno.conf', toml)
     })
 
+    // Import behavior.
     $('.js-import-label').on('click', () => {
         $('.js-import-file').val(null).click()
     })
-    $('.js-import-file').on('change', ev => {
+    $('.js-import-file').on('change', async ev => {
+
         if (ev.target.files.length === 0) {
             return
         }
-
-        const file = ev.target.files[0]
 
         if (!window.confirm('Are you sure to load labels?')) {
             return
         }
 
-        let fileReader = new FileReader()
-        fileReader.onload = event => {
-            const tomlString = event.target.result
-            try {
-                const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
+        try {
+            const file = ev.target.files[0]
+            const tomlString = await __WEBPACK_IMPORTED_MODULE_2__utils__["loadFileAsText"](file)
+            const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
+            __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
+            // Re-render.
+            $(`.js-label-tab[data-type="${currentTab}"]`).click()
 
-                // whitespace to '&nbsp'
-                Object.keys(labelData).forEach(key => {
-                    let labelObject = labelData[key]
-                    let labels = (labelObject.labels || []).map(label => {
-                        if (label === '') {
-                            label = '&nbsp;'
-                        }
-                        return label
-                    })
-                    labelObject.labels = labels
-                })
-
-                __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
-                // Re-render.
-                $(`.js-label-tab[data-type="${currentTab}"]`).click()
-            } catch (e) {
-                console.log('ERROR:', e)
-                console.log('TOML:\n', tomlString)
-                __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
-                return
-            }
+        } catch (e) {
+            console.log('ERROR:', e)
+            console.log('TOML:\n', tomlString)
+            __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
+            return
         }
-        fileReader.readAsText(file)
+
     })
 }
 
@@ -6244,7 +6313,7 @@ function setup (getSelectedAnnotations) {
 
     // The event an annotation was deleted.
     window.addEventListener('annotationDeleted', e => {
-        treatAnnotationDeleted(e.detail)
+        handleAnnotationDeleted(e.detail)
     })
 
     // The event an annotation was hovered in.
@@ -6271,7 +6340,7 @@ function setup (getSelectedAnnotations) {
 /**
  * When an annotation is deleted.
  */
-function treatAnnotationDeleted ({ uuid }) {
+function handleAnnotationDeleted ({ uuid }) {
     if (__WEBPACK_IMPORTED_MODULE_0__core__["c" /* isCurrent */](uuid)) {
         __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */](...arguments)
     }
