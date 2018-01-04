@@ -20,7 +20,7 @@ const colors = [
     'FFEB3B', // yellow
     'FF5722', // orange
     '795548', // brown
-    'f44336', // red
+    'F44336', // red
     'E91E63', // pink
     '9C27B0', // purple
     '3F51B5', // blue
@@ -33,10 +33,10 @@ const colors = [
 export function setup (createSpanAnnotation, createRelAnnotation) {
 
     // Set add button behavior.
-    setupLabelAddButton()
+    setupAddButton()
 
     // Set trash button behavior.
-    setupLabelTrashButton()
+    setupTrashButton()
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)
@@ -146,7 +146,7 @@ function setupColorPicker () {
 /**
  * Set the add button behavior.
  */
-function setupLabelAddButton () {
+function setupAddButton () {
     $('.js-label-tab-content').on('click', '.js-add-label-button', e => {
         let $this = $(e.currentTarget)
 
@@ -176,7 +176,7 @@ function setupLabelAddButton () {
 /**
  * Set the trash button behavior.
  */
-function setupLabelTrashButton () {
+function setupTrashButton () {
     $('.js-label-tab-content').on('click', '.js-label-trash', e => {
         const $this = $(e.currentTarget)
         const idx = $this.data('index')
@@ -201,10 +201,12 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
+        let color = '#' + $this.parent().find('.js-label-palette').data('color')
+        console.log('add:', color)
         if (type === 'span') {
-            createSpanAnnotation({ text })
+            createSpanAnnotation({ text, color })
         } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
-            createRelAnnotation({ type, text })
+            createRelAnnotation({ type, text, color })
         }
     })
 }
