@@ -27,7 +27,6 @@ const colors = [
     '4CAF50'  // green
 ]
 
-
 /**
  * Setup the behaviors for Input Label.
  */
@@ -121,7 +120,6 @@ function setupTabClick () {
  */
 function setupColorPicker () {
 
-
     // Setup colorPickers.
     $('.js-label-palette').spectrum({
         showPaletteOnly        : true,
@@ -144,7 +142,6 @@ function setupColorPicker () {
         // TODO 色変更時の処理を実装する.
     })
 }
-
 
 /**
  * Set the add button behavior.
@@ -252,7 +249,6 @@ function setupImportExportLink () {
 
         } catch (e) {
             console.log('ERROR:', e)
-            console.log('TOML:\n', tomlString)
             alertDialog.show({ message : 'ERROR: cannot load the label file.' })
             return
         }

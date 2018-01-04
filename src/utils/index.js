@@ -168,7 +168,7 @@ export function download (fileName, content) {
 /**
  * Load a file as a text.
  */
-export function loadFileAsText(file) {
+export function loadFileAsText (file) {
     return new Promise((resolve, reject) => {
         let fileReader = new FileReader()
         fileReader.onload = event => {
