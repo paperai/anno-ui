@@ -17,14 +17,14 @@ let currentTab = 'span'
  */
 const colors = [
     // pick from https://www.materialui.co/colors.
-    'FFEB3B', // yellow
-    'FF5722', // orange
-    '795548', // brown
-    'F44336', // red
-    'E91E63', // pink
-    '9C27B0', // purple
-    '3F51B5', // blue
-    '4CAF50'  // green
+    '#FFEB3B', // yellow
+    '#FF5722', // orange
+    '#795548', // brown
+    '#F44336', // red
+    '#E91E63', // pink
+    '#9C27B0', // purple
+    '#3F51B5', // blue
+    '#4CAF50'  // green
 ]
 
 /**
@@ -201,7 +201,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
-        let color = '#' + $this.parent().find('.js-label-palette').data('color')
+        let color = $this.parent().find('.js-label-palette').data('color')
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
