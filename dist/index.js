@@ -2229,6 +2229,16 @@ function setupImportExportLink () {
     $('.js-export-label').on('click', () => {
         let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
 
+        // Modify.
+        Object.keys(data).forEach(type => {
+            data[type].labels.forEach((item, index) => {
+                // old -> new style.
+                if (typeof item === 'string') {
+                    data[type].labels[index] = [ item, colors[0] ]
+                }
+            })
+        })
+
         // Conver to TOML style.
         const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
 

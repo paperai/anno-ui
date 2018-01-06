@@ -248,6 +248,16 @@ function setupImportExportLink () {
     $('.js-export-label').on('click', () => {
         let data = db.getLabelList()
 
+        // Modify.
+        Object.keys(data).forEach(type => {
+            data[type].labels.forEach((item, index) => {
+                // old -> new style.
+                if (typeof item === 'string') {
+                    data[type].labels[index] = [ item, colors[0] ]
+                }
+            })
+        })
+
         // Conver to TOML style.
         const toml = annoUtils.tomlString(data)
 
