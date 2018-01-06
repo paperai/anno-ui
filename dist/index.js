@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -84,7 +84,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * UI - Alert dialog.
  */
-__webpack_require__(10)
+__webpack_require__(11)
 
 function create ({ type = 'alert', message = '' }) {
     const id = 'modal-' + (new Date().getTime())
@@ -249,7 +249,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(8);
+var	fixUrls = __webpack_require__(9);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -572,9 +572,11 @@ function updateLink (link, options, obj) {
 /* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
 /* harmony export (immutable) */ __webpack_exports__["d"] = isValidInput;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(28);
 /**
  * Core facilities for Label Input.
  */
+
 
 
 /**
@@ -629,9 +631,9 @@ function enable ({ uuid, text, disable = false, autoFocus = false, blurListener 
     if (disable === false) {
         $inputLabel
             .removeAttr('disabled')
-            // .on('keyup', () => {
-            //     // saveText(uuid, true)
-            // })
+            .on('keyup', () => {
+                watchColor(uuid)
+            })
     }
 
     if (autoFocus) {
@@ -677,6 +679,12 @@ function saveText (uuid) {
     }
 
     _saveAnnotationText(uuid, text)
+}
+
+function watchColor (uuid) {
+    const aText = $inputLabel.val()
+    const aColor = __WEBPACK_IMPORTED_MODULE_1__color__["c" /* find */](aText)
+    __WEBPACK_IMPORTED_MODULE_1__color__["e" /* notifyColorChanged */]({ text : aText, color : aColor, uuid })
 }
 
 /**
@@ -890,20 +898,49 @@ function loadFileAsText (file) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
+/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
+/**
+ * Storage for label settings.
+ */
+
+// LocalStorage key to save label data.
+const LSKEY_LABEL_LIST = 'pdfanno-label-list'
+
+/**
+ * Get the labels from the storage.
+ */
+function getLabelList () {
+    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}')
+}
+
+/**
+ * Save the labels to the storage.
+ */
+function saveLabelList (data) {
+    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data))
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__utils__ = __webpack_require__(4);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
@@ -919,7 +956,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return __WEBPACK_IMPORTED_MODULE_11__uis__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_12__events__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "util", function() { return __WEBPACK_IMPORTED_MODULE_13__utils__; });
-__webpack_require__(6)
+__webpack_require__(7)
 
 
 
@@ -940,13 +977,13 @@ __webpack_require__(6)
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -971,7 +1008,7 @@ if(false) {
 }
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -985,7 +1022,7 @@ exports.push([module.i, "@charset 'utf-8';\n\n/* Reset CSS */\nhtml{color:#000;b
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 
@@ -1080,7 +1117,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1380,13 +1417,13 @@ function getContentDropdownInitialText () {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1411,7 +1448,7 @@ if(false) {
 }
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1425,7 +1462,7 @@ exports.push([module.i, "/**\n * UI - Alert Dialog.\n */\n\n.alertdialog-danger 
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1511,7 +1548,7 @@ function resetCheckReferenceAnnoDropdown () {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1578,7 +1615,7 @@ function setup ({
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1621,7 +1658,7 @@ function setup ({
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1688,7 +1725,7 @@ function setup ({
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1751,7 +1788,7 @@ function _getDownloadFileName (getCurrentContentName) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1784,7 +1821,7 @@ function setup ({ enableRect, disableRect }) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1805,7 +1842,7 @@ function setup ({ createRelAnnotation }) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1823,19 +1860,21 @@ function setup ({ createSpanAnnotation }) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(28);
 /**
  * UI parts - Input Label.
  */
-__webpack_require__(21)
+__webpack_require__(22)
+
 
 
 
@@ -1848,7 +1887,8 @@ function setup ({
     getSelectedAnnotations,
     saveAnnotationText,
     createSpanAnnotation,
-    createRelAnnotation
+    createRelAnnotation,
+    colorChangeListener = function () {}
 }) {
 
     // Define core functions.
@@ -1859,17 +1899,19 @@ function setup ({
 
     // Define window event listeners.
     __WEBPACK_IMPORTED_MODULE_2__listener__["a" /* setup */](getSelectedAnnotations)
+
+    __WEBPACK_IMPORTED_MODULE_3__color__["f" /* setup */](colorChangeListener)
 }
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(22);
+var content = __webpack_require__(23);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1894,7 +1936,7 @@ if(false) {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1908,20 +1950,22 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__color__ = __webpack_require__(28);
 /**
  * Define the behaviors of label input component.
  */
+
 
 
 
@@ -1938,14 +1982,14 @@ let currentTab = 'span'
  */
 const colors = [
     // pick from https://www.materialui.co/colors.
-    'FFEB3B', // yellow
-    'FF5722', // orange
-    '795548', // brown
-    'F44336', // red
-    'E91E63', // pink
-    '9C27B0', // purple
-    '3F51B5', // blue
-    '4CAF50'  // green
+    '#FFEB3B', // yellow
+    '#FF5722', // orange
+    '#795548', // brown
+    '#F44336', // red
+    '#E91E63', // pink
+    '#9C27B0', // purple
+    '#3F51B5', // blue
+    '#4CAF50'  // green
 ]
 
 /**
@@ -1980,8 +2024,6 @@ function setupTabClick () {
         let labels
         if (labelObject.labels === undefined) {
             const text = type === 'span' ? 'span1' : 'relation1'
-            // const color = colors[0]
-            // labels = [{ text, color }]
             labels = [ text ]
         } else {
             labels = labelObject.labels
@@ -1996,13 +2038,13 @@ function setupTabClick () {
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
 
-            let text, color
+            let text, aColor
             if (typeof label === 'string') { // old style.
                 text = label
-                color = colors[0]
+                aColor = __WEBPACK_IMPORTED_MODULE_5__color__["b" /* colors */][0]
             } else {
                 text = label[0]
-                color = label[1]
+                aColor = label[1]
             }
 
             $ul.append(`
@@ -2010,7 +2052,7 @@ function setupTabClick () {
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>
-                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${color}">
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}">
                     <div class="label-list__text js-label">
                         ${text}
                     </div>
@@ -2046,10 +2088,7 @@ function setupColorPicker () {
         showPaletteOnly        : true,
         showPalette            : true,
         hideAfterPaletteSelect : true,
-        palette                : [
-            colors.slice(0, Math.floor(colors.length / 2)),
-            colors.slice(Math.floor(colors.length / 2), colors.length)
-        ]
+        palette                : __WEBPACK_IMPORTED_MODULE_5__color__["d" /* getPaletteColors */]()
     })
     // Set initial color.
     $('.js-label-palette').each((i, elm) => {
@@ -2081,11 +2120,11 @@ function setupAddButton () {
         }
 
         // Chose one at random.
-        let color = colors[Math.floor(Math.random() * colors.length) % colors.length]
+        let aColor = __WEBPACK_IMPORTED_MODULE_5__color__["a" /* choice */]()
 
         let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push([ text, color ])
+        labelObject.labels.push([ text, aColor ])
         d[type] = labelObject
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
@@ -2122,7 +2161,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
-        let color = '#' + $this.parent().find('.js-label-palette').data('color')
+        let color = $this.parent().find('.js-label-palette').data('color')
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
@@ -2181,11 +2220,11 @@ function setupImportExportLink () {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(25);
-var compiler = __webpack_require__(26);
+var parser = __webpack_require__(26);
+var compiler = __webpack_require__(27);
 
 module.exports = {
   parse: function(input) {
@@ -2196,7 +2235,7 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -6043,7 +6082,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6247,36 +6286,83 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
-/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
-/**
- * Storage for label settings.
- */
+/* harmony export (immutable) */ __webpack_exports__["f"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["a"] = choice;
+/* harmony export (immutable) */ __webpack_exports__["d"] = getPaletteColors;
+/* harmony export (immutable) */ __webpack_exports__["c"] = find;
+/* harmony export (immutable) */ __webpack_exports__["e"] = notifyColorChanged;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
+// labelInput/color.js
 
-// LocalStorage key to save label data.
-const LSKEY_LABEL_LIST = 'pdfanno-label-list'
 
 /**
- * Get the labels from the storage.
+ * Colors for a picker.
  */
-function getLabelList () {
-    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}')
+const colors = [
+    // pick from https://www.materialui.co/colors.
+    '#FFEB3B', // yellow
+    '#FF5722', // orange
+    '#795548', // brown
+    '#F44336', // red
+    '#E91E63', // pink
+    '#9C27B0', // purple
+    '#3F51B5', // blue
+    '#4CAF50'  // green
+]
+/* harmony export (immutable) */ __webpack_exports__["b"] = colors;
+
+
+let _colorChangeListener
+
+function setup (colorChangeListener) {
+    _colorChangeListener = colorChangeListener
 }
 
-/**
- * Save the labels to the storage.
- */
-function saveLabelList (data) {
-    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data))
+function choice () {
+    return colors[Math.floor(Math.random() * colors.length) % colors.length]
+}
+
+function getPaletteColors () {
+    return [
+        colors.slice(0, Math.floor(colors.length / 2)),
+        colors.slice(Math.floor(colors.length / 2), colors.length)
+    ]
+}
+
+function find (text) {
+
+    // Default color.
+    let color = colors[0]
+
+    const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
+    Object.keys(labelList).forEach(type => {
+        console.log(type, labelList[type])
+        labelList[type].labels.forEach(item => {
+            // old style.
+            if (typeof item === 'string') {
+                return
+            }
+            const [aText, aColor] = item
+            if (text === aText) {
+                color = aColor
+            }
+        })
+    })
+
+    return color
+}
+
+function notifyColorChanged ({ text, color, uuid }) {
+    _colorChangeListener(...arguments)
 }
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6387,7 +6473,7 @@ function handleAnnotationDeselected () {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6396,7 +6482,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
 /* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(31);
 /**
  * UI parts - Upload Button.
  */
@@ -6467,7 +6553,7 @@ function setResult (text) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6544,7 +6630,7 @@ function arrayBufferToBase64 (buffer) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6557,7 +6643,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

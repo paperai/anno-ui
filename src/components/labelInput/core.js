@@ -2,6 +2,7 @@
  * Core facilities for Label Input.
  */
 import * as alertDialog from '../../uis/alertDialog'
+import * as color from './color'
 
 /**
  * A blur event listener.
@@ -55,9 +56,9 @@ export function enable ({ uuid, text, disable = false, autoFocus = false, blurLi
     if (disable === false) {
         $inputLabel
             .removeAttr('disabled')
-            // .on('keyup', () => {
-            //     // saveText(uuid, true)
-            // })
+            .on('keyup', () => {
+                watchColor(uuid)
+            })
     }
 
     if (autoFocus) {
@@ -103,6 +104,12 @@ function saveText (uuid) {
     }
 
     _saveAnnotationText(uuid, text)
+}
+
+function watchColor (uuid) {
+    const aText = $inputLabel.val()
+    const aColor = color.find(aText)
+    color.notifyColorChanged({ text : aText, color : aColor, uuid })
 }
 
 /**

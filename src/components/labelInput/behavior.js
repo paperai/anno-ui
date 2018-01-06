@@ -6,6 +6,7 @@ import * as alertDialog from '../../uis/alertDialog'
 import * as annoUtils from '../../utils'
 import * as db from './db'
 import * as core from './core'
+import * as color from './color'
 
 /**
  * The selected tab.
@@ -59,8 +60,6 @@ function setupTabClick () {
         let labels
         if (labelObject.labels === undefined) {
             const text = type === 'span' ? 'span1' : 'relation1'
-            // const color = colors[0]
-            // labels = [{ text, color }]
             labels = [ text ]
         } else {
             labels = labelObject.labels
@@ -75,13 +74,13 @@ function setupTabClick () {
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
 
-            let text, color
+            let text, aColor
             if (typeof label === 'string') { // old style.
                 text = label
-                color = colors[0]
+                aColor = color.colors[0]
             } else {
                 text = label[0]
-                color = label[1]
+                aColor = label[1]
             }
 
             $ul.append(`
@@ -89,7 +88,7 @@ function setupTabClick () {
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>
-                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${color}">
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}">
                     <div class="label-list__text js-label">
                         ${text}
                     </div>
@@ -125,10 +124,7 @@ function setupColorPicker () {
         showPaletteOnly        : true,
         showPalette            : true,
         hideAfterPaletteSelect : true,
-        palette                : [
-            colors.slice(0, Math.floor(colors.length / 2)),
-            colors.slice(Math.floor(colors.length / 2), colors.length)
-        ]
+        palette                : color.getPaletteColors()
     })
     // Set initial color.
     $('.js-label-palette').each((i, elm) => {
@@ -160,11 +156,11 @@ function setupAddButton () {
         }
 
         // Chose one at random.
-        let color = colors[Math.floor(Math.random() * colors.length) % colors.length]
+        let aColor = color.choice()
 
         let d = db.getLabelList()
         let labelObject = d[type] || { labels : [] }
-        labelObject.labels.push([ text, color ])
+        labelObject.labels.push([ text, aColor ])
         d[type] = labelObject
         db.saveLabelList(d)
 
