@@ -9,26 +9,6 @@ import * as core from './core'
 import * as color from './color'
 
 /**
- * The selected tab.
- */
-// let currentTab = 'span'
-
-/**
- * Colors for a picker.
- */
-const colors = [
-    // pick from https://www.materialui.co/colors.
-    '#FFEB3B', // yellow
-    '#FF5722', // orange
-    '#795548', // brown
-    '#F44336', // red
-    '#E91E63', // pink
-    '#9C27B0', // purple
-    '#3F51B5', // blue
-    '#4CAF50'  // green
-]
-
-/**
  * Setup the behaviors for Input Label.
  */
 export function setup (createSpanAnnotation, createRelAnnotation) {
@@ -253,7 +233,7 @@ function setupImportExportLink () {
             data[type].labels.forEach((item, index) => {
                 // old -> new style.
                 if (typeof item === 'string') {
-                    data[type].labels[index] = [ item, colors[0] ]
+                    data[type].labels[index] = [ item, color.colors[0] ]
                 }
             })
         })
