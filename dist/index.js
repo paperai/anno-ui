@@ -2178,6 +2178,7 @@ function setupTrashButton () {
         const $this = $(e.currentTarget)
         const idx = $this.data('index')
         const type = $this.parents('[data-type]').data('type')
+        const text = $this.siblings('.js-label').text().trim()
 
         let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
@@ -2186,7 +2187,11 @@ function setupTrashButton () {
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
+        $(`.js-label-tab[data-type="${type}"]`).click()
+
+        // Notify color changed.
+        const aColor = __WEBPACK_IMPORTED_MODULE_5__color__["c" /* find */](type, text)
+        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({ text, color : aColor, annoType : type })
     })
 }
 

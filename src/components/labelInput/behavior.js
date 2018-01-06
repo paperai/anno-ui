@@ -197,6 +197,7 @@ function setupTrashButton () {
         const $this = $(e.currentTarget)
         const idx = $this.data('index')
         const type = $this.parents('[data-type]').data('type')
+        const text = $this.siblings('.js-label').text().trim()
 
         let d = db.getLabelList()
         let labelObject = d[type] || { labels : [] }
@@ -205,7 +206,11 @@ function setupTrashButton () {
         db.saveLabelList(d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
+        $(`.js-label-tab[data-type="${type}"]`).click()
+
+        // Notify color changed.
+        const aColor = color.find(type, text)
+        color.notifyColorChanged({ text, color : aColor, annoType : type })
     })
 }
 
