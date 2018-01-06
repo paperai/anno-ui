@@ -186,6 +186,13 @@ function setupAddButton () {
 
         // Re-render.
         $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
+
+        // Notify color changed.
+        color.notifyColorChanged({
+            text,
+            color    : aColor,
+            annoType : core.getCurrentTab()
+        })
     })
 }
 

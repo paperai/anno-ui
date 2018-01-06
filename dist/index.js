@@ -2167,6 +2167,13 @@ function setupAddButton () {
 
         // Re-render.
         $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
+
+        // Notify color changed.
+        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({
+            text,
+            color    : aColor,
+            annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()
+        })
     })
 }
 
