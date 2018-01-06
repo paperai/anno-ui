@@ -4,6 +4,16 @@
 import * as alertDialog from '../../uis/alertDialog'
 import * as color from './color'
 
+let currentTab
+
+export function setCurrentTab (tab) {
+    currentTab = tab
+}
+
+export function getCurrentTab (tab) {
+    return currentTab
+}
+
 /**
  * A blur event listener.
  */
@@ -108,8 +118,8 @@ function saveText (uuid) {
 
 function watchColor (uuid) {
     const aText = $inputLabel.val()
-    const aColor = color.find(aText)
-    color.notifyColorChanged({ text : aText, color : aColor, uuid })
+    const aColor = color.find(currentTab, aText)
+    color.notifyColorChanged({ color : aColor, uuid })
 }
 
 /**

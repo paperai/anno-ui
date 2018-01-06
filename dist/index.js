@@ -566,11 +566,13 @@ function updateLink (link, options, obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["e"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["f"] = setCurrentTab;
+/* harmony export (immutable) */ __webpack_exports__["c"] = getCurrentTab;
+/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["b"] = enable;
 /* harmony export (immutable) */ __webpack_exports__["a"] = disable;
-/* harmony export (immutable) */ __webpack_exports__["c"] = isCurrent;
-/* harmony export (immutable) */ __webpack_exports__["d"] = isValidInput;
+/* harmony export (immutable) */ __webpack_exports__["d"] = isCurrent;
+/* harmony export (immutable) */ __webpack_exports__["e"] = isValidInput;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(28);
 /**
@@ -578,6 +580,16 @@ function updateLink (link, options, obj) {
  */
 
 
+
+let currentTab
+
+function setCurrentTab (tab) {
+    currentTab = tab
+}
+
+function getCurrentTab (tab) {
+    return currentTab
+}
 
 /**
  * A blur event listener.
@@ -683,8 +695,8 @@ function saveText (uuid) {
 
 function watchColor (uuid) {
     const aText = $inputLabel.val()
-    const aColor = __WEBPACK_IMPORTED_MODULE_1__color__["c" /* find */](aText)
-    __WEBPACK_IMPORTED_MODULE_1__color__["e" /* notifyColorChanged */]({ text : aText, color : aColor, uuid })
+    const aColor = __WEBPACK_IMPORTED_MODULE_1__color__["c" /* find */](currentTab, aText)
+    __WEBPACK_IMPORTED_MODULE_1__color__["e" /* notifyColorChanged */]({ color : aColor, uuid })
 }
 
 /**
@@ -1892,7 +1904,7 @@ function setup ({
 }) {
 
     // Define core functions.
-    __WEBPACK_IMPORTED_MODULE_0__core__["e" /* setup */](saveAnnotationText)
+    __WEBPACK_IMPORTED_MODULE_0__core__["g" /* setup */](saveAnnotationText)
 
     // Define user actions.
     __WEBPACK_IMPORTED_MODULE_1__behavior__["a" /* setup */](createSpanAnnotation, createRelAnnotation)
@@ -1975,7 +1987,7 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 /**
  * The selected tab.
  */
-let currentTab = 'span'
+// let currentTab = 'span'
 
 /**
  * Colors for a picker.
@@ -1996,6 +2008,8 @@ const colors = [
  * Setup the behaviors for Input Label.
  */
 function setup (createSpanAnnotation, createRelAnnotation) {
+
+    __WEBPACK_IMPORTED_MODULE_4__core__["f" /* setCurrentTab */]('span')
 
     // Set add button behavior.
     setupAddButton()
@@ -2024,7 +2038,7 @@ function setupTabClick () {
         let labels
         if (labelObject.labels === undefined) {
             const text = type === 'span' ? 'span1' : 'relation1'
-            labels = [ text ]
+            labels = [ [ text, __WEBPACK_IMPORTED_MODULE_5__color__["b" /* colors */][0] ] ]
         } else {
             labels = labelObject.labels
         }
@@ -2033,7 +2047,8 @@ function setupTabClick () {
         d[type] = labelObject
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
-        currentTab = type
+        // currentTab = type
+        __WEBPACK_IMPORTED_MODULE_4__core__["f" /* setCurrentTab */](type)
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
@@ -2052,7 +2067,7 @@ function setupTabClick () {
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>
-                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}">
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}" data-index="${index}">
                     <div class="label-list__text js-label">
                         ${text}
                     </div>
@@ -2097,9 +2112,26 @@ function setupColorPicker () {
     })
 
     // Setup behavior.
+    // Save the color to db, and notify.
     $('.js-label-palette').off('change').on('change', (e) => {
-        console.log('click color picker:', e)
-        // TODO 色変更時の処理を実装する.
+        const $this = $(e.currentTarget)
+        const aColor = $this.spectrum('get').toHexString()
+        const index = $this.data('index')
+        console.log('click color picker:', e, aColor, index)
+
+        let labelList = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let label = labelList[__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()].labels[index]
+        if (typeof label === 'string') { // old style.
+            label = [ label, aColor ]
+        } else {
+            label[1] = aColor
+        }
+        labelList[__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()].labels[index] = label
+        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelList)
+
+        // Notify color changed.
+        const text = $this.siblings('.js-label').text().trim()
+        __WEBPACK_IMPORTED_MODULE_5__color__["e" /* notifyColorChanged */]({ text : text, color : aColor, annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]() })
     })
 }
 
@@ -2114,7 +2146,7 @@ function setupAddButton () {
         let type = $this.parents('[data-type]').data('type')
 
         // Check the text valid.
-        if (!__WEBPACK_IMPORTED_MODULE_4__core__["d" /* isValidInput */](text)) {
+        if (!__WEBPACK_IMPORTED_MODULE_4__core__["e" /* isValidInput */](text)) {
             __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
             return
         }
@@ -2129,7 +2161,7 @@ function setupAddButton () {
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+        $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
     })
 }
 
@@ -2149,7 +2181,7 @@ function setupTrashButton () {
         __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+        $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
     })
 }
 
@@ -2161,7 +2193,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
-        let color = $this.parent().find('.js-label-palette').data('color')
+        let color = $this.parent().find('.js-label-palette').spectrum('get').toHexString()
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
@@ -2207,7 +2239,7 @@ function setupImportExportLink () {
             const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
             __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
             // Re-render.
-            $(`.js-label-tab[data-type="${currentTab}"]`).click()
+            $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
 
         } catch (e) {
             console.log('ERROR:', e)
@@ -6333,30 +6365,30 @@ function getPaletteColors () {
     ]
 }
 
-function find (text) {
+/**
+* Find a color for the text in the type.
+*/
+function find (type, text) {
 
     // Default color.
     let color = colors[0]
 
     const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
-    Object.keys(labelList).forEach(type => {
-        console.log(type, labelList[type])
-        labelList[type].labels.forEach(item => {
-            // old style.
-            if (typeof item === 'string') {
-                return
-            }
-            const [aText, aColor] = item
-            if (text === aText) {
-                color = aColor
-            }
-        })
+    labelList[type].labels.forEach(item => {
+        // old style.
+        if (typeof item === 'string') {
+            return
+        }
+        const [aText, aColor] = item
+        if (text === aText) {
+            color = aColor
+        }
     })
 
     return color
 }
 
-function notifyColorChanged ({ text, color, uuid }) {
+function notifyColorChanged ({ text, color, uuid ,annoType }) {
     _colorChangeListener(...arguments)
 }
 
@@ -6425,7 +6457,7 @@ function setup (getSelectedAnnotations) {
  * When an annotation is deleted.
  */
 function handleAnnotationDeleted ({ uuid }) {
-    if (__WEBPACK_IMPORTED_MODULE_0__core__["c" /* isCurrent */](uuid)) {
+    if (__WEBPACK_IMPORTED_MODULE_0__core__["d" /* isCurrent */](uuid)) {
         __WEBPACK_IMPORTED_MODULE_0__core__["a" /* disable */](...arguments)
     }
 }

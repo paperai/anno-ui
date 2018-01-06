@@ -11,7 +11,7 @@ import * as color from './color'
 /**
  * The selected tab.
  */
-let currentTab = 'span'
+// let currentTab = 'span'
 
 /**
  * Colors for a picker.
@@ -32,6 +32,8 @@ const colors = [
  * Setup the behaviors for Input Label.
  */
 export function setup (createSpanAnnotation, createRelAnnotation) {
+
+    core.setCurrentTab('span')
 
     // Set add button behavior.
     setupAddButton()
@@ -60,7 +62,7 @@ function setupTabClick () {
         let labels
         if (labelObject.labels === undefined) {
             const text = type === 'span' ? 'span1' : 'relation1'
-            labels = [ text ]
+            labels = [ [ text, color.colors[0] ] ]
         } else {
             labels = labelObject.labels
         }
@@ -69,7 +71,8 @@ function setupTabClick () {
         d[type] = labelObject
         db.saveLabelList(d)
 
-        currentTab = type
+        // currentTab = type
+        core.setCurrentTab(type)
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
@@ -88,7 +91,7 @@ function setupTabClick () {
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>
-                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}">
+                    <input type="text" name="color" class="js-label-palette" autocomplete="off" data-color="${aColor}" data-index="${index}">
                     <div class="label-list__text js-label">
                         ${text}
                     </div>
@@ -133,9 +136,26 @@ function setupColorPicker () {
     })
 
     // Setup behavior.
+    // Save the color to db, and notify.
     $('.js-label-palette').off('change').on('change', (e) => {
-        console.log('click color picker:', e)
-        // TODO 色変更時の処理を実装する.
+        const $this = $(e.currentTarget)
+        const aColor = $this.spectrum('get').toHexString()
+        const index = $this.data('index')
+        console.log('click color picker:', e, aColor, index)
+
+        let labelList = db.getLabelList()
+        let label = labelList[core.getCurrentTab()].labels[index]
+        if (typeof label === 'string') { // old style.
+            label = [ label, aColor ]
+        } else {
+            label[1] = aColor
+        }
+        labelList[core.getCurrentTab()].labels[index] = label
+        db.saveLabelList(labelList)
+
+        // Notify color changed.
+        const text = $this.siblings('.js-label').text().trim()
+        color.notifyColorChanged({ text : text, color : aColor, annoType : core.getCurrentTab() })
     })
 }
 
@@ -165,7 +185,7 @@ function setupAddButton () {
         db.saveLabelList(d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+        $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
     })
 }
 
@@ -185,7 +205,7 @@ function setupTrashButton () {
         db.saveLabelList(d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${currentTab}"]`).click()
+        $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
     })
 }
 
@@ -197,7 +217,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
         let type = $this.parents('[data-type]').data('type')
-        let color = $this.parent().find('.js-label-palette').data('color')
+        let color = $this.parent().find('.js-label-palette').spectrum('get').toHexString()
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
@@ -243,7 +263,7 @@ function setupImportExportLink () {
             const labelData = toml.parse(tomlString)
             db.saveLabelList(labelData)
             // Re-render.
-            $(`.js-label-tab[data-type="${currentTab}"]`).click()
+            $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
 
         } catch (e) {
             console.log('ERROR:', e)

@@ -33,29 +33,29 @@ export function getPaletteColors () {
     ]
 }
 
-export function find (text) {
+/**
+* Find a color for the text in the type.
+*/
+export function find (type, text) {
 
     // Default color.
     let color = colors[0]
 
     const labelList = db.getLabelList()
-    Object.keys(labelList).forEach(type => {
-        console.log(type, labelList[type])
-        labelList[type].labels.forEach(item => {
-            // old style.
-            if (typeof item === 'string') {
-                return
-            }
-            const [aText, aColor] = item
-            if (text === aText) {
-                color = aColor
-            }
-        })
+    labelList[type].labels.forEach(item => {
+        // old style.
+        if (typeof item === 'string') {
+            return
+        }
+        const [aText, aColor] = item
+        if (text === aText) {
+            color = aColor
+        }
     })
 
     return color
 }
 
-export function notifyColorChanged ({ text, color, uuid }) {
+export function notifyColorChanged ({ text, color, uuid ,annoType }) {
     _colorChangeListener(...arguments)
 }
