@@ -696,7 +696,7 @@ function saveText (uuid) {
 function watchColor (uuid) {
     const aText = $inputLabel.val()
     const aColor = __WEBPACK_IMPORTED_MODULE_1__color__["c" /* find */](currentTab, aText)
-    __WEBPACK_IMPORTED_MODULE_1__color__["e" /* notifyColorChanged */]({ color : aColor, uuid })
+    __WEBPACK_IMPORTED_MODULE_1__color__["f" /* notifyColorChanged */]({ color : aColor, uuid })
 }
 
 /**
@@ -1912,8 +1912,13 @@ function setup ({
     // Define window event listeners.
     __WEBPACK_IMPORTED_MODULE_2__listener__["a" /* setup */](getSelectedAnnotations)
 
-    __WEBPACK_IMPORTED_MODULE_3__color__["f" /* setup */](colorChangeListener)
+    __WEBPACK_IMPORTED_MODULE_3__color__["g" /* setup */](colorChangeListener)
 }
+
+const getColorMap = __WEBPACK_IMPORTED_MODULE_3__color__["d" /* getColorMap */]
+/* harmony export (immutable) */ __webpack_exports__["getColorMap"] = getColorMap;
+
+// export getColorMap
 
 
 /***/ }),
@@ -2103,7 +2108,7 @@ function setupColorPicker () {
         showPaletteOnly        : true,
         showPalette            : true,
         hideAfterPaletteSelect : true,
-        palette                : __WEBPACK_IMPORTED_MODULE_5__color__["d" /* getPaletteColors */]()
+        palette                : __WEBPACK_IMPORTED_MODULE_5__color__["e" /* getPaletteColors */]()
     })
     // Set initial color.
     $('.js-label-palette').each((i, elm) => {
@@ -2131,7 +2136,7 @@ function setupColorPicker () {
 
         // Notify color changed.
         const text = $this.siblings('.js-label').text().trim()
-        __WEBPACK_IMPORTED_MODULE_5__color__["e" /* notifyColorChanged */]({ text : text, color : aColor, annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]() })
+        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({ text : text, color : aColor, annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]() })
     })
 }
 
@@ -6322,11 +6327,12 @@ module.exports = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["f"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["a"] = choice;
-/* harmony export (immutable) */ __webpack_exports__["d"] = getPaletteColors;
+/* harmony export (immutable) */ __webpack_exports__["e"] = getPaletteColors;
 /* harmony export (immutable) */ __webpack_exports__["c"] = find;
-/* harmony export (immutable) */ __webpack_exports__["e"] = notifyColorChanged;
+/* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
+/* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
 // labelInput/color.js
 
@@ -6390,6 +6396,23 @@ function find (type, text) {
 
 function notifyColorChanged ({ text, color, uuid ,annoType }) {
     _colorChangeListener(...arguments)
+}
+
+function getColorMap () {
+    const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
+    Object.keys(labelMap).forEach(type => {
+        labelMap[type].labels.forEach(item => {
+            // old style.
+            if (typeof item === 'string') {
+                labelMap[type][item] = colors[0]
+            } else {
+                labelMap[type][item[0]] = item[1]
+            }
+        })
+        delete labelMap[type].labels
+    })
+    labelMap.default = colors[0]
+    return labelMap
 }
 
 

@@ -59,3 +59,20 @@ export function find (type, text) {
 export function notifyColorChanged ({ text, color, uuid ,annoType }) {
     _colorChangeListener(...arguments)
 }
+
+export function getColorMap () {
+    const labelMap = db.getLabelList()
+    Object.keys(labelMap).forEach(type => {
+        labelMap[type].labels.forEach(item => {
+            // old style.
+            if (typeof item === 'string') {
+                labelMap[type][item] = colors[0]
+            } else {
+                labelMap[type][item[0]] = item[1]
+            }
+        })
+        delete labelMap[type].labels
+    })
+    labelMap.default = colors[0]
+    return labelMap
+}

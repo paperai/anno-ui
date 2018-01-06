@@ -30,3 +30,6 @@ export function setup ({
 
     color.setup(colorChangeListener)
 }
+
+export const getColorMap = color.getColorMap
+// export getColorMap
