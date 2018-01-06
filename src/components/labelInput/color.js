@@ -5,7 +5,7 @@ import * as db from './db'
  * Colors for a picker.
  */
 export const colors = [
-    // pick from https://www.materialui.co/colors.
+    // Pick from https://www.materialui.co/colors.
     '#FFEB3B', // yellow
     '#FF5722', // orange
     '#795548', // brown
@@ -56,10 +56,35 @@ export function find (type, text) {
     return color
 }
 
-export function notifyColorChanged ({ text, color, uuid ,annoType }) {
+export function notifyColorChanged ({ text, color, uuid, annoType }) {
     _colorChangeListener(...arguments)
 }
 
+/**
+ * Get the color map.
+
+    Example:
+    ---
+    {
+        "span" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "one-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "two-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "link-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "default" : defaultColor
+    }
+ */
 export function getColorMap () {
     const labelMap = db.getLabelList()
     Object.keys(labelMap).forEach(type => {

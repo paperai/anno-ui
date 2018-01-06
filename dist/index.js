@@ -6363,7 +6363,7 @@ module.exports = {
  * Colors for a picker.
  */
 const colors = [
-    // pick from https://www.materialui.co/colors.
+    // Pick from https://www.materialui.co/colors.
     '#FFEB3B', // yellow
     '#FF5722', // orange
     '#795548', // brown
@@ -6416,10 +6416,35 @@ function find (type, text) {
     return color
 }
 
-function notifyColorChanged ({ text, color, uuid ,annoType }) {
+function notifyColorChanged ({ text, color, uuid, annoType }) {
     _colorChangeListener(...arguments)
 }
 
+/**
+ * Get the color map.
+
+    Example:
+    ---
+    {
+        "span" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "one-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "two-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "link-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "default" : defaultColor
+    }
+ */
 function getColorMap () {
     const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
     Object.keys(labelMap).forEach(type => {
