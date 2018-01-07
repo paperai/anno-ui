@@ -27,7 +27,7 @@
     cursor: pointer;
     border-radius: 3px;
     background-color: white;
-    margin-right: 5px;
+    margin-right: 13px;
     flex: 0 0 30px;
 }
 .label-list__btn:hover,
@@ -40,6 +40,7 @@
     padding: 2px;
     font-size: 20px;
     min-height: 1em;
+    margin-left: 13px;
 }
 .label-list__input {
     flex-grow: 1;
@@ -54,4 +55,7 @@
 }
 .label-list .sp-dd {
     display: none;
+}
+.label-list .sp-preview {
+    margin-right: 0;
 }
