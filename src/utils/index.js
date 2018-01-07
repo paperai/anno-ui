@@ -164,3 +164,20 @@ export function download (fileName, content) {
     a.click()
     a.parentNode.removeChild(a)
 }
+
+/**
+ * Load a file as a text.
+ */
+export function loadFileAsText (file) {
+    return new Promise((resolve, reject) => {
+        let fileReader = new FileReader()
+        fileReader.onload = event => {
+            const text = event.target.result
+            resolve(text)
+        }
+        fileReader.onerror = err => {
+            reject(err)
+        }
+        fileReader.readAsText(file)
+    })
+}
