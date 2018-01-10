@@ -16,6 +16,8 @@ export const colors = [
     '#4CAF50'  // green
 ]
 
+const defaultColor = '#AAA'
+
 let _colorChangeListener
 
 export function setup (colorChangeListener) {
@@ -39,7 +41,7 @@ export function getPaletteColors () {
 export function find (type, text) {
 
     // Default color.
-    let color = colors[0]
+    let color = defaultColor
 
     const labelList = db.getLabelList()
     labelList[type].labels.forEach(item => {
@@ -98,6 +100,6 @@ export function getColorMap () {
         })
         delete labelMap[type].labels
     })
-    labelMap.default = colors[0]
+    labelMap.default = defaultColor
     return labelMap
 }
