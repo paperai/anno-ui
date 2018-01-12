@@ -1255,42 +1255,12 @@ module.exports = function (css) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setupColorPicker"] = setupColorPicker;
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /**
  * UI parts - Browse button.
  */
 
-
-/**
- * Setup the color pickers.
- */
-function setupColorPicker () {
-
-    const colors = [
-        'rgb(255, 128, 0)', 'hsv 100 70 50', 'yellow', 'blanchedalmond',
-        'red', 'green', 'blue', 'violet'
-    ]
-
-    // Setup colorPickers.
-    $('.js-anno-palette').spectrum({
-        showPaletteOnly        : true,
-        showPalette            : true,
-        hideAfterPaletteSelect : true,
-        palette                : [
-            colors.slice(0, Math.floor(colors.length / 2)),
-            colors.slice(Math.floor(colors.length / 2), colors.length)
-        ]
-    })
-    // Set initial color.
-    $('.js-anno-palette').each((i, elm) => {
-        $(elm).spectrum('set', colors[ i % colors.length ])
-    })
-
-    // Setup behavior.
-    $('.js-anno-palette').off('change').on('change', _displayCurrentReferenceAnnotations)
-}
 
 let _displayCurrentReferenceAnnotations
 let _displayCurrentPrimaryAnnotations
@@ -1517,7 +1487,7 @@ function setAnnoDropdownList () {
     // Setup anno / reference dropdown.
     _getAnnoFiles().forEach(file => {
 
-        let snipet1 = `
+        let snipet = `
             <li>
                 <a href="#">
                     <i class="fa fa-check no-visible" aria-hidden="true"></i>
@@ -1525,22 +1495,10 @@ function setAnnoDropdownList () {
                 </a>
             </li>
         `
-        $('#dropdownAnnoPrimary ul').append(snipet1)
-
-        let snipet2 = `
-            <li>
-                <a href="#">
-                    <i class="fa fa-check no-visible" aria-hidden="true"></i>
-                    <input type="text" name="color" class="js-anno-palette" autocomplete="off">
-                    <span class="js-annoname">${file.name}</span>
-                </a>
-            </li>
-        `
-        $('#dropdownAnnoReference ul').append(snipet2)
+        $('#dropdownAnnoPrimary ul').append(snipet)
+        $('#dropdownAnnoReference ul').append(snipet)
     })
 
-    // Setup color pallets.
-    setupColorPicker()
 }
 
 function getContentDropdownInitialText () {
