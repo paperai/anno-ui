@@ -1067,32 +1067,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_labelInput__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__uis__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__events__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__utils__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_labelInput__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_uploadButton__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__uis__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__events__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__utils__ = __webpack_require__(6);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "primaryAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "referenceAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoListDropdown", function() { return __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "downloadButton", function() { return __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoRectButton", function() { return __WEBPACK_IMPORTED_MODULE_6__components_annoRectButton__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoRelButton", function() { return __WEBPACK_IMPORTED_MODULE_7__components_annoRelButton__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "annoSpanButton", function() { return __WEBPACK_IMPORTED_MODULE_8__components_annoSpanButton__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "labelInput", function() { return __WEBPACK_IMPORTED_MODULE_9__components_labelInput__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "uploadButton", function() { return __WEBPACK_IMPORTED_MODULE_10__components_uploadButton__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return __WEBPACK_IMPORTED_MODULE_11__uis__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_12__events__; });
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "util", function() { return __WEBPACK_IMPORTED_MODULE_13__utils__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "labelInput", function() { return __WEBPACK_IMPORTED_MODULE_6__components_labelInput__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "uploadButton", function() { return __WEBPACK_IMPORTED_MODULE_7__components_uploadButton__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return __WEBPACK_IMPORTED_MODULE_8__uis__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_9__events__; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "util", function() { return __WEBPACK_IMPORTED_MODULE_10__utils__; });
 __webpack_require__(8)
-
-
-
 
 
 
@@ -1885,86 +1876,14 @@ function _getDownloadFileName (getCurrentContentName) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * UI parts - Anno Tools for RectAnnotation.
- */
-function setup ({ enableRect, disableRect }) {
-    // Rect annotation button.
-    $('.js-tool-btn-rect').off('click').on('click', (e) => {
-        let $btn = $(e.currentTarget)
-
-        // Make disable.
-        if ($btn.hasClass('active')) {
-            window.currentAnnoToolType = 'view'
-            $btn.removeClass('active').blur()
-            disableRect()
-
-        // Make enable.
-        } else {
-            window.currentAnnoToolType = 'rect'
-            $btn.addClass('active')
-            enableRect()
-        }
-
-        return false
-    })
-}
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * UI parts - Anno Tools for RelationAnnotation (one-way / two-way / link).
- */
-function setup ({ createRelAnnotation }) {
-    // Relation annotation button.
-    $('.js-tool-btn-rel').off('click').on('click', e => {
-        const $button = $(e.currentTarget)
-        const type = $button.data('type')
-        createRelAnnotation(type)
-        $button.blur()
-    })
-}
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
-/**
- * UI parts - Anno Tools for SpanAnnotation.
- */
-function setup ({ createSpanAnnotation }) {
-    $('.js-tool-btn-span').off('click').on('click', e => {
-        $(e.currentTarget).blur()
-        createSpanAnnotation()
-    })
-}
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(4);
 /**
  * UI parts - Input Label.
  */
-__webpack_require__(23)
+__webpack_require__(20)
 
 
 
@@ -2001,13 +1920,13 @@ const getColorMap = __WEBPACK_IMPORTED_MODULE_3__color__["d" /* getColorMap */]
 
 
 /***/ }),
-/* 23 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(24);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -2032,7 +1951,7 @@ if(false) {
 }
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -2046,12 +1965,12 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = setup;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(6);
@@ -2338,11 +2257,11 @@ function setupImportExportLink () {
 
 
 /***/ }),
-/* 26 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(27);
-var compiler = __webpack_require__(28);
+var parser = __webpack_require__(24);
+var compiler = __webpack_require__(25);
 
 module.exports = {
   parse: function(input) {
@@ -2353,7 +2272,7 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -6200,7 +6119,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 28 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6404,7 +6323,7 @@ module.exports = {
 
 
 /***/ }),
-/* 29 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6515,7 +6434,7 @@ function handleAnnotationDeselected () {
 
 
 /***/ }),
-/* 30 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6524,7 +6443,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
 /* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(28);
 /**
  * UI parts - Upload Button.
  */
@@ -6595,7 +6514,7 @@ function setResult (text) {
 
 
 /***/ }),
-/* 31 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6672,7 +6591,7 @@ function arrayBufferToBase64 (buffer) {
 
 
 /***/ }),
-/* 32 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6685,7 +6604,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 33 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6710,16 +6629,6 @@ function setup () {
         }
 
         dispatchWindowEvent('manageCtrlKey', 'off')
-
-        if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1)
-        } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2)
-        } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3)
-        } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4)
-        }
     })
 }
 
