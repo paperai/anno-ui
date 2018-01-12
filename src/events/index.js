@@ -17,16 +17,6 @@ export function setup () {
         }
 
         dispatchWindowEvent('manageCtrlKey', 'off')
-
-        if (e.keyCode === 49) {         // Digit "1"
-            dispatchWindowEvent('digitKeyPressed', 1)
-        } else if (e.keyCode === 50) {  // Digit "2"
-            dispatchWindowEvent('digitKeyPressed', 2)
-        } else if (e.keyCode === 51) {  // Digit "3"
-            dispatchWindowEvent('digitKeyPressed', 3)
-        } else if (e.keyCode === 52) {  // Digit "4"
-            dispatchWindowEvent('digitKeyPressed', 4)
-        }
     })
 }
 
