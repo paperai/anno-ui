@@ -6534,12 +6534,11 @@ function upload ({
     const contentBase64 = arrayBufferToBase64(contentFile.content)
 
     // API endpoint.
-    const url = window.API_ROOT + '/api/pdf_upload'
+    const url = window.API_ROOT + 'internal/api/pdfs/' + contentFile.name
 
     // API params.
     let data = {
-        filename : contentFile.name,
-        pdf      : contentBase64
+        pdf : contentBase64
     }
 
     // Callback before ajax call.
