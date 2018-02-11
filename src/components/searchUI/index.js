@@ -28,7 +28,7 @@ let _searchResultRenderer
 
 let _resetUIAfter
 
-let _positions
+let _hitCount
 
 /**
  * Setup the search function.
@@ -59,7 +59,7 @@ export function setSearchPosition (value) {
 }
 
 export function searchType () {
-    return _searchType;
+    return _searchType
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -111,7 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         // No action for no results.
-        if (_positions.length === 0) {
+        if (_hitCount === 0) {
             return
         }
 
@@ -129,7 +129,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function prevResult () {
     _searchPosition--
     if (_searchPosition < 0) {
-        _searchPosition = _positions.length - 1
+        _searchPosition = _hitCount - 1
     }
     highlightSearchResult()
 }
@@ -139,7 +139,7 @@ function prevResult () {
  */
 function nextResult () {
     _searchPosition++
-    if (_searchPosition >= _positions.length) {
+    if (_searchPosition >= _hitCount) {
         _searchPosition = 0
     }
     highlightSearchResult()
@@ -223,21 +223,23 @@ function doSearch ({ query = null } = {}) {
         return
     }
 
+    _hitCount = 0
     _pages.forEach(page => {
 
         // Search.
-        _positions = search({ hay : page.body, needle : text, isCaseSensitive, useRegexp })
-        _searchResultRenderer(_positions, _pages)
+        const _positions = search({ hay : page.body, needle : text, isCaseSensitive, useRegexp })
+        _searchResultRenderer(_positions, page, text)
+        _hitCount += _positions.length
     })
 
     if (_searchType === 'text') {
         $('.search-hit').removeClass('hidden')
         $('.search-current-position').text(_searchPosition + 1)
-        $('.search-hit-count').text(_positions.length) // TODO: searchHighlights(=_positionsを元にハイライトされた個数)と_positionsが不一致になることは？
+        $('.search-hit-count').text(_hitCount) // TODO: searchHighlights(=_positionsを元にハイライトされた個数)と_positionsが不一致になることは？
     } else {
         // Dict matching.
         $('.js-dict-match-cur-pos').text(_searchPosition + 1)
-        $('.js-dict-match-hit-counts').text(_positions.length)
+        $('.js-dict-match-hit-counts').text(_hitCount)
     }
 }
 
@@ -295,7 +297,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         // No action for no results.
-        if (_positions.length === 0) {
+        if (_hitCount === 0) {
             return
         }
 
@@ -306,8 +308,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         _searchPosition += num
         if (_searchPosition < 0) {
-            _searchPosition = _positions.length - 1
-        } else if (_searchPosition >= _positions.length) {
+            _searchPosition = _hitCount - 1
+        } else if (_searchPosition >= _hitCount) {
             _searchPosition = 0
         }
 
