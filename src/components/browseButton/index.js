@@ -43,6 +43,9 @@ export function setup ({
             return
         }
 
+        files.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
         loadFiles(files).then(() => {
 
             // Get current visuals.
