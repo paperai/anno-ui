@@ -7,7 +7,7 @@
 		exports["annoUI"] = factory();
 	else
 		root["annoUI"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1296,6 +1296,9 @@ function setup ({
             return
         }
 
+        files.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
         loadFiles(files).then(() => {
 
             // Get current visuals.
