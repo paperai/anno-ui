@@ -1288,7 +1288,7 @@ function setup ({
 
     $('.js-file :file').on('change', ev => {
 
-        const files = ev.target.files
+        const files = Array.from(ev.target.files)
 
         let error = isValidDirectorySelect(files)
         if (error) {
@@ -1297,8 +1297,8 @@ function setup ({
         }
 
         files.sort((a, b) => {
-            return a.name.localeCompare(b.name);
-        });
+            return a.name.localeCompare(b.name)
+        })
         loadFiles(files).then(() => {
 
             // Get current visuals.
