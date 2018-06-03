@@ -11,7 +11,7 @@ import * as color from './color'
 /**
  * Setup the behaviors for Input Label.
  */
-export function setup (createSpanAnnotation, createRelAnnotation) {
+export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
 
     core.setCurrentTab('span')
 
@@ -28,7 +28,11 @@ export function setup (createSpanAnnotation, createRelAnnotation) {
     setupTabClick()
 
     // Set import/export link behavior.
-    setupImportExportLink()
+    setupImportExportLink(namingRuleForExport)
+}
+
+export function defaultNamingRuleForExport (exportProcess) {
+    exportProcess('pdfanno.conf')
 }
 
 /**
@@ -222,27 +226,45 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
 /**
  * Set the behavior of importing/exporting label settings.
  */
-function setupImportExportLink () {
+function setupImportExportLink (namingRuleForExport) {
 
     // Export behavior.
-    $('.js-export-label').on('click', () => {
-        let data = db.getLabelList()
+    $('.js-export-label').on('click', (e) => {
+        e.preventDefault()
+        if (e.target.classList.contains('disabled')) {
+            // already running the other click process.
+            return false;
+        }
+        // change to not clickable
+        e.target.classList.add('disabled');
+        namingRuleForExport((exportFileName) => {
+            if (exportFileName === undefined) {
+                // export is canceled.
+                // rechange to clickable
+                e.target.classList.remove('disabled');
+                return false
+            }
+            let data = db.getLabelList()
 
-        // Modify.
-        Object.keys(data).forEach(type => {
-            data[type].labels.forEach((item, index) => {
-                // old -> new style.
-                if (typeof item === 'string') {
-                    data[type].labels[index] = [ item, color.colors[0] ]
-                }
+            // Modify.
+            Object.keys(data).forEach(type => {
+                data[type].labels.forEach((item, index) => {
+                    // old -> new style.
+                    if (typeof item === 'string') {
+                        data[type].labels[index] = [ item, color.colors[0] ]
+                    }
+                })
             })
+
+            // Conver to TOML style.
+            const toml = annoUtils.tomlString(data)
+
+            // Download.
+            annoUtils.download(exportFileName, toml)
+
+            // rechange to clickable
+            e.target.classList.remove('disabled');
         })
-
-        // Conver to TOML style.
-        const toml = annoUtils.tomlString(data)
-
-        // Download.
-        annoUtils.download('pdfanno.conf', toml)
     })
 
     // Import behavior.
