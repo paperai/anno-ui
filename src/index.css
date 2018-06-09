@@ -75,7 +75,7 @@ input:-webkit-autofill:active {
 .js-label-tab-content {
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: calc(100vh - 40em);
+    max-height: calc(100vh - 25em); /* Adjust for HD size(1366x768) */
 }
 
 .js-label-tab-content .label-list__text {
