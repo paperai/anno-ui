@@ -71,3 +71,21 @@ input:-webkit-autofill:active {
 .anno-ui .sp-preview {
     margin-right: 0;
 }
+
+.js-label-tab-content {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: calc(100vh - 25em); /* Adjust for HD size(1366x768) */
+}
+
+.js-label-tab-content .label-list__text {
+    word-break: break-all;
+}
+
+.js-label-tab-content .label-list__input {
+    width: 100%;
+}
+
+.js-label-tab-content .sp-replacer {
+    overflow: inherit;
+}
