@@ -89,3 +89,7 @@ input:-webkit-autofill:active {
 .js-label-tab-content .sp-replacer {
     overflow: inherit;
 }
+
+.js-export-label.disabled {
+    cursor: not-allowed;
+}
