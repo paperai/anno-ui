@@ -12,6 +12,7 @@ import * as searchUI from './components/searchUI'
 import * as ui from './uis'
 import * as event from './events'
 import * as util from './utils'
+import * as core from './core'
 
 export {
     browseButton,
@@ -25,5 +26,6 @@ export {
     searchUI,
     ui,
     event,
-    util
+    util,
+    core
 }
