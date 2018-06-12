@@ -16,14 +16,15 @@ export function setup ({
     saveAnnotationText,
     createSpanAnnotation,
     createRelAnnotation,
-    colorChangeListener = function () {}
+    colorChangeListener = function () {},
+    namingRuleForExport = behavior.defaultNamingRuleForExport
 }) {
 
     // Define core functions.
     core.setup(saveAnnotationText)
 
     // Define user actions.
-    behavior.setup(createSpanAnnotation, createRelAnnotation)
+    behavior.setup(createSpanAnnotation, createRelAnnotation, namingRuleForExport)
 
     // Define window event listeners.
     listener.setup(getSelectedAnnotations)
