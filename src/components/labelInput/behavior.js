@@ -7,6 +7,7 @@ import * as annoUtils from '../../utils'
 import * as db from './db'
 import * as core from './core'
 import * as color from './color'
+import labelInputReader from './reader'
 
 /**
  * Setup the behaviors for Input Label.
@@ -283,8 +284,7 @@ function setupImportExportLink (namingRuleForExport) {
 
         try {
             const file = ev.target.files[0]
-            const tomlString = await annoUtils.loadFileAsText(file)
-            const labelData = toml.parse(tomlString)
+            const labelData = await labelInputReader(file)
             db.saveLabelList(labelData)
             // Re-render.
             $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
