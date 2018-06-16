@@ -149,13 +149,13 @@ function nextResult () {
  * Highlight a single search result.
  */
 function highlightSearchResult () {
-    switch(_searchType) {
-      case 'text':
-        $('.search-current-position').text(_searchPosition + 1)
-        break
-      case 'dictionary':
-        $('.js-dict-match-cur-pos').text(_searchPosition + 1)
-        break
+    switch (_searchType) {
+        case 'text':
+            $('.search-current-position').text(_searchPosition + 1)
+            break
+        case 'dictionary':
+            $('.js-dict-match-cur-pos').text(_searchPosition + 1)
+            break
     }
     _scrollTo(_searchPosition)
 }
