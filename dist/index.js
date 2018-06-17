@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -84,7 +84,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /**
  * UI - Alert dialog.
  */
-__webpack_require__(12)
+__webpack_require__(13)
 
 function create ({ type = 'alert', message = '' }) {
     const id = 'modal-' + (new Date().getTime())
@@ -249,7 +249,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(10);
+var	fixUrls = __webpack_require__(11);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -720,7 +720,7 @@ function isValidInput (text) {
 /* harmony export (immutable) */ __webpack_exports__["c"] = find;
 /* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
 /* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(7);
 // labelInput/color.js
 
 
@@ -835,28 +835,24 @@ function getColorMap () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
-/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
-/**
- * Storage for label settings.
- */
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["applicationName"] = applicationName;
+let _applicationName = 'pdfanno'
 
-// LocalStorage key to save label data.
-const LSKEY_LABEL_LIST = 'pdfanno-label-list'
-
-/**
- * Get the labels from the storage.
- */
-function getLabelList () {
-    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST) || '{}')
+function setup ({
+    applicationName
+}) {
+    _applicationName = applicationName
 }
 
-/**
- * Save the labels to the storage.
- */
-function saveLabelList (data) {
-    localStorage.setItem(LSKEY_LABEL_LIST, JSON.stringify(data))
+function applicationName () {
+    return _applicationName
 }
+
+const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
+/* harmony export (immutable) */ __webpack_exports__["validLabelTypes"] = validLabelTypes;
+
 
 
 /***/ }),
@@ -1060,19 +1056,54 @@ function loadFileAsText (file) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
+/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(5);
+
+
+/**
+ * Storage for label settings.
+ */
+
+// LocalStorage key to save label data.
+function LSKEY_LABEL_LIST () {
+    return __WEBPACK_IMPORTED_MODULE_0__core__["applicationName"]() + '-label-list'
+}
+
+/**
+ * Get the labels from the storage.
+ */
+function getLabelList () {
+    return JSON.parse(localStorage.getItem(LSKEY_LABEL_LIST()) || '{}')
+}
+
+/**
+ * Save the labels to the storage.
+ */
+function saveLabelList (data) {
+    localStorage.setItem(LSKEY_LABEL_LIST(), JSON.stringify(data))
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_labelInput__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_uploadButton__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_searchUI__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__uis__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__events__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_browseButton__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_referenceAnnoDropdown__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_annoListDropdown__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_downloadButton__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_labelInput__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_uploadButton__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_searchUI__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__uis__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__events__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__utils__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__core__ = __webpack_require__(5);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "browseButton", function() { return __WEBPACK_IMPORTED_MODULE_0__components_browseButton__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "contentDropdown", function() { return __WEBPACK_IMPORTED_MODULE_1__components_contentDropdown__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "primaryAnnoDropdown", function() { return __WEBPACK_IMPORTED_MODULE_2__components_primaryAnnoDropdown__; });
@@ -1085,7 +1116,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return __WEBPACK_IMPORTED_MODULE_9__uis__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "event", function() { return __WEBPACK_IMPORTED_MODULE_10__events__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "util", function() { return __WEBPACK_IMPORTED_MODULE_11__utils__; });
-__webpack_require__(8)
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "core", function() { return __WEBPACK_IMPORTED_MODULE_12__core__; });
+__webpack_require__(9)
+
 
 
 
@@ -1104,13 +1137,13 @@ __webpack_require__(8)
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(9);
+var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1135,7 +1168,7 @@ if(false) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1149,7 +1182,7 @@ exports.push([module.i, "@charset 'utf-8';\n\n/* Reset CSS */\nhtml{color:#000;b
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 
@@ -1244,7 +1277,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1505,13 +1538,13 @@ function getContentDropdownInitialText () {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1536,7 +1569,7 @@ if(false) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1550,7 +1583,7 @@ exports.push([module.i, "/**\n * UI - Alert Dialog.\n */\n\n.alertdialog-danger 
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1636,7 +1669,7 @@ function resetCheckReferenceAnnoDropdown () {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1703,7 +1736,7 @@ function setup ({
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1746,7 +1779,7 @@ function setup ({
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1813,7 +1846,7 @@ function setup ({
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1876,20 +1909,20 @@ function _getDownloadFileName (getCurrentContentName) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setup"] = setup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(4);
 /**
  * UI parts - Input Label.
  */
-__webpack_require__(20)
+__webpack_require__(21)
 
 
 
@@ -1927,13 +1960,13 @@ const getColorMap = __WEBPACK_IMPORTED_MODULE_3__color__["d" /* getColorMap */]
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(21);
+var content = __webpack_require__(22);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -1958,7 +1991,7 @@ if(false) {
 }
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1972,19 +2005,18 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["a"] = defaultNamingRuleForExport;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__db__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__color__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reader__ = __webpack_require__(24);
 /**
  * Define the behaviors of label input component.
  */
@@ -2000,7 +2032,7 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
  */
 function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
 
-    __WEBPACK_IMPORTED_MODULE_4__core__["f" /* setCurrentTab */]('span')
+    __WEBPACK_IMPORTED_MODULE_3__core__["f" /* setCurrentTab */]('span')
 
     // Set add button behavior.
     setupAddButton()
@@ -2028,22 +2060,22 @@ function defaultNamingRuleForExport (exportProcess) {
 function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
             const text = type === 'span' ? 'span1' : 'relation1'
-            labels = [ [ text, __WEBPACK_IMPORTED_MODULE_5__color__["b" /* colors */][0] ] ]
+            labels = [ [ text, __WEBPACK_IMPORTED_MODULE_4__color__["b" /* colors */][0] ] ]
         } else {
             labels = labelObject.labels
         }
 
         labelObject.labels = labels
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
 
         // currentTab = type
-        __WEBPACK_IMPORTED_MODULE_4__core__["f" /* setCurrentTab */](type)
+        __WEBPACK_IMPORTED_MODULE_3__core__["f" /* setCurrentTab */](type)
 
         let $ul = $(`<ul class="tab-pane active label-list" data-type="${type}"/>`)
         labels.forEach((label, index) => {
@@ -2051,7 +2083,7 @@ function setupTabClick () {
             let text, aColor
             if (typeof label === 'string') { // old style.
                 text = label
-                aColor = __WEBPACK_IMPORTED_MODULE_5__color__["b" /* colors */][0]
+                aColor = __WEBPACK_IMPORTED_MODULE_4__color__["b" /* colors */][0]
             } else {
                 text = label[0]
                 aColor = label[1]
@@ -2098,7 +2130,7 @@ function setupColorPicker () {
         showPaletteOnly        : true,
         showPalette            : true,
         hideAfterPaletteSelect : true,
-        palette                : __WEBPACK_IMPORTED_MODULE_5__color__["e" /* getPaletteColors */]()
+        palette                : __WEBPACK_IMPORTED_MODULE_4__color__["e" /* getPaletteColors */]()
     })
     // Set initial color.
     $('.js-label-palette').each((i, elm) => {
@@ -2114,19 +2146,19 @@ function setupColorPicker () {
         const index = $this.data('index')
         console.log('click color picker:', e, aColor, index)
 
-        let labelList = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
-        let label = labelList[__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()].labels[index]
+        let labelList = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+        let label = labelList[__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()].labels[index]
         if (typeof label === 'string') { // old style.
             label = [ label, aColor ]
         } else {
             label[1] = aColor
         }
-        labelList[__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()].labels[index] = label
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelList)
+        labelList[__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()].labels[index] = label
+        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelList)
 
         // Notify color changed.
         const text = $this.siblings('.js-label').text().trim()
-        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({ text : text, color : aColor, annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]() })
+        __WEBPACK_IMPORTED_MODULE_4__color__["f" /* notifyColorChanged */]({ text : text, color : aColor, annoType : __WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]() })
     })
 }
 
@@ -2141,28 +2173,28 @@ function setupAddButton () {
         let type = $this.parents('[data-type]').data('type')
 
         // Check the text valid.
-        if (!__WEBPACK_IMPORTED_MODULE_4__core__["e" /* isValidInput */](text)) {
-            __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
+        if (!__WEBPACK_IMPORTED_MODULE_3__core__["e" /* isValidInput */](text)) {
+            __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'Nor white space, tab, or line break are not permitted.' })
             return
         }
 
         // Chose one at random.
-        let aColor = __WEBPACK_IMPORTED_MODULE_5__color__["a" /* choice */]()
+        let aColor = __WEBPACK_IMPORTED_MODULE_4__color__["a" /* choice */]()
 
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
         labelObject.labels.push([ text, aColor ])
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
 
         // Re-render.
-        $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
+        $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()}"]`).click()
 
         // Notify color changed.
-        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({
+        __WEBPACK_IMPORTED_MODULE_4__color__["f" /* notifyColorChanged */]({
             text,
             color    : aColor,
-            annoType : __WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()
+            annoType : __WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()
         })
     })
 }
@@ -2177,18 +2209,18 @@ function setupTrashButton () {
         const type = $this.parents('[data-type]').data('type')
         const text = $this.siblings('.js-label').text().trim()
 
-        let d = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
         labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
 
         // Re-render.
         $(`.js-label-tab[data-type="${type}"]`).click()
 
         // Notify color changed.
-        const aColor = __WEBPACK_IMPORTED_MODULE_5__color__["c" /* find */](type, text)
-        __WEBPACK_IMPORTED_MODULE_5__color__["f" /* notifyColorChanged */]({ text, color : aColor, annoType : type })
+        const aColor = __WEBPACK_IMPORTED_MODULE_4__color__["c" /* find */](type, text)
+        __WEBPACK_IMPORTED_MODULE_4__color__["f" /* notifyColorChanged */]({ text, color : aColor, annoType : type })
     })
 }
 
@@ -2220,37 +2252,37 @@ function setupImportExportLink (namingRuleForExport) {
         e.preventDefault()
         if (e.target.classList.contains('disabled')) {
             // already running the other click process.
-            return false;
+            return false
         }
         // change to not clickable
-        e.target.classList.add('disabled');
+        e.target.classList.add('disabled')
         namingRuleForExport((exportFileName) => {
             if (exportFileName === undefined) {
                 // export is canceled.
                 // rechange to clickable
-                e.target.classList.remove('disabled');
+                e.target.classList.remove('disabled')
                 return false
             }
-            let data = __WEBPACK_IMPORTED_MODULE_3__db__["a" /* getLabelList */]()
+            let data = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
 
             // Modify.
             Object.keys(data).forEach(type => {
                 data[type].labels.forEach((item, index) => {
                     // old -> new style.
                     if (typeof item === 'string') {
-                        data[type].labels[index] = [ item, __WEBPACK_IMPORTED_MODULE_5__color__["b" /* colors */][0] ]
+                        data[type].labels[index] = [ item, __WEBPACK_IMPORTED_MODULE_4__color__["b" /* colors */][0] ]
                     }
                 })
             })
 
             // Conver to TOML style.
-            const toml = __WEBPACK_IMPORTED_MODULE_2__utils__["tomlString"](data)
+            const toml = __WEBPACK_IMPORTED_MODULE_1__utils__["tomlString"](data)
 
             // Download.
-            __WEBPACK_IMPORTED_MODULE_2__utils__["download"](exportFileName, toml)
+            __WEBPACK_IMPORTED_MODULE_1__utils__["download"](exportFileName, toml)
 
             // rechange to clickable
-            e.target.classList.remove('disabled');
+            e.target.classList.remove('disabled')
         })
     })
 
@@ -2270,15 +2302,14 @@ function setupImportExportLink (namingRuleForExport) {
 
         try {
             const file = ev.target.files[0]
-            const tomlString = await __WEBPACK_IMPORTED_MODULE_2__utils__["loadFileAsText"](file)
-            const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
-            __WEBPACK_IMPORTED_MODULE_3__db__["b" /* saveLabelList */](labelData)
+            const labelData = await __WEBPACK_IMPORTED_MODULE_5__reader__["a" /* default */](file)
+            __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelData)
             // Re-render.
-            $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_4__core__["c" /* getCurrentTab */]()}"]`).click()
+            $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()}"]`).click()
 
         } catch (e) {
             console.log('ERROR:', e)
-            __WEBPACK_IMPORTED_MODULE_1__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
+            __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__["show"]({ message : 'ERROR: cannot load the label file.' })
             return
         }
 
@@ -2287,11 +2318,46 @@ function setupImportExportLink (namingRuleForExport) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__core__ = __webpack_require__(5);
+
+
+
+
+/**
+ * Read the label list from File object
+ * @param File(Blob) object
+ * @return Promise.resolve(labelData) ... success, returned labelData (this will use to `db.setLabelList(labelData)`)
+ * @return Promise.reject(DOMError) ... error occurred on read the fileObj
+ * @return Promise.reject(TypeError) ... invalid label type is found in read from fileObj
+ */
+/* harmony default export */ __webpack_exports__["a"] = (async function (fileObj) {
+    const tomlString = await __WEBPACK_IMPORTED_MODULE_1__utils__["loadFileAsText"](fileObj)
+    if (tomlString === '') {
+        throw new TypeError('Empty data')
+    }
+    const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
+    for (let key in labelData) {
+        if (!__WEBPACK_IMPORTED_MODULE_2__core__["validLabelTypes"].includes(key)) {
+            throw new TypeError('Invalid label type; ' + key)
+        }
+    }
+    return labelData
+});
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(24);
-var compiler = __webpack_require__(25);
+var parser = __webpack_require__(26);
+var compiler = __webpack_require__(27);
 
 module.exports = {
   parse: function(input) {
@@ -2302,7 +2368,7 @@ module.exports = {
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -6149,7 +6215,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6353,7 +6419,7 @@ module.exports = {
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6464,7 +6530,7 @@ function handleAnnotationDeselected () {
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6473,7 +6539,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["uploadPDF"] = uploadPDF;
 /* harmony export (immutable) */ __webpack_exports__["setResult"] = setResult;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__funcs_upload__ = __webpack_require__(30);
 /**
  * UI parts - Upload Button.
  */
@@ -6544,7 +6610,7 @@ function setResult (text) {
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6620,7 +6686,7 @@ function arrayBufferToBase64 (buffer) {
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6781,13 +6847,13 @@ function nextResult () {
  * Highlight a single search result.
  */
 function highlightSearchResult () {
-    switch(_searchType) {
-      case 'text':
-        $('.search-current-position').text(_searchPosition + 1)
-        break
-      case 'dictionary':
-        $('.js-dict-match-cur-pos').text(_searchPosition + 1)
-        break
+    switch (_searchType) {
+        case 'text':
+            $('.search-current-position').text(_searchPosition + 1)
+            break
+        case 'dictionary':
+            $('.js-dict-match-cur-pos').text(_searchPosition + 1)
+            break
     }
     _scrollTo(_searchPosition)
 }
@@ -6974,7 +7040,7 @@ function searchByDictionary (texts = []) {
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6987,7 +7053,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

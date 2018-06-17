@@ -1,12 +1,12 @@
 /**
  * Define the behaviors of label input component.
  */
-import toml from 'toml'
 import * as alertDialog from '../../uis/alertDialog'
 import * as annoUtils from '../../utils'
 import * as db from './db'
 import * as core from './core'
 import * as color from './color'
+import labelInputReader from './reader'
 
 /**
  * Setup the behaviors for Input Label.
@@ -233,15 +233,15 @@ function setupImportExportLink (namingRuleForExport) {
         e.preventDefault()
         if (e.target.classList.contains('disabled')) {
             // already running the other click process.
-            return false;
+            return false
         }
         // change to not clickable
-        e.target.classList.add('disabled');
+        e.target.classList.add('disabled')
         namingRuleForExport((exportFileName) => {
             if (exportFileName === undefined) {
                 // export is canceled.
                 // rechange to clickable
-                e.target.classList.remove('disabled');
+                e.target.classList.remove('disabled')
                 return false
             }
             let data = db.getLabelList()
@@ -263,7 +263,7 @@ function setupImportExportLink (namingRuleForExport) {
             annoUtils.download(exportFileName, toml)
 
             // rechange to clickable
-            e.target.classList.remove('disabled');
+            e.target.classList.remove('disabled')
         })
     })
 
@@ -283,8 +283,7 @@ function setupImportExportLink (namingRuleForExport) {
 
         try {
             const file = ev.target.files[0]
-            const tomlString = await annoUtils.loadFileAsText(file)
-            const labelData = toml.parse(tomlString)
+            const labelData = await labelInputReader(file)
             db.saveLabelList(labelData)
             // Re-render.
             $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
