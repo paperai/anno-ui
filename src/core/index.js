@@ -9,3 +9,5 @@ export function setup ({
 export function applicationName () {
     return _applicationName
 }
+
+export const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
