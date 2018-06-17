@@ -1,7 +1,6 @@
 /**
  * Define the behaviors of label input component.
  */
-import toml from 'toml'
 import * as alertDialog from '../../uis/alertDialog'
 import * as annoUtils from '../../utils'
 import * as db from './db'
@@ -234,15 +233,15 @@ function setupImportExportLink (namingRuleForExport) {
         e.preventDefault()
         if (e.target.classList.contains('disabled')) {
             // already running the other click process.
-            return false;
+            return false
         }
         // change to not clickable
-        e.target.classList.add('disabled');
+        e.target.classList.add('disabled')
         namingRuleForExport((exportFileName) => {
             if (exportFileName === undefined) {
                 // export is canceled.
                 // rechange to clickable
-                e.target.classList.remove('disabled');
+                e.target.classList.remove('disabled')
                 return false
             }
             let data = db.getLabelList()
@@ -264,7 +263,7 @@ function setupImportExportLink (namingRuleForExport) {
             annoUtils.download(exportFileName, toml)
 
             // rechange to clickable
-            e.target.classList.remove('disabled');
+            e.target.classList.remove('disabled')
         })
     })
 
