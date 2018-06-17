@@ -1,11 +1,6 @@
 import toml from 'toml'
 import * as annoUtils from '../../utils'
-
-/**
- * label types
- * TODO: move to src/core/index.js ...?
- */
-const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
+import { validLabelTypes } from '../../core'
 
 /**
  * Read the label list from File object
@@ -16,6 +11,9 @@ const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
  */
 export default async function (fileObj) {
     const tomlString = await annoUtils.loadFileAsText(fileObj)
+    if (tomlString === '') {
+        throw new TypeError('Empty data')
+    }
     const labelData = toml.parse(tomlString)
     for (let key in labelData) {
         if (!validLabelTypes.includes(key)) {
