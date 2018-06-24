@@ -15,6 +15,16 @@ Put the code below in your html file.
 
 ```
 
+## How to test anno-ui.
+
+### Dependencies
+
+- Chrome web browser (this is detected automatically by [Puppeteer](https://github.com/GoogleChrome/puppeteer) and karma-chrome-launcher)
+
+```
+npm test
+```
+
 ## How to develop with anno-ui.
 When developing an application like [pdfanno](https://github.com/paperai/pdfanno) or [htmlanno](https://github.com/paperai/htmlanno) depending on anno-ui, you sometimes have to write code for both - your app and anno-ui. In such case, [npm link](https://docs.npmjs.com/cli/link) will help you want to do.  
 Describes How to use it.
