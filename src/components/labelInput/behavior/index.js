@@ -1,12 +1,13 @@
 /**
  * Define the behaviors of label input component.
  */
-import * as alertDialog from '../../uis/alertDialog'
-import * as annoUtils from '../../utils'
-import * as db from './db'
-import * as core from './core'
-import * as color from './color'
+import * as alertDialog from '../../../uis/alertDialog'
+import * as annoUtils from '../../../utils'
+import * as db from '../db'
+import * as core from '../core'
+import * as color from '../color'
 import labelInputReader from './reader'
+import editButtonClickListener from './editButton'
 
 /**
  * Setup the behaviors for Input Label.
@@ -20,6 +21,9 @@ export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForE
 
     // Set trash button behavior.
     setupTrashButton()
+
+    // Set edit button behavior.
+    $('.js-label-edit').on('click', editButtonClickListener)
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)

@@ -3,7 +3,7 @@ import assert from 'assert'
 import toml from 'toml'
 
 // Test target
-import labelInputReader from '../../../src/components/labelInput/reader.js'
+import labelInputReader from '../../../src/components/labelInput/behavior/reader.js'
 
 const validLabelInputData = [
     '[span]',

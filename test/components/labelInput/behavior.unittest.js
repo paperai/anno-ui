@@ -2,7 +2,7 @@ import assert from 'assert'
 import sinon from 'sinon'
 
 // Test target
-import * as labelInputBehavior from '../../../src/components/labelInput/behavior.js'
+import * as labelInputBehavior from '../../../src/components/labelInput/behavior/index.js'
 
 import * as db from '../../../src/components/labelInput/db.js'
 import * as color from '../../../src/components/labelInput/color.js'
@@ -97,13 +97,17 @@ describe('labelInput/Behavior', () => {
                     assert.ok(this.firstElement.querySelector('div.label-list__btn'))
                 })
 
-                it('should have trush-button, color-picker, and label-text', function () {
+                it('should have edit-button, trush-button, color-picker, and label-text', function () {
+                    const editButton = this.firstElement.querySelector('div.label-list__btn.js-label-edit')
+                    assert.ok(editButton, 'editButton does not exist')
+                    assert.strictEqual('0', editButton.getAttribute('data-index'))
+
                     const trushButton = this.firstElement.querySelector('div.label-list__btn.js-label-trash')
-                    assert.ok(trushButton)
+                    assert.ok(trushButton, 'trushButton does not exist')
                     assert.strictEqual('0', trushButton.getAttribute('data-index'))
             
                     const colorPicker = this.firstElement.querySelector('input.js-label-palette')
-                    assert.ok(colorPicker)
+                    assert.ok(colorPicker, 'colorPicker does not exist')
                     assert.strictEqual('text', colorPicker.getAttribute('type'))
                     assert.strictEqual('color', colorPicker.getAttribute('name'))
                     assert.strictEqual('off', colorPicker.getAttribute('autoComplete'))
@@ -114,10 +118,15 @@ describe('labelInput/Behavior', () => {
                     assert.strictEqual('span1', labelText.textContent.trim())
                 })
 
-                it('should same value `data-index` attribute both trushButton and colorPicker', function () {
+                it('should same value `data-index` attribute both editButton, trushButton and colorPicker', function () {
+                    const editButton = this.firstElement.querySelector('div.label-list__btn.js-label-edit')
                     const trushButton = this.firstElement.querySelector('div.label-list__btn.js-label-trash')
                     const colorPicker = this.firstElement.querySelector('input.js-label-palette')
 
+                    assert.strictEqual(
+                        editButton.getAttribute('data-index'),
+                        trushButton.getAttribute('data-index')
+                    )
                     assert.strictEqual(
                         trushButton.getAttribute('data-index'),
                         colorPicker.getAttribute('data-index')
@@ -165,27 +174,19 @@ describe('labelInput/Behavior', () => {
             })
 
             context('click event on `span` tab when label-text does not exist', () => {
-                it('should be created initial label-text `span1`', function () {
-                    assert.fail('not implement')
-                })
+                it('should be created initial label-text `span1`')
             })
 
             context('click event on `one-way` tab when label-text does not exist', () => {
-                it('should be created initial label-text `relation1`', function () {
-                    assert.fail('not implement')
-                })
+                it('should be created initial label-text `relation1`')
             })
 
             context('click event on `two-way` tab when label-text does not exist', () => {
-                it('should be created initial label-text `relation1`', function () {
-                    assert.fail('not implement')
-                })
+                it('should be created initial label-text `relation1`')
             })
 
             context('click event on `link` tab when label-text does not exist', () => {
-                it('should be created initial label-text `relation1`', function () {
-                    assert.fail('not implement')
-                })
+                it('should be created initial label-text `relation1`')
             }) 
         })
     })
@@ -200,38 +201,26 @@ describe('labelInput/Behavior', () => {
     })
 
     context('`.js-add-label-button` click event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 
     context('`.js-label-trush` click event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 
     context('`.js-label` click event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 
     context('`.js-export-label` click event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 
     context('`.js-import-label` click event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 
     context('`.js-import-file` change event listener', () => {
-        it('', () => {
-            assert.fail()
-        })
+        it('test is not implemented')
     })
 })
