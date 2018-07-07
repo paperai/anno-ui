@@ -23,7 +23,7 @@ export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForE
     setupTrashButton()
 
     // Set edit button behavior.
-    $('.js-label-edit').on('click', editButtonClickListener)
+    $('.js-label-tab-content').on('click', '.js-label-edit', editButtonClickListener)
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)
@@ -76,6 +76,9 @@ function setupTabClick () {
 
             $ul.append(`
                 <li class="label-list__item">
+                    <div class="label-list__btn js-label-edit" data-index="${index}">
+                        <i class="fa fa-edit fa-2x"></i>
+                    </div>
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>
