@@ -32,6 +32,9 @@ export function create ({ type = 'alert', message = '' }) {
 
 export function show () {
     const $modal = create(...arguments)
+    $modal.on('shown.bs.modal', () => {
+        $('[data-dismiss="modal"]').focus()
+    })
     $modal.modal('show')
     return $modal
 }
