@@ -11,7 +11,7 @@ import labelInputReader from './reader'
 /**
  * Setup the behaviors for Input Label.
  */
-export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
+export function setup ({ createSpanAnnotation, createRelAnnotation, createRectAnnotation, namingRuleForExport }) {
 
     core.setCurrentTab('span')
 
@@ -22,7 +22,7 @@ export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForE
     setupTrashButton()
 
     // Set the action when a label is clicked.
-    setupLabelText(createSpanAnnotation, createRelAnnotation)
+    setupLabelText(createSpanAnnotation, createRelAnnotation, createRectAnnotation)
 
     // Set tab behavior.
     setupTabClick()
@@ -45,7 +45,16 @@ function setupTabClick () {
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
-            const text = type === 'span' ? 'span1' : 'relation1'
+
+            let text = ''
+            if (type === 'span') {
+                text = 'span1'
+            } else if (type === 'rect') {
+                text = 'rect1'
+            } else {
+                text = 'relation1'
+            }
+
             labels = [ [ text, color.colors[0] ] ]
         } else {
             labels = labelObject.labels
@@ -208,7 +217,7 @@ function setupTrashButton () {
 /**
  * Set the behavior which a label text is clicked.
  */
-function setupLabelText (createSpanAnnotation, createRelAnnotation) {
+function setupLabelText (createSpanAnnotation, createRelAnnotation, createRectAnnotation) {
     $('.js-label-tab-content').on('click', '.js-label', e => {
         let $this = $(e.currentTarget)
         let text = $this.text().trim()
@@ -219,6 +228,8 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
             createSpanAnnotation({ text, color })
         } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
             createRelAnnotation({ type, text, color })
+        } else if (type === 'rect') {
+            createRectAnnotation({ text, color })
         }
     })
 }
