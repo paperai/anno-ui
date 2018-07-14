@@ -6483,7 +6483,6 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
             inputField.removeEventListener('blur', blurListener)
             labelChangeListener({
                 text: value,
-                color: __WEBPACK_IMPORTED_MODULE_3__color__["c" /* find */](labelType, value),
                 annoType: labelType,
                 oldText: oldValue
             })

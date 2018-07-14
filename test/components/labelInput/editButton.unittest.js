@@ -5,10 +5,11 @@ import sinon from 'sinon'
 import * as core from '../../../src/components/labelInput/core.js'
 import * as ui from '../../../src/uis/'
 
+import * as db from '../../../src/components/labelInput/db'
+import * as color from '../../../src/components/labelInput/color'
 
 // Test target
 import editButtonClickListener from '../../../src/components/labelInput/behavior/editButton.js'
-import * as db from '../../../src/components/labelInput/db'
 
 describe('label edit button on labelInput component', () => {
     before(function () {
@@ -109,13 +110,12 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, color, annoType, oldText}', function () {
+            it('should call labelChangeListener with argument {text, annoType, oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
                         text: this.newValidLabel,
-                        color: this.labelColor,
                         annoType: this.labelType,
                         oldText: this.labelTextContent
                     }
@@ -261,13 +261,12 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, color, annoType, oldText}', function () {
+            it('should call labelChangeListener with argument {text, annoType, oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
                         text: this.newValidLabel,
-                        color: this.labelColor,
                         annoType: this.labelType,
                         oldText: this.labelTextContent
                     }

@@ -26,7 +26,6 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
             inputField.removeEventListener('blur', blurListener)
             labelChangeListener({
                 text: value,
-                color: color.find(labelType, value),
                 annoType: labelType,
                 oldText: oldValue
             })
