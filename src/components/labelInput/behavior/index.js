@@ -12,18 +12,22 @@ import editButtonClickListener from './editButton'
 /**
  * Setup the behaviors for Input Label.
  */
-export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
+export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport, labelChangeListener) {
 
     core.setCurrentTab('span')
 
     // Set add button behavior.
+    // TODO: set labelChangeListener
     setupAddButton()
 
     // Set trash button behavior.
+    // TODO: set labelChangeListener
     setupTrashButton()
 
     // Set edit button behavior.
-    $('.js-label-tab-content').on('click', '.js-label-edit', editButtonClickListener)
+    $('.js-label-tab-content').on('click', '.js-label-edit', (event) => {
+        editButtonClickListener(event, labelChangeListener)
+    })
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)

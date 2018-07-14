@@ -16,7 +16,7 @@ export function setup ({
     saveAnnotationText,
     createSpanAnnotation,
     createRelAnnotation,
-    colorChangeListener = function () {},
+    labelChangeListener = function () {},
     namingRuleForExport = behavior.defaultNamingRuleForExport
 }) {
 
@@ -24,12 +24,12 @@ export function setup ({
     core.setup(saveAnnotationText)
 
     // Define user actions.
-    behavior.setup(createSpanAnnotation, createRelAnnotation, namingRuleForExport)
+    behavior.setup(createSpanAnnotation, createRelAnnotation, namingRuleForExport, labelChangeListener)
 
     // Define window event listeners.
     listener.setup(getSelectedAnnotations)
 
-    color.setup(colorChangeListener)
+    color.setup(labelChangeListener)
 }
 
 export const getColorMap = color.getColorMap

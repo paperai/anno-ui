@@ -44,14 +44,19 @@ describe('label edit button on labelInput component', () => {
         this.labelList.appendChild(document.createTextNode('\n'))
 
         document.body.appendChild(this.labelList)
-        $(this.labelList).on('click', '.js-label-edit', editButtonClickListener)
+
+        this.labelChangeListener = sinon.spy()
+
+        $(this.labelList).on('click', '.js-label-edit', (event) => {
+          editButtonClickListener(event, this.labelChangeListener)
+        })
     })
     afterEach(function () {
         db.saveLabelList(this.labeldb)
         document.body.removeChild(this.labelList)
     })
 
-    context('click event is occurred', function () {
+    context('when click event is occurred', function () {
         beforeEach(function () {
             $('.js-label-edit').click()
         })
@@ -80,6 +85,9 @@ describe('label edit button on labelInput component', () => {
         it('should be disabled `.js-label-edit`', function () {
             assert.ok(this.labelInput.querySelector('.js-label-edit').classList.contains('disabled'))
         })
+        it('should not call labelChangeListener', function () {
+            assert.ok(this.labelChangeListener.notCalled)
+        })
     })
 
     context('when be displayed `<input class="label-list__input">` and focus out this', function () {
@@ -100,6 +108,17 @@ describe('label edit button on labelInput component', () => {
             it('should called validator(core.isValidInput) with value of `<input class="label-list__input">`', function () {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
+            })
+            it('should call labelChangeListener with argument {text, color, annoType}', function () {
+                assert.ok(this.labelChangeListener.calledOnce)
+                assert.deepStrictEqual(
+                    this.labelChangeListener.firstCall.args[0],
+                    {
+                        text: this.newValidLabel,
+                        color: this.labelColor,
+                        annoType: this.labelType
+                    }
+                )
             })
             it('should re-display `.label-list__text.js-label` and set value of `<input class="label-list__input">` as textContent`', function () {
                 const labelText = this.labelInput.querySelector('.label-list__text.js-label')
@@ -183,6 +202,9 @@ describe('label edit button on labelInput component', () => {
                     assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
                     assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
                 })
+                it('should not call labelChangeListener', function () {
+                    assert.ok(this.labelChangeListener.notCalled)
+                })
             })
         })
 
@@ -237,6 +259,17 @@ describe('label edit button on labelInput component', () => {
             it('should called validator(core.isValidInput) with value of `<input class="label-list__input">`', function () {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
+            })
+            it('should call labelChangeListener with argument {text, color, annoType}', function () {
+                assert.ok(this.labelChangeListener.calledOnce)
+                assert.deepStrictEqual(
+                    this.labelChangeListener.firstCall.args[0],
+                    {
+                        text: this.newValidLabel,
+                        color: this.labelColor,
+                        annoType: this.labelType
+                    }
+                )
             })
             it('should re-display `.label-list__text.js-label` and set value of `<input class="label-list__input">` as textContent`', function () {
                 const labelText = this.labelInput.querySelector('.label-list__text.js-label')
@@ -318,6 +351,9 @@ describe('label edit button on labelInput component', () => {
                     })
                     assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
                     assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
+                })
+                it('should not call labelChangeListener', function () {
+                    assert.ok(this.labelChangeListener.notCalled)
                 })
             })
         })

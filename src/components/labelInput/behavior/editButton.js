@@ -1,8 +1,9 @@
 import * as core from '../core'
 import * as uis from '../../../uis'
 import * as db from '../db'
+import * as color from '../color'
 
-function setupLabelEditListener (inputField, labelText, editButton) {
+function setupLabelEditListener (inputField, labelText, editButton, labelChangeListener) {
     const blurListener = (event) => {
         event.stopPropagation()
 
@@ -23,6 +24,11 @@ function setupLabelEditListener (inputField, labelText, editButton) {
 
             inputField.parentElement.replaceChild(labelText, inputField)
             inputField.removeEventListener('blur', blurListener)
+            labelChangeListener({
+                text: value,
+                color: color.find(labelType, value),
+                annoType: labelType
+            })
             editButton.classList.remove('disabled')
         } else {
             const modal = uis.alertDialog.show({
@@ -53,14 +59,14 @@ function setupLabelEditListener (inputField, labelText, editButton) {
     inputField.addEventListener('blur', blurListener)
 }
 
-export default function (event) {
+export default function (event, labelChangeListener) {
     const labelText = event.currentTarget.parentElement.querySelector('.js-label')
     const inputField = document.createElement('input')
     inputField.setAttribute('type', 'text')
     inputField.classList.add('label-list__input')
     inputField.value = labelText.textContent.trim()
     event.currentTarget.classList.add('disabled')
-    setupLabelEditListener(inputField, labelText, event.currentTarget)
+    setupLabelEditListener(inputField, labelText, event.currentTarget, labelChangeListener)
 
     event.currentTarget.parentElement.replaceChild(inputField, labelText)
     inputField.focus()
