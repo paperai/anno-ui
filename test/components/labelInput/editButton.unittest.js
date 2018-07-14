@@ -109,14 +109,15 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, color, annoType}', function () {
+            it('should call labelChangeListener with argument {text, color, annoType, oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
                         text: this.newValidLabel,
                         color: this.labelColor,
-                        annoType: this.labelType
+                        annoType: this.labelType,
+                        oldText: this.labelTextContent
                     }
                 )
             })
@@ -260,14 +261,15 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, color, annoType}', function () {
+            it('should call labelChangeListener with argument {text, color, annoType, oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
                         text: this.newValidLabel,
                         color: this.labelColor,
-                        annoType: this.labelType
+                        annoType: this.labelType,
+                        oldText: this.labelTextContent
                     }
                 )
             })

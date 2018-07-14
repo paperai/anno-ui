@@ -27,7 +27,8 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
             labelChangeListener({
                 text: value,
                 color: color.find(labelType, value),
-                annoType: labelType
+                annoType: labelType,
+                oldText: oldValue
             })
             editButton.classList.remove('disabled')
         } else {

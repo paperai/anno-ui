@@ -136,7 +136,7 @@ function show () {
 /* harmony export (immutable) */ __webpack_exports__["d"] = isCurrent;
 /* harmony export (immutable) */ __webpack_exports__["e"] = isValidInput;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(2);
 /**
  * Core facilities for Label Input.
  */
@@ -273,6 +273,127 @@ function isValidInput (text) {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["a"] = choice;
+/* harmony export (immutable) */ __webpack_exports__["e"] = getPaletteColors;
+/* harmony export (immutable) */ __webpack_exports__["c"] = find;
+/* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
+/* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
+// labelInput/color.js
+
+
+/**
+ * Colors for a picker.
+ */
+const colors = [
+    // Pick from https://www.materialui.co/colors.
+    '#FFEB3B', // yellow
+    '#FF5722', // orange
+    '#795548', // brown
+    '#F44336', // red
+    '#E91E63', // pink
+    '#9C27B0', // purple
+    '#3F51B5', // blue
+    '#4CAF50'  // green
+]
+/* harmony export (immutable) */ __webpack_exports__["b"] = colors;
+
+
+const defaultColor = '#AAA'
+
+let _colorChangeListener
+
+function setup (colorChangeListener) {
+    _colorChangeListener = colorChangeListener
+}
+
+function choice () {
+    return colors[Math.floor(Math.random() * colors.length) % colors.length]
+}
+
+function getPaletteColors () {
+    return [
+        colors.slice(0, Math.floor(colors.length / 2)),
+        colors.slice(Math.floor(colors.length / 2), colors.length)
+    ]
+}
+
+/**
+* Find a color for the text in the type.
+*/
+function find (type, text) {
+
+    // Default color.
+    let color = defaultColor
+
+    const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
+    labelList[type].labels.forEach(item => {
+        // old style.
+        if (typeof item === 'string') {
+            return
+        }
+        const [aText, aColor] = item
+        if (text === aText) {
+            color = aColor
+        }
+    })
+
+    return color
+}
+
+function notifyColorChanged ({ text, color, uuid, annoType }) {
+    _colorChangeListener(...arguments)
+}
+
+/**
+ * Get the color map.
+
+    Example:
+    ---
+    {
+        "span" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "one-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "two-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "link-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "default" : defaultColor
+    }
+ */
+function getColorMap () {
+    const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
+    Object.keys(labelMap).forEach(type => {
+        labelMap[type].labels.forEach(item => {
+            // old style.
+            if (typeof item === 'string') {
+                labelMap[type][item] = colors[0]
+            } else {
+                labelMap[type][item[0]] = item[1]
+            }
+        })
+        delete labelMap[type].labels
+    })
+    labelMap.default = defaultColor
+    return labelMap
+}
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 /*
@@ -354,7 +475,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -713,127 +834,6 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["a"] = choice;
-/* harmony export (immutable) */ __webpack_exports__["e"] = getPaletteColors;
-/* harmony export (immutable) */ __webpack_exports__["c"] = find;
-/* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
-/* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
-// labelInput/color.js
-
-
-/**
- * Colors for a picker.
- */
-const colors = [
-    // Pick from https://www.materialui.co/colors.
-    '#FFEB3B', // yellow
-    '#FF5722', // orange
-    '#795548', // brown
-    '#F44336', // red
-    '#E91E63', // pink
-    '#9C27B0', // purple
-    '#3F51B5', // blue
-    '#4CAF50'  // green
-]
-/* harmony export (immutable) */ __webpack_exports__["b"] = colors;
-
-
-const defaultColor = '#AAA'
-
-let _colorChangeListener
-
-function setup (colorChangeListener) {
-    _colorChangeListener = colorChangeListener
-}
-
-function choice () {
-    return colors[Math.floor(Math.random() * colors.length) % colors.length]
-}
-
-function getPaletteColors () {
-    return [
-        colors.slice(0, Math.floor(colors.length / 2)),
-        colors.slice(Math.floor(colors.length / 2), colors.length)
-    ]
-}
-
-/**
-* Find a color for the text in the type.
-*/
-function find (type, text) {
-
-    // Default color.
-    let color = defaultColor
-
-    const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
-    labelList[type].labels.forEach(item => {
-        // old style.
-        if (typeof item === 'string') {
-            return
-        }
-        const [aText, aColor] = item
-        if (text === aText) {
-            color = aColor
-        }
-    })
-
-    return color
-}
-
-function notifyColorChanged ({ text, color, uuid, annoType }) {
-    _colorChangeListener(...arguments)
-}
-
-/**
- * Get the color map.
-
-    Example:
-    ---
-    {
-        "span" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "one-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "two-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "link-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "default" : defaultColor
-    }
- */
-function getColorMap () {
-    const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
-    Object.keys(labelMap).forEach(type => {
-        labelMap[type].labels.forEach(item => {
-            // old style.
-            if (typeof item === 'string') {
-                labelMap[type][item] = colors[0]
-            } else {
-                labelMap[type][item[0]] = item[1]
-            }
-        })
-        delete labelMap[type].labels
-    })
-    labelMap.default = defaultColor
-    return labelMap
-}
-
-
-/***/ }),
 /* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1167,7 +1167,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(4)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1187,7 +1187,7 @@ if(false) {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -1568,7 +1568,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(4)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1588,7 +1588,7 @@ if(false) {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -1934,7 +1934,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(2);
 /**
  * UI parts - Input Label.
  */
@@ -1953,7 +1953,7 @@ function setup ({
     saveAnnotationText,
     createSpanAnnotation,
     createRelAnnotation,
-    colorChangeListener = function () {},
+    labelChangeListener = function () {},
     namingRuleForExport = __WEBPACK_IMPORTED_MODULE_1__behavior__["a" /* defaultNamingRuleForExport */]
 }) {
 
@@ -1961,12 +1961,12 @@ function setup ({
     __WEBPACK_IMPORTED_MODULE_0__core__["g" /* setup */](saveAnnotationText)
 
     // Define user actions.
-    __WEBPACK_IMPORTED_MODULE_1__behavior__["b" /* setup */](createSpanAnnotation, createRelAnnotation, namingRuleForExport)
+    __WEBPACK_IMPORTED_MODULE_1__behavior__["b" /* setup */](createSpanAnnotation, createRelAnnotation, namingRuleForExport, labelChangeListener)
 
     // Define window event listeners.
     __WEBPACK_IMPORTED_MODULE_2__listener__["a" /* setup */](getSelectedAnnotations)
 
-    __WEBPACK_IMPORTED_MODULE_3__color__["g" /* setup */](colorChangeListener)
+    __WEBPACK_IMPORTED_MODULE_3__color__["g" /* setup */](labelChangeListener)
 }
 
 const getColorMap = __WEBPACK_IMPORTED_MODULE_3__color__["d" /* getColorMap */]
@@ -1990,7 +1990,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(4)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2010,7 +2010,7 @@ if(false) {
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -2031,7 +2031,7 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reader__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__editButton__ = __webpack_require__(29);
 /**
@@ -2048,18 +2048,22 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 /**
  * Setup the behaviors for Input Label.
  */
-function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
+function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport, labelChangeListener) {
 
     __WEBPACK_IMPORTED_MODULE_3__core__["f" /* setCurrentTab */]('span')
 
     // Set add button behavior.
+    // TODO: set labelChangeListener
     setupAddButton()
 
     // Set trash button behavior.
+    // TODO: set labelChangeListener
     setupTrashButton()
 
     // Set edit button behavior.
-    $('.js-label-tab-content').on('click', '.js-label-edit', __WEBPACK_IMPORTED_MODULE_6__editButton__["a" /* default */])
+    $('.js-label-tab-content').on('click', '.js-label-edit', (event) => {
+        __WEBPACK_IMPORTED_MODULE_6__editButton__["a" /* default */](event, labelChangeListener)
+    })
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)
@@ -6450,11 +6454,13 @@ module.exports = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(2);
 
 
 
 
-function setupLabelEditListener (inputField, labelText, editButton) {
+
+function setupLabelEditListener (inputField, labelText, editButton, labelChangeListener) {
     const blurListener = (event) => {
         event.stopPropagation()
 
@@ -6475,6 +6481,12 @@ function setupLabelEditListener (inputField, labelText, editButton) {
 
             inputField.parentElement.replaceChild(labelText, inputField)
             inputField.removeEventListener('blur', blurListener)
+            labelChangeListener({
+                text: value,
+                color: __WEBPACK_IMPORTED_MODULE_3__color__["c" /* find */](labelType, value),
+                annoType: labelType,
+                oldText: oldValue
+            })
             editButton.classList.remove('disabled')
         } else {
             const modal = __WEBPACK_IMPORTED_MODULE_1__uis__["alertDialog"].show({
@@ -6505,14 +6517,14 @@ function setupLabelEditListener (inputField, labelText, editButton) {
     inputField.addEventListener('blur', blurListener)
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (function (event) {
+/* harmony default export */ __webpack_exports__["a"] = (function (event, labelChangeListener) {
     const labelText = event.currentTarget.parentElement.querySelector('.js-label')
     const inputField = document.createElement('input')
     inputField.setAttribute('type', 'text')
     inputField.classList.add('label-list__input')
     inputField.value = labelText.textContent.trim()
     event.currentTarget.classList.add('disabled')
-    setupLabelEditListener(inputField, labelText, event.currentTarget)
+    setupLabelEditListener(inputField, labelText, event.currentTarget, labelChangeListener)
 
     event.currentTarget.parentElement.replaceChild(inputField, labelText)
     inputField.focus()
