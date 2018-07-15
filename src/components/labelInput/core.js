@@ -128,5 +128,5 @@ function watchColor (uuid) {
  * Nor White space, tab or line break are not permitted.
  */
 export function isValidInput (text) {
-    return !/\s/.test(text)
+    return /^\S+$/.test(text)
 }
