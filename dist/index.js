@@ -136,7 +136,7 @@ function show () {
 /* harmony export (immutable) */ __webpack_exports__["d"] = isCurrent;
 /* harmony export (immutable) */ __webpack_exports__["e"] = isValidInput;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color__ = __webpack_require__(4);
 /**
  * Core facilities for Label Input.
  */
@@ -267,133 +267,12 @@ function watchColor (uuid) {
  * Nor White space, tab or line break are not permitted.
  */
 function isValidInput (text) {
-    return !/\s/.test(text)
+    return /^\S+$/.test(text)
 }
 
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
-/* harmony export (immutable) */ __webpack_exports__["a"] = choice;
-/* harmony export (immutable) */ __webpack_exports__["e"] = getPaletteColors;
-/* harmony export (immutable) */ __webpack_exports__["c"] = find;
-/* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
-/* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
-// labelInput/color.js
-
-
-/**
- * Colors for a picker.
- */
-const colors = [
-    // Pick from https://www.materialui.co/colors.
-    '#FFEB3B', // yellow
-    '#FF5722', // orange
-    '#795548', // brown
-    '#F44336', // red
-    '#E91E63', // pink
-    '#9C27B0', // purple
-    '#3F51B5', // blue
-    '#4CAF50'  // green
-]
-/* harmony export (immutable) */ __webpack_exports__["b"] = colors;
-
-
-const defaultColor = '#AAA'
-
-let _colorChangeListener
-
-function setup (colorChangeListener) {
-    _colorChangeListener = colorChangeListener
-}
-
-function choice () {
-    return colors[Math.floor(Math.random() * colors.length) % colors.length]
-}
-
-function getPaletteColors () {
-    return [
-        colors.slice(0, Math.floor(colors.length / 2)),
-        colors.slice(Math.floor(colors.length / 2), colors.length)
-    ]
-}
-
-/**
-* Find a color for the text in the type.
-*/
-function find (type, text) {
-
-    // Default color.
-    let color = defaultColor
-
-    const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
-    labelList[type].labels.forEach(item => {
-        // old style.
-        if (typeof item === 'string') {
-            return
-        }
-        const [aText, aColor] = item
-        if (text === aText) {
-            color = aColor
-        }
-    })
-
-    return color
-}
-
-function notifyColorChanged ({ text, color, uuid, annoType }) {
-    _colorChangeListener(...arguments)
-}
-
-/**
- * Get the color map.
-
-    Example:
-    ---
-    {
-        "span" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "one-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "two-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "link-way" : {
-            "label1" : color1,
-            "label2" : color2
-        },
-        "default" : defaultColor
-    }
- */
-function getColorMap () {
-    const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["a" /* getLabelList */]()
-    Object.keys(labelMap).forEach(type => {
-        labelMap[type].labels.forEach(item => {
-            // old style.
-            if (typeof item === 'string') {
-                labelMap[type][item] = colors[0]
-            } else {
-                labelMap[type][item[0]] = item[1]
-            }
-        })
-        delete labelMap[type].labels
-    })
-    labelMap.default = defaultColor
-    return labelMap
-}
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports) {
 
 /*
@@ -475,7 +354,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -834,12 +713,134 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["g"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["a"] = choice;
+/* harmony export (immutable) */ __webpack_exports__["e"] = getPaletteColors;
+/* harmony export (immutable) */ __webpack_exports__["c"] = find;
+/* harmony export (immutable) */ __webpack_exports__["f"] = notifyColorChanged;
+/* harmony export (immutable) */ __webpack_exports__["d"] = getColorMap;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__db__ = __webpack_require__(5);
+// labelInput/color.js
+
+
+/**
+ * Colors for a picker.
+ */
+const colors = [
+    // Pick from https://www.materialui.co/colors.
+    '#FFEB3B', // yellow
+    '#FF5722', // orange
+    '#795548', // brown
+    '#F44336', // red
+    '#E91E63', // pink
+    '#9C27B0', // purple
+    '#3F51B5', // blue
+    '#4CAF50'  // green
+]
+/* harmony export (immutable) */ __webpack_exports__["b"] = colors;
+
+
+const defaultColor = '#AAA'
+
+let _colorChangeListener
+
+function setup (colorChangeListener) {
+    _colorChangeListener = colorChangeListener
+}
+
+function choice () {
+    return colors[Math.floor(Math.random() * colors.length) % colors.length]
+}
+
+function getPaletteColors () {
+    return [
+        colors.slice(0, Math.floor(colors.length / 2)),
+        colors.slice(Math.floor(colors.length / 2), colors.length)
+    ]
+}
+
+/**
+* Find a color for the text in the type.
+*/
+function find (type, text) {
+
+    // Default color.
+    let color = defaultColor
+
+    const labelList = __WEBPACK_IMPORTED_MODULE_0__db__["b" /* getLabelList */]()
+    labelList[type].labels.forEach(item => {
+        // old style.
+        if (typeof item === 'string') {
+            return
+        }
+        const [aText, aColor] = item
+        if (text === aText) {
+            color = aColor
+        }
+    })
+
+    return color
+}
+
+function notifyColorChanged ({ text, color, uuid, annoType }) {
+    _colorChangeListener(...arguments)
+}
+
+/**
+ * Get the color map.
+
+    Example:
+    ---
+    {
+        "span" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "one-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "two-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "link-way" : {
+            "label1" : color1,
+            "label2" : color2
+        },
+        "default" : defaultColor
+    }
+ */
+function getColorMap () {
+    const labelMap = __WEBPACK_IMPORTED_MODULE_0__db__["b" /* getLabelList */]()
+    Object.keys(labelMap).forEach(type => {
+        labelMap[type].labels.forEach(item => {
+            // old style.
+            if (typeof item === 'string') {
+                labelMap[type][item] = colors[0]
+            } else {
+                labelMap[type][item[0]] = item[1]
+            }
+        })
+        delete labelMap[type].labels
+    })
+    labelMap.default = defaultColor
+    return labelMap
+}
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getLabelList;
-/* harmony export (immutable) */ __webpack_exports__["b"] = saveLabelList;
+/* harmony export (immutable) */ __webpack_exports__["b"] = getLabelList;
+/* harmony export (immutable) */ __webpack_exports__["c"] = saveLabelList;
+/* harmony export (immutable) */ __webpack_exports__["a"] = findLabel;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(6);
 
 
@@ -864,6 +865,26 @@ function getLabelList () {
  */
 function saveLabelList (data) {
     localStorage.setItem(LSKEY_LABEL_LIST(), JSON.stringify(data))
+}
+
+/**
+ * search the label fron the storage.
+ * @param labelType {span|one-way|two-way|link}
+ * @param labelText the inputted string on label editor
+ * @return labelObject (Array of [labelText, labelColor]) or undefined
+ */
+function findLabel (labelType, labelText) {
+    const labelList = getLabelList()
+    if (labelList[labelType] === undefined) {
+        return undefined
+    }
+    const labelCount = labelList[labelType].labels.length
+    for (let index = 0; index < labelCount; index++) {
+        if (labelList[labelType].labels[index][0] === labelText) {
+            return labelList[labelType].labels[index]
+        }
+    }
+    return undefined
 }
 
 
@@ -1167,7 +1188,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(3)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1187,7 +1208,7 @@ if(false) {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(undefined);
+exports = module.exports = __webpack_require__(2)(undefined);
 // imports
 
 
@@ -1568,7 +1589,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(3)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1588,7 +1609,7 @@ if(false) {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(undefined);
+exports = module.exports = __webpack_require__(2)(undefined);
 // imports
 
 
@@ -1934,7 +1955,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__behavior__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listener__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(4);
 /**
  * UI parts - Input Label.
  */
@@ -1990,7 +2011,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(3)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2010,7 +2031,7 @@ if(false) {
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(undefined);
+exports = module.exports = __webpack_require__(2)(undefined);
 // imports
 
 
@@ -2031,7 +2052,7 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reader__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__editButton__ = __webpack_require__(29);
 /**
@@ -2085,7 +2106,7 @@ function defaultNamingRuleForExport (exportProcess) {
 function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
-        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
         const labelObject = d[type] || {}
         let labels
         if (labelObject.labels === undefined) {
@@ -2097,7 +2118,7 @@ function setupTabClick () {
 
         labelObject.labels = labels
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](d)
 
         // currentTab = type
         __WEBPACK_IMPORTED_MODULE_3__core__["f" /* setCurrentTab */](type)
@@ -2174,7 +2195,7 @@ function setupColorPicker () {
         const index = $this.data('index')
         console.log('click color picker:', e, aColor, index)
 
-        let labelList = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+        let labelList = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
         let label = labelList[__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()].labels[index]
         if (typeof label === 'string') { // old style.
             label = [ label, aColor ]
@@ -2182,7 +2203,7 @@ function setupColorPicker () {
             label[1] = aColor
         }
         labelList[__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()].labels[index] = label
-        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelList)
+        __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](labelList)
 
         // Notify color changed.
         const text = $this.siblings('.js-label').text().trim()
@@ -2209,11 +2230,11 @@ function setupAddButton () {
         // Chose one at random.
         let aColor = __WEBPACK_IMPORTED_MODULE_4__color__["a" /* choice */]()
 
-        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
         labelObject.labels.push([ text, aColor ])
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](d)
 
         // Re-render.
         $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()}"]`).click()
@@ -2237,11 +2258,11 @@ function setupTrashButton () {
         const type = $this.parents('[data-type]').data('type')
         const text = $this.siblings('.js-label').text().trim()
 
-        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+        let d = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
         let labelObject = d[type] || { labels : [] }
         labelObject.labels = labelObject.labels.slice(0, idx).concat(labelObject.labels.slice(idx + 1, labelObject.labels.length))
         d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
+        __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](d)
 
         // Re-render.
         $(`.js-label-tab[data-type="${type}"]`).click()
@@ -2291,7 +2312,7 @@ function setupImportExportLink (namingRuleForExport) {
                 e.target.classList.remove('disabled')
                 return false
             }
-            let data = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+            let data = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
 
             // Modify.
             Object.keys(data).forEach(type => {
@@ -2331,7 +2352,7 @@ function setupImportExportLink (namingRuleForExport) {
         try {
             const file = ev.target.files[0]
             const labelData = await __WEBPACK_IMPORTED_MODULE_5__reader__["a" /* default */](file)
-            __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelData)
+            __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](labelData)
             // Re-render.
             $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()}"]`).click()
 
@@ -6454,49 +6475,51 @@ module.exports = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__uis__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color__ = __webpack_require__(2);
-
 
 
 
 
 function setupLabelEditListener (inputField, labelText, editButton, labelChangeListener) {
+    const alertAndCloseEdit = (message) => {
+        const modal = __WEBPACK_IMPORTED_MODULE_1__uis__["alertDialog"].show({ type : 'alert', message : message })
+        modal.on('hide.bs.modal', () => {
+            inputField.parentElement.replaceChild(labelText, inputField)
+            inputField.removeEventListener('blur', blurListener)
+            editButton.classList.remove('disabled')
+        })
+    }
+
     const blurListener = (event) => {
         event.stopPropagation()
 
+        // Get <ul class="label-list" data-type="...">
+        const labelType = $(inputField).parentsUntil('.label-list').parent()[0].getAttribute('data-type')
         const value = inputField.value.trim()
+        const oldValue = labelText.textContent.trim()
         if (__WEBPACK_IMPORTED_MODULE_0__core__["e" /* isValidInput */](value)) {
-            // Get <ul class="label-list" data-type="...">
-            const labelType = $(inputField).parentsUntil('.label-list').parent()[0].getAttribute('data-type')
-            const oldValue = labelText.textContent.trim()
-            labelText.textContent = value
+            if (value === oldValue || __WEBPACK_IMPORTED_MODULE_2__db__["a" /* findLabel */](labelType, value) === undefined) {
+                labelText.textContent = value
+                const labelList = __WEBPACK_IMPORTED_MODULE_2__db__["b" /* getLabelList */]()
+                labelList[labelType].labels.forEach((labelObject) => {
+                    if (labelObject[0] === oldValue) {
+                        labelObject[0] = value
+                    }
+                })
+                __WEBPACK_IMPORTED_MODULE_2__db__["c" /* saveLabelList */](labelList)
 
-            const labelList = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
-            labelList[labelType].labels.forEach((labelObject) => {
-                if (labelObject[0] === oldValue) {
-                    labelObject[0] = value
-                }
-            })
-            __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelList)
-
-            inputField.parentElement.replaceChild(labelText, inputField)
-            inputField.removeEventListener('blur', blurListener)
-            labelChangeListener({
-                text: value,
-                annoType: labelType,
-                oldText: oldValue
-            })
-            editButton.classList.remove('disabled')
-        } else {
-            const modal = __WEBPACK_IMPORTED_MODULE_1__uis__["alertDialog"].show({
-                type    : 'alert',
-                message : 'Nor white space, tab, or line break are not permitted.'
-            })
-            modal.on('hide.bs.modal', () => {
                 inputField.parentElement.replaceChild(labelText, inputField)
                 inputField.removeEventListener('blur', blurListener)
+                labelChangeListener({
+                    text     : value,
+                    annoType : labelType,
+                    oldText  : oldValue
+                })
                 editButton.classList.remove('disabled')
-            })
+            } else {
+                alertAndCloseEdit('label is duplicated in same type')
+            }
+        } else {
+            alertAndCloseEdit('Nor white space, tab, or line break are not permitted.')
         }
     }
 
