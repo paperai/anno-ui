@@ -231,6 +231,39 @@ describe('label edit button on labelInput component', () => {
                 testsForInvalidValue()
             })
         })
+        context('input value is alreay exist in list', function () {
+            beforeEach(function (done) {
+                this.duplicatedLabel = (new Date()).getTime()
+
+                const duplicatedLabel = document.createElement('li')
+                duplicatedLabel.classList.add('label-list__item')
+                const labelText = document.createElement('div')
+                labelText.textContent = this.duplicatedLabel + '\n'
+                labelText.classList.add('label-list__text')
+                labelText.classList.add('js-label')
+                duplicatedLabel.appendChild(labelText)
+                this.labelList.appendChild(duplicatedLabel)
+                this.labelList.appendChild(document.createTextNode('\n'))
+
+                const labeldb = db.getLabelList()
+                labeldb[this.labelType].labels.push([this.duplicatedLabel, this.labelColor])
+                db.saveLabelList(labeldb)
+
+                beforeEachForInputFinished(this.duplicatedLabel, done)
+                $('.label-list__input')[0].blur()
+            })
+            afterEach(function () {
+                ui.alertDialog.show.restore()
+            })
+
+            it('should show alert dialog', function () {
+                assert.ok(ui.alertDialog.show.calledOnce)
+                assert.deepStrictEqual(
+                    ui.alertDialog.show.firstCall.args[0],
+                    { type: 'alert', message: 'label is duplicated in same type' }
+                )
+            })
+        })
     })
 
     context('when be displayed `<input class="label-list__input">` and input Enter-key', function () {
