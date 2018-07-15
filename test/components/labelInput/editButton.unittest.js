@@ -91,6 +91,64 @@ describe('label edit button on labelInput component', () => {
         })
     })
 
+    // function of beforeEach() for context('when be displayed `<input class="label-list__input">` and ...')
+    function beforeEachForInputFinished (newValue, done) {
+        sinon.stub(ui.alertDialog, 'show')
+        ui.alertDialog.show.returns({
+            on: (eventTarget, listener) => {
+                setTimeout(
+                    () => {
+                        listener()
+                        done()
+                    }, 500
+                )
+            }
+        })
+        $('.js-label-edit').click()
+        $('.label-list__input').val(newValue)
+        // focus out or hit enter key
+    }
+    function testsForInvalidValue () {
+        it('should show alert dialog', function () {
+            assert.ok(ui.alertDialog.show.calledOnce)
+            assert.deepStrictEqual(
+                ui.alertDialog.show.firstCall.args[0],
+                { type: 'alert', message: 'Nor white space, tab, or line break are not permitted.' }
+            )
+        });
+
+        context('after closed the alert dialog', function () {
+            afterEach(function () {
+                db.saveLabelList(this.labeldb)
+            })
+
+            // In real, alert dialog is shown as modal, user cannot any operation until close it.
+            // In test, operation is sequentially because alert dialog is not shown
+            it('should hide `<input class="label-list__input">`', function () {
+                assert.ok(!this.labelInput.querySelector('.label-list__input'))
+                assert.ok(!this.labelInput.querySelector('.js-label-edit').classList.contains('disabled'))
+            })
+            it('should restore label the before edit state', function () {
+                const labelText = this.labelInput.querySelector('.label-list__text.js-label')
+                assert.ok(labelText)
+                assert.strictEqual(labelText.textContent.trim(), this.labelTextContent)
+            })
+            it('should not update labelList in db', function () {
+                const newLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
+                    return labelObject[0] === this.newValidLabel && labelObject[1] === this.labelColor
+                })
+                const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
+                    return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
+                })
+                assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
+                assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
+            })
+            it('should not call labelChangeListener', function () {
+                assert.ok(this.labelChangeListener.notCalled)
+            })
+        })
+   }
+
     context('when be displayed `<input class="label-list__input">` and focus out this', function () {
         context('input value is valid (that does not include space)', function () {
             beforeEach(function () {
@@ -144,100 +202,33 @@ describe('label edit button on labelInput component', () => {
             })
         })
 
-        context('input value is invalid (that includes space)', function () {
-            beforeEach(function (done) {
-                sinon.stub(ui.alertDialog, 'show')
-                ui.alertDialog.show.returns({
-                    on: (eventTarget, listener) => {
-                        setTimeout(
-                            () => {
-                                listener()
-                                done()
-                            }, 500
-                        )
-                    }
+        context('input value is invalid', function () {
+            context('when value includes space', function () {
+                beforeEach(function (done) {
+                    // TODO: 変数名直し忘れ。newInvalidLabel
+                    this.newValidLabel = this.labelTextContent + ' updated'
+                    beforeEachForInputFinished(this.newValidLabel, done)
+                    $('.label-list__input')[0].blur()
                 })
-
-                // TODO: 変数名直し忘れ。newInvalidLabel
-                this.newValidLabel = this.labelTextContent + ' updated'
-                $('.js-label-edit').click()
-                $('.label-list__input').val(this.newValidLabel)
-                $('.label-list__input')[0].blur()
-            })
-            afterEach(function () {
-                db.saveLabelList(this.labeldb)
-                ui.alertDialog.show.restore()
-            })
-
-            it('should show alert dialog', function () {
-                assert.ok(ui.alertDialog.show.calledOnce)
-                assert.deepStrictEqual(
-                    ui.alertDialog.show.firstCall.args[0],
-                    { type: 'alert', message: 'Nor white space, tab, or line break are not permitted.' }
-                )
-            });
-
-            context('after closed the alert dialog', function () {
                 afterEach(function () {
                     db.saveLabelList(this.labeldb)
+                    ui.alertDialog.show.restore()
                 })
+                testsForInvalidValue()
+            })        
 
-                // In real, alert dialog is shown as modal, user cannot any operation until close it.
-                // In test, operation is sequentially because alert dialog is not shown
-                it('should hide `<input class="label-list__input">`', function () {
-                    assert.ok(!this.labelInput.querySelector('.label-list__input'))
-                    assert.ok(!this.labelInput.querySelector('.js-label-edit').classList.contains('disabled'))
+            context('when valuencludes tab-code(`\\t`)', function () {
+                beforeEach(function (done) {
+                    // TODO: 変数名直し忘れ。newInvalidLabel
+                    this.newValidLabel = this.labelTextContent + '\tupdated'
+                    beforeEachForInputFinished(this.newValidLabel, done)
+                    $('.label-list__input')[0].blur()
                 })
-                it('should restore label the before edit state', function () {
-                    const labelText = this.labelInput.querySelector('.label-list__text.js-label')
-                    assert.ok(labelText)
-                    assert.strictEqual(labelText.textContent.trim(), this.labelTextContent)
+                afterEach(function () {
+                    db.saveLabelList(this.labeldb)
+                    ui.alertDialog.show.restore()
                 })
-                it('should not update labelList in db', function () {
-                    const newLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
-                        return labelObject[0] === this.newValidLabel && labelObject[1] === this.labelColor
-                    })
-                    const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
-                        return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
-                    })
-                    assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
-                    assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
-                })
-                it('should not call labelChangeListener', function () {
-                    assert.ok(this.labelChangeListener.notCalled)
-                })
-            })
-        })
-
-        context('input value is invalid (that includes tab-code(`\\t`))', function () {
-            beforeEach(function (done) {
-                sinon.stub(ui.alertDialog, 'show')
-                ui.alertDialog.show.returns({
-                    on: (eventTarget, listener) => {
-                        setTimeout(
-                            () => {
-                                listener()
-                                done()
-                            }, 500
-                        )
-                    }
-                })
-
-                this.newValidLabel = this.labelTextContent + '\tupdated'
-                $('.js-label-edit').click()
-                $('.label-list__input').val(this.newValidLabel)
-                $('.label-list__input')[0].blur()
-            })
-            afterEach(function () {
-                db.saveLabelList(this.labeldb)
-                ui.alertDialog.show.restore()
-            })
-            it('should show alert dialog', function () {
-                assert.ok(ui.alertDialog.show.calledOnce)
-                assert.deepStrictEqual(
-                    ui.alertDialog.show.firstCall.args[0],
-                    { type: 'alert', message: 'Nor white space, tab, or line break are not permitted.' }
-                )
+                testsForInvalidValue()
             })
         })
     })
@@ -295,99 +286,32 @@ describe('label edit button on labelInput component', () => {
             })
         })
 
-        context('input value is invalid (that includes space)', function () {
-            beforeEach(function (done) {
-                sinon.stub(ui.alertDialog, 'show')
-                ui.alertDialog.show.returns({
-                    on: (eventTarget, listener) => {
-                        setTimeout(
-                            () => {
-                                listener()
-                                done()
-                            }, 1000
-                        )
-                    }
+        context('input value is invalid', function () {
+            context('value includes space', function () {
+                beforeEach(function (done) {
+                    this.newValidLabel = this.labelTextContent + ' updated'
+                    beforeEachForInputFinished(this.newValidLabel, done)
+                    $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })
-
-                this.newValidLabel = this.labelTextContent + ' updated'
-                $('.js-label-edit').click()
-                $('.label-list__input').val(this.newValidLabel)
-                $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
-            })
-            afterEach(function () {
-                db.saveLabelList(this.labeldb)
-                ui.alertDialog.show.restore()
-            })
-
-            it('should show alert dialog', function () {
-                assert.ok(ui.alertDialog.show.calledOnce)
-                assert.deepStrictEqual(
-                    ui.alertDialog.show.firstCall.args[0],
-                    { type: 'alert', message: 'Nor white space, tab, or line break are not permitted.' }
-                )
-            })
-
-            context('after closed the alert dialog', function () {
                 afterEach(function () {
                     db.saveLabelList(this.labeldb)
+                    ui.alertDialog.show.restore()
                 })
-
-                // In real, alert dialog is shown as modal, user cannot any operation until close it.
-                // In test, operation is sequentially because alert dialog is not shown
-                it('should hide `<input class="label-list__input">`', function () {
-                    assert.ok(!this.labelInput.querySelector('.label-list__input'))
-                    assert.ok(!this.labelInput.querySelector('.js-label-edit').classList.contains('disabled'))
-                })
-                it('should restore label the before edit state', function () {
-                    const labelText = this.labelInput.querySelector('.label-list__text.js-label')
-                    assert.ok(labelText)
-                    assert.strictEqual(labelText.textContent.trim(), this.labelTextContent)
-                })
-                it('should not update labelList in db', function () {
-                    const newLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
-                        return labelObject[0] === this.newValidLabel && labelObject[1] === this.labelColor
-                    })
-                    const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
-                        return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
-                    })
-                    assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
-                    assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
-                })
-                it('should not call labelChangeListener', function () {
-                    assert.ok(this.labelChangeListener.notCalled)
-                })
+                testsForInvalidValue()
             })
-        })
 
-        context('input value is invalid (that includes tab-code(`\\t`))', function () {
-            beforeEach(function (done) {
-                sinon.stub(ui.alertDialog, 'show')
-                ui.alertDialog.show.returns({
-                    on: (eventTarget, listener) => {
-                        setTimeout(
-                            () => {
-                                listener()
-                                done()
-                            }, 500
-                        )
-                    }
+            context('value includes tab-code(`\\t`)', function () {
+                beforeEach(function (done) {
+                    this.newValidLabel = this.labelTextContent + '\tupdated'
+                    beforeEachForInputFinished(this.newValidLabel, done)
+
+                    $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })
-
-                this.newValidLabel = this.labelTextContent + '\tupdated'
-                $('.js-label-edit').click()
-                $('.label-list__input').val(this.newValidLabel)
-                $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
-            })
-            afterEach(function () {
-                db.saveLabelList(this.labeldb)
-                ui.alertDialog.show.restore()
-            })
-            it('should show alert dialog', function () {
-                assert.ok(ui.alertDialog.show.calledOnce)
-                assert.deepStrictEqual(
-                    ui.alertDialog.show.firstCall.args[0],
-                    { type: 'alert', message: 'Nor white space, tab, or line break are not permitted.' }
-                )
+                afterEach(function () {
+                    db.saveLabelList(this.labeldb)
+                    ui.alertDialog.show.restore()
+                })
+                testsForInvalidValue()
             })
         })
     })
