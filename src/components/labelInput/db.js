@@ -22,3 +22,23 @@ export function getLabelList () {
 export function saveLabelList (data) {
     localStorage.setItem(LSKEY_LABEL_LIST(), JSON.stringify(data))
 }
+
+/**
+ * search the label fron the storage.
+ * @param labelType {span|one-way|two-way|link}
+ * @param labelText the inputted string on label editor
+ * @return labelObject (Array of [labelText, labelColor]) or undefined
+ */
+export function findLabel(labelType, labelText) {
+    const labelList = getLabelList()
+    if (labelList[labelType] === undefined) {
+        return undefined
+    }
+    const labelCount = labelList[labelType].labels.length
+    for(let index = 0; index < labelCount; index ++) {
+        if (labelList[labelType].labels[index][0] == labelText) {
+            return labelList[labelType].labels[index]
+        }
+    }
+    return undefined
+}

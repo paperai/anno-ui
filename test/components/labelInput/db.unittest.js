@@ -80,4 +80,33 @@ describe('label list db', () => {
             )
         })
     })
+
+    context('findLabel()', () => {
+        beforeEach(function () {
+            this.labelList = {
+                'span': { // annotation type
+                    labels: [
+                        ['span1', '#f1f'], // each labelObj (label, color)
+                        ['span2', '#ff1'], // each labelObj (label, color)
+                    ]
+                },
+                'one-way': {
+                    labels: [ ['relation1', '#1ff'], ['relation2', '#fff'] ]
+                }
+            }
+            db.saveLabelList(this.labelList)
+        })
+
+        context('when target label exists in localStorage', function () {
+            it('should return labelObject(lable, color)', function () {
+                assert.deepStrictEqual(db.findLabel('span', 'span2'), this.labelList['span'].labels[1])
+            })
+        })
+
+        context('when target label does not exist in localStorage', function () {
+            it('should return undefined', function () {
+                assert.strictEqual(db.findLabel('one-way', 'span2'), undefined)
+            })
+        })
+    })
 })
