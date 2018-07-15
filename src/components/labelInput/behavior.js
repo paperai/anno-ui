@@ -35,25 +35,32 @@ export function defaultNamingRuleForExport (exportProcess) {
     exportProcess('pdfanno.conf')
 }
 
+function initializeLabelDb () {
+    const defaultColor = color.colors[0]
+    const labelList = db.getLabelList()
+
+    document.querySelectorAll('.js-label-tab').forEach((labelTab) => {
+        const labelType = labelTab.getAttribute('data-type')
+        const labelTypeObj = labelList[labelType] || { labels : [] }
+        if (labelTypeObj.labels.length === 0) {
+            if (labelType === 'span') {
+                labelTypeObj.labels.push(['span1', defaultColor])
+            } else {
+                labelTypeObj.labels.push(['relation1', defaultColor])
+            }
+        }
+        labelList[labelType] = labelTypeObj
+    })
+    db.saveLabelList(labelList)
+}
+
 /**
  * Setup the tab behavior.
  */
 function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
-        let d = db.getLabelList()
-        const labelObject = d[type] || {}
-        let labels
-        if (labelObject.labels === undefined) {
-            const text = type === 'span' ? 'span1' : 'relation1'
-            labels = [ [ text, color.colors[0] ] ]
-        } else {
-            labels = labelObject.labels
-        }
-
-        labelObject.labels = labels
-        d[type] = labelObject
-        db.saveLabelList(d)
+        const labels = db.getLabelList()[type].labels
 
         // currentTab = type
         core.setCurrentTab(type)
@@ -98,6 +105,7 @@ function setupTabClick () {
     })
 
     // Setup the initial tab content.
+    initializeLabelDb()
     $('.js-label-tab[data-type="span"]').click()
 }
 

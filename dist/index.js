@@ -2054,25 +2054,32 @@ function defaultNamingRuleForExport (exportProcess) {
     exportProcess('pdfanno.conf')
 }
 
+function initializeLabelDb () {
+    const defaultColor = __WEBPACK_IMPORTED_MODULE_4__color__["b" /* colors */][0]
+    const labelList = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
+
+    document.querySelectorAll('.js-label-tab').forEach((labelTab) => {
+        const labelType = labelTab.getAttribute('data-type')
+        const labelTypeObj = labelList[labelType] || { labels : [] }
+        if (labelTypeObj.labels.length === 0) {
+            if (labelType === 'span') {
+                labelTypeObj.labels.push(['span1', defaultColor])
+            } else {
+                labelTypeObj.labels.push(['relation1', defaultColor])
+            }
+        }
+        labelList[labelType] = labelTypeObj
+    })
+    __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelList)
+}
+
 /**
  * Setup the tab behavior.
  */
 function setupTabClick () {
     $('.js-label-tab').on('click', e => {
         const type = $(e.currentTarget).data('type')
-        let d = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()
-        const labelObject = d[type] || {}
-        let labels
-        if (labelObject.labels === undefined) {
-            const text = type === 'span' ? 'span1' : 'relation1'
-            labels = [ [ text, __WEBPACK_IMPORTED_MODULE_4__color__["b" /* colors */][0] ] ]
-        } else {
-            labels = labelObject.labels
-        }
-
-        labelObject.labels = labels
-        d[type] = labelObject
-        __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](d)
+        const labels = __WEBPACK_IMPORTED_MODULE_2__db__["a" /* getLabelList */]()[type].labels
 
         // currentTab = type
         __WEBPACK_IMPORTED_MODULE_3__core__["f" /* setCurrentTab */](type)
@@ -2117,6 +2124,7 @@ function setupTabClick () {
     })
 
     // Setup the initial tab content.
+    initializeLabelDb()
     $('.js-label-tab[data-type="span"]').click()
 }
 
