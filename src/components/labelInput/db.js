@@ -29,14 +29,14 @@ export function saveLabelList (data) {
  * @param labelText the inputted string on label editor
  * @return labelObject (Array of [labelText, labelColor]) or undefined
  */
-export function findLabel(labelType, labelText) {
+export function findLabel (labelType, labelText) {
     const labelList = getLabelList()
     if (labelList[labelType] === undefined) {
         return undefined
     }
     const labelCount = labelList[labelType].labels.length
-    for(let index = 0; index < labelCount; index ++) {
-        if (labelList[labelType].labels[index][0] == labelText) {
+    for (let index = 0; index < labelCount; index++) {
+        if (labelList[labelType].labels[index][0] === labelText) {
             return labelList[labelType].labels[index]
         }
     }

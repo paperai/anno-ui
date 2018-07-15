@@ -233,7 +233,7 @@ describe('label edit button on labelInput component', () => {
         })
         context('input value is alreay exist in list', function () {
             beforeEach(function (done) {
-                this.duplicatedLabel = (new Date()).getTime()
+                this.duplicatedLabel = (new Date()).getTime() + '_dupilicated'
 
                 const duplicatedLabel = document.createElement('li')
                 duplicatedLabel.classList.add('label-list__item')

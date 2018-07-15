@@ -1,11 +1,10 @@
 import * as core from '../core'
 import * as uis from '../../../uis'
 import * as db from '../db'
-import * as color from '../color'
 
 function setupLabelEditListener (inputField, labelText, editButton, labelChangeListener) {
     const alertAndCloseEdit = (message) => {
-        const modal = uis.alertDialog.show({ type    : 'alert', message : message })
+        const modal = uis.alertDialog.show({ type : 'alert', message : message })
         modal.on('hide.bs.modal', () => {
             inputField.parentElement.replaceChild(labelText, inputField)
             inputField.removeEventListener('blur', blurListener)
@@ -21,11 +20,11 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
         const value = inputField.value.trim()
         const oldValue = labelText.textContent.trim()
         if (core.isValidInput(value)) {
-            if (value == oldValue || db.findLabel(labelType, value) === undefined) {
+            if (value === oldValue || db.findLabel(labelType, value) === undefined) {
                 labelText.textContent = value
                 const labelList = db.getLabelList()
                 labelList[labelType].labels.forEach((labelObject) => {
-                    if (labelObject[0] == oldValue) {
+                    if (labelObject[0] === oldValue) {
                         labelObject[0] = value
                     }
                 })
@@ -34,9 +33,9 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
                 inputField.parentElement.replaceChild(labelText, inputField)
                 inputField.removeEventListener('blur', blurListener)
                 labelChangeListener({
-                    text: value,
-                    annoType: labelType,
-                    oldText: oldValue
+                    text     : value,
+                    annoType : labelType,
+                    oldText  : oldValue
                 })
                 editButton.classList.remove('disabled')
             } else {
