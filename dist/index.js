@@ -850,7 +850,7 @@ function applicationName () {
     return _applicationName
 }
 
-const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
+const validLabelTypes = ['span', 'relation']
 /* harmony export (immutable) */ __webpack_exports__["validLabelTypes"] = validLabelTypes;
 
 
@@ -863,9 +863,14 @@ const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["setupResizableColumns"] = setupResizableColumns;
 /* harmony export (immutable) */ __webpack_exports__["tomlString"] = tomlString;
+/* harmony export (immutable) */ __webpack_exports__["toml2object"] = toml2object;
 /* harmony export (immutable) */ __webpack_exports__["uuid"] = uuid;
 /* harmony export (immutable) */ __webpack_exports__["download"] = download;
 /* harmony export (immutable) */ __webpack_exports__["loadFileAsText"] = loadFileAsText;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
+
+
 /**
  * Make the UI resizable.
  */
@@ -942,51 +947,52 @@ function setupResizableColumns () {
 }
 
 /**
- * Convert object to TOML String.
+ * Convert label object to TOML String.
  */
-function tomlString (obj, root = true) {
+function tomlString (obj, type = null) {
     let lines = []
-
-    // `version` is first.
-    if ('version' in obj) {
-        lines.push(`version = "${obj['version']}"`)
-        lines.push('')
-        delete obj['version']
-    }
-
-    // #paperanno-ja/issues/38
-    // Make all values in `position` as string.
-    if ('position' in obj) {
-        let position = obj.position
-        position = position.map(p => {
-            if (typeof p === 'number') {
-                return String(p)
-            } else {
-                return p.map(v => String(v))
-            }
-        })
-        obj.position = position
-    }
 
     Object.keys(obj).forEach(prop => {
         let val = obj[prop]
-        if (typeof val === 'string') {
-            lines.push(`${prop} = "${val}"`)
-            root && lines.push('')
-        } else if (typeof val === 'number') {
-            lines.push(`${prop} = ${val}`)
-            root && lines.push('')
-        } else if (isArray(val)) {
-            lines.push(`${prop} = ${JSON.stringify(val)}`)
-            root && lines.push('')
-        } else if (typeof val === 'object') {
-            lines.push(`[${prop}]`)
-            lines.push(tomlString(val, false))
-            root && lines.push('')
+        if (prop === 'span' || prop === 'relation') {
+            lines.push(tomlString(val, prop))
+        } else if (prop === 'labels') {
+            if (isArray(val)) {
+                val.forEach(v => {
+                    if (type !== null) {
+                        lines.push(`[[${type}]]`)
+                    }
+                    lines.push(`label = "${v[0]}"`)
+                    lines.push(`color = "${v[1]}"`)
+                    lines.push('')
+                })
+            }
         }
     })
 
     return lines.join('\n')
+}
+
+/**
+ * Convert TOML String to label object.
+ *
+ * @export
+ * @param {String} tomlData
+ */
+function toml2object (tomlData) {
+    const data = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlData)
+    const object = {}
+    ;['span', 'relation'].forEach(type => {
+        object[type] = {}
+        object[type].labels = []
+        if (isArray(data[type])) {
+            data[type].forEach(item => {
+                object[type].labels.push([item.label, item.color])
+            })
+        }
+    })
+
+    return object
 }
 
 /**
@@ -1803,12 +1809,8 @@ function setup ({
             let icon
             if (a.type === 'span') {
                 icon = '<i class="fa fa-pencil"></i>'
-            } else if (a.type === 'relation' && a.direction === 'one-way') {
+            } else if (a.type === 'relation' && a.direction === 'relation') {
                 icon = '<i class="fa fa-long-arrow-right"></i>'
-            } else if (a.type === 'relation' && a.direction === 'two-way') {
-                icon = '<i class="fa fa-arrows-h"></i>'
-            } else if (a.type === 'relation' && a.direction === 'link') {
-                icon = '<i class="fa fa-minus"></i>'
             } else if (a.type === 'area') {
                 icon = '<i class="fa fa-square-o"></i>'
             }
@@ -2014,7 +2016,7 @@ exports.push([module.i, "\r\n.inputLabel {\r\n    font-size: 20px;\r\n}\r\n\r\n/
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__core__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__color__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reader__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reader__ = __webpack_require__(27);
 /**
  * Define the behaviors of label input component.
  */
@@ -2234,7 +2236,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
-        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
+        } else if (type === 'relation') {
             createRelAnnotation({ type, text, color })
         }
     })
@@ -2317,45 +2319,10 @@ function setupImportExportLink (namingRuleForExport) {
 
 /***/ }),
 /* 24 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toml___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toml__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__core__ = __webpack_require__(5);
-
-
-
-
-/**
- * Read the label list from File object
- * @param File(Blob) object
- * @return Promise.resolve(labelData) ... success, returned labelData (this will use to `db.setLabelList(labelData)`)
- * @return Promise.reject(DOMError) ... error occurred on read the fileObj
- * @return Promise.reject(TypeError) ... invalid label type is found in read from fileObj
- */
-/* harmony default export */ __webpack_exports__["a"] = (async function (fileObj) {
-    const tomlString = await __WEBPACK_IMPORTED_MODULE_1__utils__["loadFileAsText"](fileObj)
-    if (tomlString === '') {
-        throw new TypeError('Empty data')
-    }
-    const labelData = __WEBPACK_IMPORTED_MODULE_0_toml___default.a.parse(tomlString)
-    for (let key in labelData) {
-        if (!__WEBPACK_IMPORTED_MODULE_2__core__["validLabelTypes"].includes(key)) {
-            throw new TypeError('Invalid label type; ' + key)
-        }
-    }
-    return labelData
-});
-
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parser = __webpack_require__(26);
-var compiler = __webpack_require__(27);
+var parser = __webpack_require__(25);
+var compiler = __webpack_require__(26);
 
 module.exports = {
   parse: function(input) {
@@ -2366,7 +2333,7 @@ module.exports = {
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = (function() {
@@ -6213,7 +6180,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6414,6 +6381,39 @@ function compile(nodes) {
 module.exports = {
   compile: compile
 };
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core__ = __webpack_require__(5);
+// import toml from 'toml'
+
+
+
+/**
+ * Read the label list from File object
+ * @param File(Blob) object
+ * @return Promise.resolve(labelData) ... success, returned labelData (this will use to `db.setLabelList(labelData)`)
+ * @return Promise.reject(DOMError) ... error occurred on read the fileObj
+ * @return Promise.reject(TypeError) ... invalid label type is found in read from fileObj
+ */
+/* harmony default export */ __webpack_exports__["a"] = (async function (fileObj) {
+    const tomlString = await __WEBPACK_IMPORTED_MODULE_0__utils__["loadFileAsText"](fileObj)
+    if (tomlString === '') {
+        throw new TypeError('Empty data')
+    }
+    const labelData = __WEBPACK_IMPORTED_MODULE_0__utils__["toml2object"](tomlString)
+    for (let key in labelData) {
+        if (!__WEBPACK_IMPORTED_MODULE_1__core__["validLabelTypes"].includes(key)) {
+            throw new TypeError('Invalid label type; ' + key)
+        }
+    }
+    return labelData
+});
 
 
 /***/ }),
