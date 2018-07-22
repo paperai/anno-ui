@@ -962,8 +962,8 @@ function tomlString (obj, type = null) {
                     if (type !== null) {
                         lines.push(`[[${type}]]`)
                     }
-                    lines.push(`label = "${v[0]}"`)
-                    lines.push(`color = "${v[1]}"`)
+                    lines.push(`label = "${escapeDoubleQuote(v[0])}"`)
+                    lines.push(`color = "${escapeDoubleQuote(v[1])}"`)
                     lines.push('')
                 })
             }
@@ -987,12 +987,20 @@ function toml2object (tomlData) {
         object[type].labels = []
         if (isArray(data[type])) {
             data[type].forEach(item => {
-                object[type].labels.push([item.label, item.color])
+                object[type].labels.push([unescapeDoubleQuote(item.label), unescapeDoubleQuote(item.color)])
             })
         }
     })
 
     return object
+}
+
+function escapeDoubleQuote (str) {
+    return str.replace(/"/g, '\\"')
+}
+
+function unescapeDoubleQuote (str) {
+    return str.replace(/\\"/g, '"')
 }
 
 /**
