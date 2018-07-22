@@ -16,12 +16,8 @@ export function setup ({
             let icon
             if (a.type === 'span') {
                 icon = '<i class="fa fa-pencil"></i>'
-            } else if (a.type === 'relation' && a.direction === 'one-way') {
+            } else if (a.type === 'relation' && a.direction === 'relation') {
                 icon = '<i class="fa fa-long-arrow-right"></i>'
-            } else if (a.type === 'relation' && a.direction === 'two-way') {
-                icon = '<i class="fa fa-arrows-h"></i>'
-            } else if (a.type === 'relation' && a.direction === 'link') {
-                icon = '<i class="fa fa-minus"></i>'
             } else if (a.type === 'area') {
                 icon = '<i class="fa fa-square-o"></i>'
             }
