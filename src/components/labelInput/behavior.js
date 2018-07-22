@@ -225,7 +225,7 @@ function setupLabelText (createSpanAnnotation, createRelAnnotation) {
         console.log('add:', color)
         if (type === 'span') {
             createSpanAnnotation({ text, color })
-        } else if (type === 'one-way' || type === 'two-way' || type === 'link') {
+        } else if (type === 'relation') {
             createRelAnnotation({ type, text, color })
         }
     })

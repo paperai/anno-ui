@@ -10,4 +10,4 @@ export function applicationName () {
     return _applicationName
 }
 
-export const validLabelTypes = ['span', 'one-way', 'two-way', 'link']
+export const validLabelTypes = ['span', 'relation']
