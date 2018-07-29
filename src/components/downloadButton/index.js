@@ -7,7 +7,7 @@
  */
 export function setup ({
     getAnnotationTOMLString,
-    getCurrentContentName,
+    getDownloadFileName,
     didDownloadCallback = function () {}
 }) {
     $('#downloadButton').off('click').on('click', e => {
@@ -18,7 +18,7 @@ export function setup ({
             let blobURL = window.URL.createObjectURL(blob)
             let a = document.createElement('a')
             document.body.appendChild(a) // for firefox working correctly.
-            a.download = _getDownloadFileName(getCurrentContentName)
+            a.download = _getDownloadFileName(getDownloadFileName)
             a.href = blobURL
             a.click()
             a.parentNode.removeChild(a)
@@ -33,7 +33,7 @@ export function setup ({
 /**
  * Get the file name for download.
  */
-function _getDownloadFileName (getCurrentContentName) {
+function _getDownloadFileName (getDownloadFileName) {
 
     // The name of Primary Annotation.
     let primaryAnnotationName
@@ -47,8 +47,6 @@ function _getDownloadFileName (getCurrentContentName) {
         return primaryAnnotationName
     }
 
-    // The name of Content.
-    let pdfFileName = getCurrentContentName()
-    let annoName = pdfFileName.replace(/\.pdf$/i, '.anno')
-    return annoName
+    // The name of Annotation file.
+    return getDownloadFileName()
 }

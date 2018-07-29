@@ -1,30 +1,36 @@
 import assert from 'assert'
 
 import toml from 'toml'
+import * as annoUtils from '../../../src/utils'
 
 // Test target
 import labelInputReader from '../../../src/components/labelInput/behavior/reader.js'
 
 const validLabelInputData = [
-    '[span]',
-    'labels = [["span1", "#FF0000"], ["span2", "#00FF00"], ["span3", "#0000FF"]]',
-    '[one-way]',
-    'labels = [["oneway-relation1", "#FFFF00"]]',
-    '[two-way]',
-    'labels = [["twoway-relation1", "#00FFFF"]]',
-    '[link]',
-    'labels = [["link-relation1", "#FF00FF"]]'
+    '[[span]]',
+    'label = "span1"',
+    'color = "#FF0000"',
+    '[[span]]',
+    'label = "span2"',
+    'color = "#00FF00"',
+    '[[span]]',
+    'label = "span3"',
+    'color = "#0000FF"',
+    '[[relation]]',
+    'label = "oneway-relation1"',
+    'color = "#FFFF00"',
 ].join("\n")
 
 const invalidLabelInputData = [
-    '[span]',
-    'labels = [["span1", "#FF0000"], ["span2", "#00FF00"], ["span3", "#0000FF"]]',
-    '[one-way]',
-    'labels = [["oneway-relation1", "#FFFF00"]]',
-    '[three-way]',
-    'labels = [["threeway-relation1", "#00FFFF"]]',
-    '[link]',
-    'labels = [["link-relation1", "#FF00FF"]]'
+    '[[span]]',
+    'label = "span1"',
+    'color = "#FF0000"',
+    '[[one-way]]',
+    'label = "span3"',
+    'color = "#0000FF"',
+    '[[relation]]',
+    'label = "oneway-relation1"',
+    'color = "#00FF00"',
 ].join("\n")
 
 const emptyData = ''
@@ -42,24 +48,22 @@ describe('labelInput/Reader', () => {
 
             assert.ok(result instanceof Promise)
             result.then((resolve) => {
-                assert.deepStrictEqual(toml.parse(validLabelInputData), resolve)
+                assert.deepStrictEqual(annoUtils.toml2object(validLabelInputData), resolve)
                 done()
             })
         })
 
-        it('should include "span", "one-way", "two-way", and "link" in labelData', async function () {
+        it('should include "span" and "relation" in labelData', async function () {
             const labelData = await labelInputReader(this.validFileObj)
-            assert.strictEqual(4, Object.keys(labelData).length)
+            assert.strictEqual(2, Object.keys(labelData).length)
             assert(labelData['span'])
-            assert(labelData['one-way'])
-            assert(labelData['two-way'])
-            assert(labelData['link'])
+            assert(labelData['relation'])
         })
 
         it('should include "labels" in labelData.span, and includes 3 label in labelData.span.labels', async function () {
             const labelData = await labelInputReader(this.validFileObj)
             assert(labelData['span'].labels)
-            assert.strictEqual(3, labelData['span'].labels.length)
+            assert.strictEqual(3, labelData['span'].labels.length, 3)
             assert.deepStrictEqual(
                 [
                     ['span1', '#FF0000'], ['span2', '#00FF00'], ['span3', '#0000FF']
@@ -67,37 +71,11 @@ describe('labelInput/Reader', () => {
             )
         })
 
-        it('should include "labels" in labelData["one-way"], and includes 1 label in labelData["one-way"].labels', async function () {
+        it('should include "labels" in labelData["relation"], and includes 1 label in labelData["relation"].labels', async function () {
             const labelData = await labelInputReader(this.validFileObj)
-            assert(labelData['one-way'].labels)
-            assert.strictEqual(1, labelData['one-way'].labels.length)
-            assert.deepStrictEqual([['oneway-relation1', '#FFFF00']], labelData['one-way'].labels)
-        })
-
-        it('should include "labels" in labelData["two-way"], and includes 1 label in labelData["two-way"].labels', async function () {
-            const labelData = await labelInputReader(this.validFileObj)
-            assert(labelData['two-way'].labels)
-            assert.strictEqual(1, labelData['two-way'].labels.length)
-            assert.deepStrictEqual([['twoway-relation1', '#00FFFF']], labelData['two-way'].labels)
-        })
-
-        it('should include "labels" in labelData.link, and includes 1 label in labelData.link.labels', async function () {
-            const labelData = await labelInputReader(this.validFileObj)
-            assert(labelData['link'].labels)
-            assert.strictEqual(1, labelData['link'].labels.length)
-            assert.deepStrictEqual([['link-relation1', '#FF00FF']], labelData['link'].labels)
-        })
-    })
-
-    context('read the invalid data from valid fileObj', function () {
-        it('should throw TypeError("Invalid label type;")', async function () {
-            try {
-                const result = await labelInputReader(this.invalidFileObj)
-                assert.fail()
-            } catch(error) {
-                assert.ok(error instanceof TypeError)
-                assert.strictEqual('Invalid label type; three-way', error.message)
-            }
+            assert(labelData['relation'].labels)
+            assert.strictEqual(1, labelData['relation'].labels.length)
+            assert.deepStrictEqual([['oneway-relation1', '#FFFF00']], labelData['relation'].labels)
         })
     })
 

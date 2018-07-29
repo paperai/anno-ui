@@ -1,4 +1,3 @@
-import toml from 'toml'
 import * as annoUtils from '../../../utils'
 import { validLabelTypes } from '../../../core'
 
@@ -14,7 +13,7 @@ export default async function (fileObj) {
     if (tomlString === '') {
         throw new TypeError('Empty data')
     }
-    const labelData = toml.parse(tomlString)
+    const labelData = annoUtils.toml2object(tomlString)
     for (let key in labelData) {
         if (!validLabelTypes.includes(key)) {
             throw new TypeError('Invalid label type; ' + key)
