@@ -1,5 +1,4 @@
 import assert from 'assert'
-import sinon from 'sinon'
 
 // for stub
 import * as annoUiCore from '../../../src/core'
@@ -11,8 +10,7 @@ describe('label list db', () => {
     before(function () {
         this.applicationName = 'labellist-db-test-' + (new Date()).getTime()
 
-        annoUiCore.applicationName = sinon.stub()
-        annoUiCore.applicationName.returns(this.applicationName)
+        annoUiCore.setup({applicationName: this.applicationName})
     })
 
     context('getLabelList', function () {
@@ -24,13 +22,8 @@ describe('label list db', () => {
         })
         
         context('when db is empty', () => {
-            afterEach(() => {
-               annoUiCore.applicationName.resetHistory()
-            })
-
             it('should return empty Object', () => {
                 assert.deepStrictEqual(db.getLabelList(), {})
-                assert.ok(annoUiCore.applicationName.calledOnce)
             })
         })
 

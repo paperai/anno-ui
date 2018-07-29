@@ -18,8 +18,11 @@ describe('label edit button on labelInput component', () => {
         this.labelColor = '#f15'
 
         this.labeldb = db.getLabelList()
-        this.labeldb[this.labelType].labels.push([this.labelTextContent, this.labelColor])
+        this.labeldb[this.labelType] = {labels :[[this.labelTextContent, this.labelColor]]}
         db.saveLabelList(this.labeldb)
+    })
+    after(() => {
+        db.saveLabelList({})
     })
     beforeEach(function () {
         this.labelList = document.createElement('ul')
@@ -62,9 +65,9 @@ describe('label edit button on labelInput component', () => {
             $('.js-label-edit').click()
         })
         afterEach(function () {
-            const inputField = $('.label-list__input')[0]
-            if (inputField) {
-                inputField.blur()
+            const inputField = $('.label-list__input')
+            if (inputField.length !== 0) {
+                inputField[0].blur()
             }
         })        
 
@@ -108,7 +111,7 @@ describe('label edit button on labelInput component', () => {
         $('.label-list__input').val(newValue)
         // focus out or hit enter key
     }
-    function testsForInvalidValue () {
+    function testsForInvalidValue (newValue) {
         it('should show alert dialog', function () {
             assert.ok(ui.alertDialog.show.calledOnce)
             assert.deepStrictEqual(
@@ -135,13 +138,13 @@ describe('label edit button on labelInput component', () => {
             })
             it('should not update labelList in db', function () {
                 const newLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
-                    return labelObject[0] === this.newValidLabel && labelObject[1] === this.labelColor
+                    return labelObject[0] === newValue && labelObject[1] === this.labelColor
                 })
                 const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
                     return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
                 })
                 assert.strictEqual(oldLabelObject.length, 1, 'old label does not exist')
-                assert.strictEqual(newLabelObject.length, 0, 'new ValidLabel exists')
+                assert.strictEqual(newLabelObject.length, 0, 'new label exists')
             })
             it('should not call labelChangeListener', function () {
                 assert.ok(this.labelChangeListener.notCalled)
@@ -197,7 +200,7 @@ describe('label edit button on labelInput component', () => {
                 const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
                     return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
                 })
-                assert.strictEqual(newLabelObject.length, 1, 'new ValidLabel does not exist')
+                assert.strictEqual(newLabelObject.length, 1, `new ValidLabel does not exist; ${this.newValidLabel}`)
                 assert.strictEqual(oldLabelObject.length, 0, 'old label exists')
             })
         })
@@ -205,30 +208,28 @@ describe('label edit button on labelInput component', () => {
         context('input value is invalid', function () {
             context('when value includes space', function () {
                 beforeEach(function (done) {
-                    // TODO: 変数名直し忘れ。newInvalidLabel
-                    this.newValidLabel = this.labelTextContent + ' updated'
-                    beforeEachForInputFinished(this.newValidLabel, done)
+                    this.newInvalidLabel = this.labelTextContent + ' updated'
+                    beforeEachForInputFinished(this.newInvalidLabel, done)
                     $('.label-list__input')[0].blur()
                 })
                 afterEach(function () {
                     db.saveLabelList(this.labeldb)
                     ui.alertDialog.show.restore()
                 })
-                testsForInvalidValue()
+                testsForInvalidValue(this.newInvalidLabel)
             })        
 
             context('when valuencludes tab-code(`\\t`)', function () {
                 beforeEach(function (done) {
-                    // TODO: 変数名直し忘れ。newInvalidLabel
-                    this.newValidLabel = this.labelTextContent + '\tupdated'
-                    beforeEachForInputFinished(this.newValidLabel, done)
+                    this.newInvalidLabel = this.labelTextContent + '\tupdated'
+                    beforeEachForInputFinished(this.newinValidLabel, done)
                     $('.label-list__input')[0].blur()
                 })
                 afterEach(function () {
                     db.saveLabelList(this.labeldb)
                     ui.alertDialog.show.restore()
                 })
-                testsForInvalidValue()
+                testsForInvalidValue(this.newInvalidLabel)
             })
         })
         context('input value is alreay exist in list', function () {
@@ -314,7 +315,7 @@ describe('label edit button on labelInput component', () => {
                 const oldLabelObject = db.getLabelList()[this.labelType].labels.filter((labelObject) => {
                     return labelObject[0] === this.labelTextContent && labelObject[1] === this.labelColor
                 })
-                assert.strictEqual(newLabelObject.length, 1, 'new ValidLabel does not exist')
+                assert.strictEqual(newLabelObject.length, 1, `new ValidLabel does not exist; ${this.newValidLabel}`)
                 assert.strictEqual(oldLabelObject.length, 0, 'old label exists')
             })
         })
@@ -322,21 +323,21 @@ describe('label edit button on labelInput component', () => {
         context('input value is invalid', function () {
             context('value includes space', function () {
                 beforeEach(function (done) {
-                    this.newValidLabel = this.labelTextContent + ' updated'
-                    beforeEachForInputFinished(this.newValidLabel, done)
+                    this.newInvalidLabel = this.labelTextContent + ' updated'
+                    beforeEachForInputFinished(this.newInvalidLabel, done)
                     $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })
                 afterEach(function () {
                     db.saveLabelList(this.labeldb)
                     ui.alertDialog.show.restore()
                 })
-                testsForInvalidValue()
+                testsForInvalidValue(this.newInvalidLabel)
             })
 
             context('value includes tab-code(`\\t`)', function () {
                 beforeEach(function (done) {
-                    this.newValidLabel = this.labelTextContent + '\tupdated'
-                    beforeEachForInputFinished(this.newValidLabel, done)
+                    this.newInvalidLabel = this.labelTextContent + '\tupdated'
+                    beforeEachForInputFinished(this.newInvalidLabel, done)
 
                     $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })
@@ -344,7 +345,7 @@ describe('label edit button on labelInput component', () => {
                     db.saveLabelList(this.labeldb)
                     ui.alertDialog.show.restore()
                 })
-                testsForInvalidValue()
+                testsForInvalidValue(this.newInvalidLabel)
             })
         })
     })

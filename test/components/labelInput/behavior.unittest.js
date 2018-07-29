@@ -10,6 +10,13 @@ import * as db from '../../../src/components/labelInput/db'
 import * as color from '../../../src/components/labelInput/color.js'
 
 describe('labelInput/Behavior', () => {
+    before(() => {
+        db.saveLabelList({})
+    })
+    after(() => {
+        db.saveLabelList({})
+    })
+
     context('setup without GUI parts', () => {
         it('is OK', () => {
             labelInputBehavior.setup(
@@ -154,7 +161,7 @@ describe('labelInput/Behavior', () => {
         })
 
         context('`.js-label-tab` click event listener', () => {
-            context('click evnet is occurred (one-way button)', () => {
+            context('click evnet is occurred (relation button)', () => {
                 it('should be erased current tab content and be created content for clicked', function (done) {
                     // check before
                     assert.ok(this.tabContent.querySelector('ul.tab-pane.label-list[data-type="span"]'))
@@ -259,7 +266,7 @@ describe('labelInput/Behavior', () => {
                 })
                 it('should create label type for `span`, and `relation`', function () {
                     const createdLabelList = db.saveLabelList.firstCall.args[0]
-                    assert.strictEqual(Object.keys(createdLabelList).length, 4)
+                    assert.strictEqual(Object.keys(createdLabelList).length, 2)
                     assert.ok(createdLabelList['span'])
                     assert.ok(createdLabelList['relation'])
                 })
@@ -280,14 +287,14 @@ describe('labelInput/Behavior', () => {
         context('when labelList in DB is not empty', function () {
             beforeEach(function () {
                 this.theLabelList = {
-                    'span': { labels: [ ['SPAN10', '#fff'] ] }
+                    'span': {labels: [['SPAN10','#fff']]}
                 }
                 db.getLabelList.returns(this.theLabelList)
 
                 this.tabs = createLabelGui(['span'])
                 document.body.appendChild(this.tabs)
 
-                behavior.setup( () => { }, () => { })
+                labelInputBehavior.setup( () => { }, () => { })
             })
             afterEach(function () {
                 document.body.removeChild(this.tabs)
