@@ -35,6 +35,13 @@ export function defaultNamingRuleForExport (exportProcess) {
     exportProcess('pdfanno.conf')
 }
 
+export function loadLabelDbfromUrl (file) {
+    const labelData = annoUtils.toml2object(file) //labelInputReader(file)
+    db.saveLabelList(labelData)
+    // Re-render.
+    $(`.js-label-tab[data-type="${core.getCurrentTab()}"]`).click()
+}
+
 function initializeLabelDb () {
     const defaultColor = color.colors[0]
     const labelList = db.getLabelList()
