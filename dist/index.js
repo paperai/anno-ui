@@ -1953,7 +1953,7 @@ function setup ({
     __WEBPACK_IMPORTED_MODULE_0__core__["g" /* setup */](saveAnnotationText)
 
     // Define user actions.
-    __WEBPACK_IMPORTED_MODULE_1__behavior__["b" /* setup */](createSpanAnnotation, createRelAnnotation, namingRuleForExport)
+    __WEBPACK_IMPORTED_MODULE_1__behavior__["c" /* setup */](createSpanAnnotation, createRelAnnotation, namingRuleForExport)
 
     // Define window event listeners.
     __WEBPACK_IMPORTED_MODULE_2__listener__["a" /* setup */](getSelectedAnnotations)
@@ -1965,6 +1965,10 @@ const getColorMap = __WEBPACK_IMPORTED_MODULE_3__color__["d" /* getColorMap */]
 /* harmony export (immutable) */ __webpack_exports__["getColorMap"] = getColorMap;
 
 // export getColorMap
+
+const loadLabelDbfromUrl = __WEBPACK_IMPORTED_MODULE_1__behavior__["b" /* loadLabelDbfromUrl */]
+/* harmony export (immutable) */ __webpack_exports__["loadLabelDbfromUrl"] = loadLabelDbfromUrl;
+
 
 
 /***/ }),
@@ -2017,8 +2021,9 @@ exports.push([module.i, "\n.inputLabel {\n    font-size: 20px;\n}\n\n/**\n * Lab
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = setup;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setup;
 /* harmony export (immutable) */ __webpack_exports__["a"] = defaultNamingRuleForExport;
+/* harmony export (immutable) */ __webpack_exports__["b"] = loadLabelDbfromUrl;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__uis_alertDialog__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__db__ = __webpack_require__(7);
@@ -2060,6 +2065,13 @@ function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) 
 
 function defaultNamingRuleForExport (exportProcess) {
     exportProcess('pdfanno.conf')
+}
+
+function loadLabelDbfromUrl (file) {
+    const labelData = __WEBPACK_IMPORTED_MODULE_1__utils__["toml2object"](file) //labelInputReader(file)
+    __WEBPACK_IMPORTED_MODULE_2__db__["b" /* saveLabelList */](labelData)
+    // Re-render.
+    $(`.js-label-tab[data-type="${__WEBPACK_IMPORTED_MODULE_3__core__["c" /* getCurrentTab */]()}"]`).click()
 }
 
 function initializeLabelDb () {

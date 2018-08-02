@@ -34,3 +34,5 @@ export function setup ({
 
 export const getColorMap = color.getColorMap
 // export getColorMap
+
+export const loadLabelDbfromUrl = behavior.loadLabelDbfromUrl
