@@ -12,6 +12,30 @@ import * as color from '../../../src/components/labelInput/color'
 import editButtonClickListener from '../../../src/components/labelInput/behavior/editButton.js'
 
 describe('label edit button on labelInput component', () => {
+    function createLabelGui (labelList, labelTextContent) {
+        const labelInput = document.createElement('li')
+        labelInput.classList.add('label-list__item')
+
+        const editLabel = document.createElement('i')
+        const editButton = document.createElement('div')
+        editButton.classList.add('js-label-edit')
+        editButton.appendChild(editLabel)
+        const labelText = document.createElement('div')
+        labelText.textContent = labelTextContent + '\n'
+        labelText.classList.add('label-list__text')
+        labelText.classList.add('js-label')
+
+        labelInput.appendChild(editButton)
+        labelInput.appendChild(document.createTextNode('\n'))
+        labelInput.appendChild(labelText)
+        labelInput.appendChild(document.createTextNode('\n'))
+
+        labelList.appendChild(labelInput)
+        labelList.appendChild(document.createTextNode('\n'))
+
+        return labelInput
+    }
+
     before(function () {
         this.labelType = 'span'
         this.labelTextContent = 'ThisIsLabel-1'
@@ -28,24 +52,7 @@ describe('label edit button on labelInput component', () => {
         this.labelList = document.createElement('ul')
         this.labelList.classList.add('label-list')
         this.labelList.setAttribute('data-type', this.labelType)
-        this.labelInput = document.createElement('li')
-        this.labelInput.classList.add('label-list__item')
-
-        const editLabel = document.createElement('i')
-        const editButton = document.createElement('div')
-        editButton.classList.add('js-label-edit')
-        editButton.appendChild(editLabel)
-        const labelText = document.createElement('div')
-        labelText.textContent = this.labelTextContent + '\n'
-        labelText.classList.add('label-list__text')
-        labelText.classList.add('js-label')
-
-        this.labelInput.appendChild(editButton)
-        this.labelInput.appendChild(document.createTextNode('\n'))
-        this.labelInput.appendChild(labelText)
-        this.labelInput.appendChild(document.createTextNode('\n'))
-        this.labelList.appendChild(this.labelInput)
-        this.labelList.appendChild(document.createTextNode('\n'))
+        this.labelInput = createLabelGui(this.labelList, this.labelTextContent)
 
         document.body.appendChild(this.labelList)
 
@@ -95,7 +102,7 @@ describe('label edit button on labelInput component', () => {
     })
 
     // function of beforeEach() for context('when be displayed `<input class="label-list__input">` and ...')
-    function beforeEachForInputFinished (newValue, done) {
+    function beforeEachForInputFinished (labelInputGui, newValue, done) {
         sinon.stub(ui.alertDialog, 'show')
         ui.alertDialog.show.returns({
             on: (eventTarget, listener) => {
@@ -107,8 +114,8 @@ describe('label edit button on labelInput component', () => {
                 )
             }
         })
-        $('.js-label-edit').click()
-        $('.label-list__input').val(newValue)
+        $(labelInputGui).find('.js-label-edit').click()
+        $(labelInputGui).find('.label-list__input').val(newValue)
         // focus out or hit enter key
     }
     function testsForInvalidValue (newValue) {
@@ -150,7 +157,7 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(this.labelChangeListener.notCalled)
             })
         })
-   }
+    }
 
     context('when be displayed `<input class="label-list__input">` and focus out this', function () {
         context('input value is valid (that does not include space)', function () {
@@ -171,13 +178,14 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, annoType, oldText}', function () {
+            it('should call labelChangeListener with argument {annoType, text, color, oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
-                        text: this.newValidLabel,
                         annoType: this.labelType,
+                        text: this.newValidLabel,
+                        color: this.labelColor,
                         oldText: this.labelTextContent
                     }
                 )
@@ -209,7 +217,7 @@ describe('label edit button on labelInput component', () => {
             context('when value includes space', function () {
                 beforeEach(function (done) {
                     this.newInvalidLabel = this.labelTextContent + ' updated'
-                    beforeEachForInputFinished(this.newInvalidLabel, done)
+                    beforeEachForInputFinished(this.labelInput,this.newInvalidLabel, done)
                     $('.label-list__input')[0].blur()
                 })
                 afterEach(function () {
@@ -222,7 +230,7 @@ describe('label edit button on labelInput component', () => {
             context('when valuencludes tab-code(`\\t`)', function () {
                 beforeEach(function (done) {
                     this.newInvalidLabel = this.labelTextContent + '\tupdated'
-                    beforeEachForInputFinished(this.newinValidLabel, done)
+                    beforeEachForInputFinished(this.labelInput, this.newinValidLabel, done)
                     $('.label-list__input')[0].blur()
                 })
                 afterEach(function () {
@@ -232,26 +240,18 @@ describe('label edit button on labelInput component', () => {
                 testsForInvalidValue(this.newInvalidLabel)
             })
         })
+
         context('input value is alreay exist in list', function () {
             beforeEach(function (done) {
                 this.duplicatedLabel = (new Date()).getTime() + '_dupilicated'
-
-                const duplicatedLabel = document.createElement('li')
-                duplicatedLabel.classList.add('label-list__item')
-                const labelText = document.createElement('div')
-                labelText.textContent = this.duplicatedLabel + '\n'
-                labelText.classList.add('label-list__text')
-                labelText.classList.add('js-label')
-                duplicatedLabel.appendChild(labelText)
-                this.labelList.appendChild(duplicatedLabel)
-                this.labelList.appendChild(document.createTextNode('\n'))
+                createLabelGui(this.labelList, this.duplicateLabel)
 
                 const labeldb = db.getLabelList()
                 labeldb[this.labelType].labels.push([this.duplicatedLabel, this.labelColor])
                 db.saveLabelList(labeldb)
 
-                beforeEachForInputFinished(this.duplicatedLabel, done)
-                $('.label-list__input')[0].blur()
+                beforeEachForInputFinished(this.labelInput, this.duplicatedLabel, done)
+                $(this.labelInput).find('.label-list__input')[0].blur()
             })
             afterEach(function () {
                 ui.alertDialog.show.restore()
@@ -286,13 +286,14 @@ describe('label edit button on labelInput component', () => {
                 assert.ok(core.isValidInput.calledOnce)
                 assert.strictEqual(core.isValidInput.firstCall.args[0], this.newValidLabel)
             })
-            it('should call labelChangeListener with argument {text, annoType, oldText}', function () {
+            it('should call labelChangeListener with argument {annoType, text, color,oldText}', function () {
                 assert.ok(this.labelChangeListener.calledOnce)
                 assert.deepStrictEqual(
                     this.labelChangeListener.firstCall.args[0],
                     {
-                        text: this.newValidLabel,
                         annoType: this.labelType,
+                        text: this.newValidLabel,
+                        color: this.labelColor,
                         oldText: this.labelTextContent
                     }
                 )
@@ -324,7 +325,7 @@ describe('label edit button on labelInput component', () => {
             context('value includes space', function () {
                 beforeEach(function (done) {
                     this.newInvalidLabel = this.labelTextContent + ' updated'
-                    beforeEachForInputFinished(this.newInvalidLabel, done)
+                    beforeEachForInputFinished(this.labelInput, this.newInvalidLabel, done)
                     $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })
                 afterEach(function () {
@@ -337,7 +338,7 @@ describe('label edit button on labelInput component', () => {
             context('value includes tab-code(`\\t`)', function () {
                 beforeEach(function (done) {
                     this.newInvalidLabel = this.labelTextContent + '\tupdated'
-                    beforeEachForInputFinished(this.newInvalidLabel, done)
+                    beforeEachForInputFinished(this.labelInput, this.newInvalidLabel, done)
 
                     $('.label-list__input')[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
                 })

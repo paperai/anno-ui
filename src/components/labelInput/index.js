@@ -8,6 +8,16 @@ import * as behavior from './behavior'
 import * as listener from './listener'
 import * as color from './color'
 
+
+/**
+ * dummy function of labenChangeListener
+ *
+ * @param annoType ... 'span' | 'relation'
+ * @param text ... current label text
+ * @param color ... current label color
+ * @param oldText ... label text that before be changed (only at label editing)
+ */
+function dummyLabelChangeListener ({ annoType, text, color, oldText }) { }
 /**
  * Setup the Label Input.
  */
@@ -16,7 +26,7 @@ export function setup ({
     saveAnnotationText,
     createSpanAnnotation,
     createRelAnnotation,
-    labelChangeListener = function () {},
+    labelChangeListener = dummyLabelChangeListener,
     namingRuleForExport = behavior.defaultNamingRuleForExport
 }) {
 

@@ -15,17 +15,28 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
     const blurListener = (event) => {
         event.stopPropagation()
 
+        const isNotChanged = (value, oldValue) => {
+            return value === oldValue
+        }
+        const isNewValue = (labelType, value) => {
+            return db.findLabel(labelType, value) === undefined
+        }
+
         // Get <ul class="label-list" data-type="...">
         const labelType = $(inputField).parentsUntil('.label-list').parent()[0].getAttribute('data-type')
         const value = inputField.value.trim()
         const oldValue = labelText.textContent.trim()
+        let colorValue
         if (core.isValidInput(value)) {
-            if (value === oldValue || db.findLabel(labelType, value) === undefined) {
+            // 1. not changed
+            // 2. changed to new label
+            if (isNotChanged(value, oldValue) || isNewValue(labelType, value)) {
                 labelText.textContent = value
                 const labelList = db.getLabelList()
                 labelList[labelType].labels.forEach((labelObject) => {
                     if (labelObject[0] === oldValue) {
                         labelObject[0] = value
+                        colorValue = labelObject[1]
                     }
                 })
                 db.saveLabelList(labelList)
@@ -33,6 +44,7 @@ function setupLabelEditListener (inputField, labelText, editButton, labelChangeL
                 inputField.parentElement.replaceChild(labelText, inputField)
                 inputField.removeEventListener('blur', blurListener)
                 labelChangeListener({
+                    color    : colorValue,
                     text     : value,
                     annoType : labelType,
                     oldText  : oldValue
