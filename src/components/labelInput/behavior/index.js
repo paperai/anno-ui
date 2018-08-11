@@ -1,25 +1,33 @@
 /**
  * Define the behaviors of label input component.
  */
-import * as alertDialog from '../../uis/alertDialog'
-import * as annoUtils from '../../utils'
-import * as db from './db'
-import * as core from './core'
-import * as color from './color'
+import * as alertDialog from '../../../uis/alertDialog'
+import * as annoUtils from '../../../utils'
+import * as db from '../db'
+import * as core from '../core'
+import * as color from '../color'
 import labelInputReader from './reader'
+import editButtonClickListener from './editButton'
 
 /**
  * Setup the behaviors for Input Label.
  */
-export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport) {
+export function setup (createSpanAnnotation, createRelAnnotation, namingRuleForExport, labelChangeListener) {
 
     core.setCurrentTab('span')
 
     // Set add button behavior.
+    // TODO: set labelChangeListener
     setupAddButton()
 
     // Set trash button behavior.
+    // TODO: set labelChangeListener
     setupTrashButton()
+
+    // Set edit button behavior.
+    $('.js-label-tab-content').on('click', '.js-label-edit', (event) => {
+        editButtonClickListener(event, labelChangeListener)
+    })
 
     // Set the action when a label is clicked.
     setupLabelText(createSpanAnnotation, createRelAnnotation)
@@ -79,6 +87,9 @@ function setupTabClick () {
 
             $ul.append(`
                 <li class="label-list__item">
+                    <div class="label-list__btn js-label-edit" data-index="${index}">
+                        <i class="fa fa-edit fa-2x"></i>
+                    </div>
                     <div class="label-list__btn js-label-trash" data-index="${index}">
                         <i class="fa fa-trash-o fa-2x"></i>
                     </div>

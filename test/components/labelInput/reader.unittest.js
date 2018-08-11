@@ -4,7 +4,7 @@ import toml from 'toml'
 import * as annoUtils from '../../../src/utils'
 
 // Test target
-import labelInputReader from '../../../src/components/labelInput/reader.js'
+import labelInputReader from '../../../src/components/labelInput/behavior/reader.js'
 
 const validLabelInputData = [
     '[[span]]',

@@ -1,6 +1,5 @@
-// import toml from 'toml'
-import * as annoUtils from '../../utils'
-import { validLabelTypes } from '../../core'
+import * as annoUtils from '../../../utils'
+import { validLabelTypes } from '../../../core'
 
 /**
  * Read the label list from File object
